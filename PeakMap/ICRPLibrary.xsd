@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+NOTICE:
+
+For five (5) years from 1/21/2020 the United States Government is granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, and perform
+publicly and display publicly, by or on behalf of the Government. There is provision for the possible extension of the term of this license. Subsequent to that period or any extension granted, the United States Government is granted for itself
+and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, distribute copies to the public, perform publicly and display publicly, and to permit others to do so. The
+specific term of the license can be identified by inquiry made to National Technology and Engineering Solutions of Sandia, LLC or DOE.
+
+NEITHER THE UNITED STATES GOVERNMENT, NOR THE UNITED STATES DEPARTMENT OF ENERGY, NOR NATIONAL TECHNOLOGY AND ENGINEERING SOLUTIONS OF SANDIA, LLC, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY,
+EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY INFORMATION, APPARATUS, PRODUCT, OR PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD
+NOT INFRINGE PRIVATELY OWNED RIGHTS.
+
+Any licensee of this software has the obligation and responsibility to abide by the applicable export control laws, regulations, and general prohibitions relating to the export of technical data. Failure to obtain an export control license or other
+authority from the Government may result in criminal liability under U.S. laws.
+
+(End of Notice)
+-->
+<xs:schema id="ICPRLibrary" targetNamespace="http://tempuri.org/ICPRLibrary.xsd" xmlns:mstns="http://tempuri.org/ICPRLibrary.xsd" xmlns="http://tempuri.org/ICPRLibrary.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ICPRLibrary" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ICPRLibrary" msprop:Generator_UserDSName="ICPRLibrary">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="NUCLIDES" msprop:Generator_TableClassName="NUCLIDESDataTable" msprop:Generator_TableVarName="tableNUCLIDES" msprop:Generator_RowChangedName="NUCLIDESRowChanged" msprop:Generator_TablePropName="NUCLIDES" msprop:Generator_RowDeletingName="NUCLIDESRowDeleting" msprop:Generator_RowChangingName="NUCLIDESRowChanging" msprop:Generator_RowEvHandlerName="NUCLIDESRowChangeEventHandler" msprop:Generator_RowDeletedName="NUCLIDESRowDeleted" msprop:Generator_RowClassName="NUCLIDESRow" msprop:Generator_UserTableName="NUCLIDES" msprop:Generator_RowEvArgName="NUCLIDESRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="NAME" msprop:Generator_ColumnVarNameInTable="columnNAME" msprop:Generator_ColumnPropNameInRow="NAME" msprop:Generator_ColumnPropNameInTable="NAMEColumn" msprop:Generator_UserColumnName="NAME" type="xs:string" />
+              <xs:element name="HALF_LIFE" msprop:Generator_ColumnVarNameInTable="columnHALF_LIFE" msprop:Generator_ColumnPropNameInRow="HALF_LIFE" msprop:Generator_ColumnPropNameInTable="HALF_LIFEColumn" msprop:Generator_UserColumnName="HALF_LIFE" type="xs:double" minOccurs="0" />
+              <xs:element name="HALF_LIFE_UNIT" msprop:Generator_ColumnVarNameInTable="columnHALF_LIFE_UNIT" msprop:Generator_ColumnPropNameInRow="HALF_LIFE_UNIT" msprop:Generator_ColumnPropNameInTable="HALF_LIFE_UNITColumn" msprop:Generator_UserColumnName="HALF_LIFE_UNIT" type="xs:string" minOccurs="0" />
+              <xs:element name="PARENT" msprop:Generator_ColumnVarNameInTable="columnPARENT" msprop:Generator_ColumnPropNameInRow="PARENT" msprop:Generator_ColumnPropNameInTable="PARENTColumn" msprop:Generator_UserColumnName="PARENT" type="xs:string" default="NONE" />
+              <xs:element name="BRANCHING" msprop:Generator_ColumnVarNameInTable="columnBRANCHING" msprop:Generator_ColumnPropNameInRow="BRANCHING" msprop:Generator_ColumnPropNameInTable="BRANCHINGColumn" msprop:Generator_UserColumnName="BRANCHING" type="xs:double" minOccurs="0" />
+              <xs:element name="PARENT_HALF_LIFE" msprop:Generator_ColumnVarNameInTable="columnPARENT_HALF_LIFE" msprop:Generator_ColumnPropNameInRow="PARENT_HALF_LIFE" msprop:Generator_ColumnPropNameInTable="PARENT_HALF_LIFEColumn" msprop:Generator_UserColumnName="PARENT_HALF_LIFE" type="xs:double" minOccurs="0" />
+              <xs:element name="PARENT_HALF_LIFE_UNIT" msprop:Generator_ColumnVarNameInTable="columnPARENT_HALF_LIFE_UNIT" msprop:Generator_ColumnPropNameInRow="PARENT_HALF_LIFE_UNIT" msprop:Generator_ColumnPropNameInTable="PARENT_HALF_LIFE_UNITColumn" msprop:Generator_UserColumnName="PARENT_HALF_LIFE_UNIT" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PHOTONS" msprop:Generator_TableClassName="PHOTONSDataTable" msprop:Generator_TableVarName="tablePHOTONS" msprop:Generator_RowChangedName="PHOTONSRowChanged" msprop:Generator_TablePropName="PHOTONS" msprop:Generator_RowDeletingName="PHOTONSRowDeleting" msprop:Generator_RowChangingName="PHOTONSRowChanging" msprop:Generator_RowEvHandlerName="PHOTONSRowChangeEventHandler" msprop:Generator_RowDeletedName="PHOTONSRowDeleted" msprop:Generator_RowClassName="PHOTONSRow" msprop:Generator_UserTableName="PHOTONS" msprop:Generator_RowEvArgName="PHOTONSRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
+              <xs:element name="NAME" msprop:Generator_ColumnVarNameInTable="columnNAME" msprop:Generator_ColumnPropNameInRow="NAME" msprop:Generator_ColumnPropNameInTable="NAMEColumn" msprop:Generator_UserColumnName="NAME" type="xs:string" />
+              <xs:element name="LINENUMBER" msprop:Generator_ColumnVarNameInTable="columnLINENUMBER" msprop:Generator_ColumnPropNameInRow="LINENUMBER" msprop:Generator_ColumnPropNameInTable="LINENUMBERColumn" msprop:Generator_UserColumnName="LINENUMBER" type="xs:int" />
+              <xs:element name="ENERGY" msprop:Generator_ColumnVarNameInTable="columnENERGY" msprop:Generator_ColumnPropNameInRow="ENERGY" msprop:Generator_ColumnPropNameInTable="ENERGYColumn" msprop:Generator_UserColumnName="ENERGY" type="xs:double" />
+              <xs:element name="YIELD" msprop:Generator_ColumnVarNameInTable="columnYIELD" msprop:Generator_ColumnPropNameInRow="YIELD" msprop:Generator_ColumnPropNameInTable="YIELDColumn" msprop:Generator_UserColumnName="YIELD" type="xs:double" />
+              <xs:element name="TYPE" msprop:Generator_ColumnVarNameInTable="columnTYPE" msprop:Generator_ColumnPropNameInRow="TYPE" msprop:Generator_ColumnPropNameInTable="TYPEColumn" msprop:Generator_UserColumnName="TYPE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DECAYCHAINS" msprop:Generator_TableClassName="DECAYCHAINSDataTable" msprop:Generator_TableVarName="tableDECAYCHAINS" msprop:Generator_RowChangedName="DECAYCHAINSRowChanged" msprop:Generator_TablePropName="DECAYCHAINS" msprop:Generator_RowDeletingName="DECAYCHAINSRowDeleting" msprop:Generator_RowChangingName="DECAYCHAINSRowChanging" msprop:Generator_RowEvHandlerName="DECAYCHAINSRowChangeEventHandler" msprop:Generator_RowDeletedName="DECAYCHAINSRowDeleted" msprop:Generator_RowClassName="DECAYCHAINSRow" msprop:Generator_UserTableName="DECAYCHAINS" msprop:Generator_RowEvArgName="DECAYCHAINSRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PARENT" msprop:Generator_ColumnVarNameInTable="columnPARENT" msprop:Generator_ColumnPropNameInRow="PARENT" msprop:Generator_ColumnPropNameInTable="PARENTColumn" msprop:Generator_UserColumnName="PARENT" type="xs:string" />
+              <xs:element name="PARENT_HALF_LIFE" msprop:Generator_ColumnVarNameInTable="columnPARENT_HALF_LIFE" msprop:Generator_ColumnPropNameInRow="PARENT_HALF_LIFE" msprop:Generator_ColumnPropNameInTable="PARENT_HALF_LIFEColumn" msprop:Generator_UserColumnName="PARENT_HALF_LIFE" type="xs:double" minOccurs="0" />
+              <xs:element name="PARENT_HALF_LIFE_UNIT" msprop:Generator_ColumnVarNameInTable="columnPARENT_HALF_LIFE_UNIT" msprop:Generator_ColumnPropNameInRow="PARENT_HALF_LIFE_UNIT" msprop:Generator_ColumnPropNameInTable="PARENT_HALF_LIFE_UNITColumn" msprop:Generator_UserColumnName="PARENT_HALF_LIFE_UNIT" type="xs:string" minOccurs="0" />
+              <xs:element name="DAUGHTER1" msprop:Generator_ColumnVarNameInTable="columnDAUGHTER1" msprop:Generator_ColumnPropNameInRow="DAUGHTER1" msprop:Generator_ColumnPropNameInTable="DAUGHTER1Column" msprop:Generator_UserColumnName="DAUGHTER1" type="xs:string" minOccurs="0" />
+              <xs:element name="PROBABILITY1" msprop:Generator_ColumnVarNameInTable="columnPROBABILITY1" msprop:Generator_ColumnPropNameInRow="PROBABILITY1" msprop:Generator_ColumnPropNameInTable="PROBABILITY1Column" msprop:Generator_UserColumnName="PROBABILITY1" type="xs:double" minOccurs="0" />
+              <xs:element name="DAUGHTER1_STABLE" msprop:Generator_ColumnVarNameInTable="columnDAUGHTER1_STABLE" msprop:Generator_ColumnPropNameInRow="DAUGHTER1_STABLE" msprop:Generator_ColumnPropNameInTable="DAUGHTER1_STABLEColumn" msprop:Generator_UserColumnName="DAUGHTER1_STABLE" type="xs:boolean" minOccurs="0" />
+              <xs:element name="DAUGHTER2" msprop:Generator_ColumnVarNameInTable="columnDAUGHTER2" msprop:Generator_ColumnPropNameInRow="DAUGHTER2" msprop:Generator_ColumnPropNameInTable="DAUGHTER2Column" msprop:Generator_UserColumnName="DAUGHTER2" type="xs:string" minOccurs="0" />
+              <xs:element name="PROBABILITY2" msprop:Generator_ColumnVarNameInTable="columnPROBABILITY2" msprop:Generator_ColumnPropNameInRow="PROBABILITY2" msprop:Generator_ColumnPropNameInTable="PROBABILITY2Column" msprop:Generator_UserColumnName="PROBABILITY2" type="xs:double" minOccurs="0" />
+              <xs:element name="DAUGHTER2_STABLE" msprop:Generator_ColumnVarNameInTable="columnDAUGHTER2_STABLE" msprop:Generator_ColumnPropNameInRow="DAUGHTER2_STABLE" msprop:Generator_ColumnPropNameInTable="DAUGHTER2_STABLEColumn" msprop:Generator_UserColumnName="DAUGHTER2_STABLE" type="xs:boolean" minOccurs="0" />
+              <xs:element name="DAUGHTER3" msprop:Generator_ColumnVarNameInTable="columnDAUGHTER3" msprop:Generator_ColumnPropNameInRow="DAUGHTER3" msprop:Generator_ColumnPropNameInTable="DAUGHTER3Column" msprop:Generator_UserColumnName="DAUGHTER3" type="xs:string" minOccurs="0" />
+              <xs:element name="PROBABILITY3" msprop:Generator_ColumnVarNameInTable="columnPROBABILITY3" msprop:Generator_ColumnPropNameInRow="PROBABILITY3" msprop:Generator_ColumnPropNameInTable="PROBABILITY3Column" msprop:Generator_UserColumnName="PROBABILITY3" type="xs:double" minOccurs="0" />
+              <xs:element name="DAUGHTER3_STABLE" msprop:Generator_ColumnVarNameInTable="columnDAUGHTER3_STABLE" msprop:Generator_ColumnPropNameInRow="DAUGHTER3_STABLE" msprop:Generator_ColumnPropNameInTable="DAUGHTER3_STABLEColumn" msprop:Generator_UserColumnName="DAUGHTER3_STABLE" type="xs:boolean" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="NUCLIDESKey1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:NUCLIDES" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="PHOTONSKey1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:PHOTONS" />
+      <xs:field xpath="mstns:ID" />
+    </xs:unique>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:DECAYCHAINS" />
+      <xs:field xpath="mstns:PARENT" />
+    </xs:unique>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="Nuclides_Photons" msdata:parent="NUCLIDES" msdata:child="PHOTONS" msdata:parentkey="NAME" msdata:childkey="NAME" msprop:Generator_UserChildTable="PHOTONS" msprop:Generator_ChildPropName="GetPHOTONSRows" msprop:Generator_UserRelationName="Nuclides_Photons" msprop:Generator_RelationVarName="relationNuclides_Photons" msprop:Generator_UserParentTable="NUCLIDES" msprop:Generator_ParentPropName="NuclidesRow" />
+      <msdata:Relationship name="NUCLIDES_DECAYCHAINS" msdata:parent="NUCLIDES" msdata:child="DECAYCHAINS" msdata:parentkey="NAME" msdata:childkey="PARENT" msprop:Generator_UserChildTable="DECAYCHAINS" msprop:Generator_ChildPropName="GetDECAYCHAINSRows" msprop:Generator_UserRelationName="NUCLIDES_DECAYCHAINS" msprop:Generator_RelationVarName="relationNUCLIDES_DECAYCHAINS" msprop:Generator_UserParentTable="NUCLIDES" msprop:Generator_ParentPropName="NUCLIDESRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

@@ -1,0 +1,106 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<!--
+NOTICE:
+
+For five (5) years from 1/21/2020 the United States Government is granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, and perform 
+publicly and display publicly, by or on behalf of the Government. There is provision for the possible extension of the term of this license. Subsequent to that period or any extension granted, the United States Government is granted for itself
+and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, distribute copies to the public, perform publicly and display publicly, and to permit others to do so. The
+specific term of the license can be identified by inquiry made to National Technology and Engineering Solutions of Sandia, LLC or DOE.
+ 
+NEITHER THE UNITED STATES GOVERNMENT, NOR THE UNITED STATES DEPARTMENT OF ENERGY, NOR NATIONAL TECHNOLOGY AND ENGINEERING SOLUTIONS OF SANDIA, LLC, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY, 
+EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY INFORMATION, APPARATUS, PRODUCT, OR PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD
+NOT INFRINGE PRIVATELY OWNED RIGHTS.
+ 
+Any licensee of this software has the obligation and responsibility to abide by the applicable export control laws, regulations, and general prohibitions relating to the export of technical data. Failure to obtain an export control license or other 
+authority from the Government may result in criminal liability under U.S. laws.
+ 
+                                             (End of Notice)
+-->
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PeakMap.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LIBRARY" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\ICRP07\DATA\ICRP-07.RAD</Value>
+    </Setting>
+    <Setting Name="CHAINS" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\ICRP07\DATA\ICRP-07.NDX</Value>
+    </Setting>
+    <Setting Name="LOWERELIMT" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="UPPERELIMIT" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">3000</Value>
+    </Setting>
+    <Setting Name="LINES" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;ENERGY,Energy,&lt;/string&gt;
+  &lt;string&gt;YIELD,Yield (%),&lt;/string&gt;
+  &lt;string&gt;TYPE,Type,&lt;/string&gt;
+  &lt;string&gt;EFFICIENCY,Efficiency (%),E3&lt;/string&gt;
+  &lt;string&gt;AREA,Area (cts),E3&lt;/string&gt;
+  &lt;string&gt;MDA,MDA (cts),E3&lt;/string&gt;
+  &lt;string&gt;MATCHED,Matched,&lt;/string&gt;
+  &lt;string&gt;PEAKNUM,Peak No.,F0&lt;/string&gt;
+  &lt;string&gt;DIFFERENCE,Diff,&lt;/string&gt;
+  &lt;string&gt;RELACTIVITY,Rel. Acitvity,E3&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="CHAINPARENT" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Th-232,Np-237,U-238,U-235</Value>
+    </Setting>
+    <Setting Name="NUCLIDES" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;NAME,Name,&lt;/string&gt;
+  &lt;string&gt;SCORE,Score,&lt;/string&gt;
+  &lt;string&gt;NUCLIDE,Nuclide,&lt;/string&gt;
+  &lt;string&gt;HALF_LIFE,Half Life,&lt;/string&gt;
+  &lt;string&gt;HALF_LIFE_UNIT,Unit,&lt;/string&gt;
+  &lt;string&gt;ENERGY,Energy,&lt;/string&gt;
+  &lt;string&gt;YIELD,Yield (%),&lt;/string&gt;
+  &lt;string&gt;TYPE,Type,&lt;/string&gt;
+  &lt;string&gt;DIFFERENCE,Diff,&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="NUCLIDESLIBRARY" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;NAME,Name,&lt;/string&gt;
+  &lt;string&gt;NUCLIDE,Nuclide,&lt;/string&gt;
+  &lt;string&gt;HALF_LIFE,Half Life,&lt;/string&gt;
+  &lt;string&gt;HALF_LIFE_UNIT,Unit,&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="LOWERYIELD" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1E-09</Value>
+    </Setting>
+    <Setting Name="LINESLIBRARY" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;ENERGY,Energy,&lt;/string&gt;
+  &lt;string&gt;YIELD,Yield (%),&lt;/string&gt;
+  &lt;string&gt;TYPE,Type,&lt;/string&gt;
+  &lt;string&gt;NAME,Name,&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="PEAKS" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;ID,No.,F0&lt;/string&gt;
+  &lt;string&gt;ENERGY,Energy,&lt;/string&gt;
+  &lt;string&gt;FWHM,FWHM,&lt;/string&gt;
+  &lt;string&gt;AREA,Area,E3&lt;/string&gt;
+  &lt;string&gt;CONTINUUM,Continuum,E3&lt;/string&gt;
+  &lt;string&gt;MATCHNAME,Id,&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="PEAKSLIBRARY" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;ID,No.,F0&lt;/string&gt;
+  &lt;string&gt;MATCHNAME,Id,&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

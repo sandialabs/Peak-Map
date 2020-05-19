@@ -1328,8 +1328,8 @@ namespace CAMInputOutput
                     nuc.HalfLifeUncertainty *= 31557600;
                     break;
                 case "D":
-                    nuc.HalfLife *= 68400;
-                    nuc.HalfLifeUncertainty *= 68400;
+                    nuc.HalfLife *= 86400;
+                    nuc.HalfLifeUncertainty *= 86400;
                     break;
                 case "H":
                     nuc.HalfLife *= 3600;

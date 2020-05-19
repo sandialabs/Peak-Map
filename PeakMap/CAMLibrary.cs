@@ -82,6 +82,7 @@ namespace PeakMap
         /// </summary>
         public override string FileName { 
             get { return file; }
+            set { file = value; }
         }
         /// <summary>
         /// Can the file be written
@@ -90,17 +91,11 @@ namespace PeakMap
         {
             get { return true; }
         }
-        /// <summary>
-        /// Save the file
-        /// </summary>
-        public override void SaveFile()
-        {
-            WriteDataToFile();
-        }
+
         /// <summary>
         /// Write the data to a CAM file
         /// </summary>
-        private void WriteDataToFile()
+        protected override void WriteDataToFile()
         {
             //check if there are things to even write
             if (lib.Tables["MATCHEDNUCLIDES"].Rows.Count < 1 && lib.Tables["MATCHEDLINES"].Rows.Count < 1)

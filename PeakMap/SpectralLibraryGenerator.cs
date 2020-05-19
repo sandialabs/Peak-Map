@@ -33,10 +33,10 @@ namespace PeakMap
         protected string file;
         public enum LibraryType { nlb, tlb };
         protected abstract double GetPrecision(double num);
-        public abstract void SaveFile();
+        protected abstract void WriteDataToFile();
         public abstract Task LoadLibraryAsync(string file);
         [Browsable(false)]
-        public abstract string FileName { get; }
+        public abstract string FileName { get; set; }
         [Browsable(false)]
         public abstract bool CanWrite { get; }
         [Browsable(false)]
@@ -339,6 +339,17 @@ namespace PeakMap
         public void ClearNuclide(DataRow nuclide)
         {
             ClearNuclide((string)nuclide["NAME"]);
+        }
+        /// <summary>
+        /// Save the library file
+        /// </summary>
+        public void SaveFile() 
+        {
+            //if the file exists it will be overwirtten 
+            if (File.Exists(file)) 
+                File.Delete(file);
+
+            WriteDataToFile();
         }
 
 

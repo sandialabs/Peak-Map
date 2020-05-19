@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace PeakMap
 {
@@ -31,6 +32,7 @@ namespace PeakMap
 
         //List<string> libNucs;
         readonly bool canWrite;
+        
         /// <summary>
         /// Initilize TextLibray Object
         /// </summary>
@@ -91,7 +93,7 @@ namespace PeakMap
         /// <summary>
         /// Writes the dataset to a file
         /// </summary>
-        private void WriteDataToFile()
+        protected override void WriteDataToFile()
         {
 
             StringBuilder strBuilder = new StringBuilder();
@@ -148,15 +150,7 @@ namespace PeakMap
                 File.WriteAllText(file, strBuilder.ToString());
             }
         }
-        /// <summary>
-        /// Saves the library file
-        /// </summary>
-        public override void SaveFile()
-        {
-            if (File.Exists(file))
-                return;
-            WriteDataToFile();
-        }
+
         /// <summary>
         /// Loads the Library
         /// </summary>
@@ -224,7 +218,7 @@ namespace PeakMap
 
         }
 
-        public override string FileName { get { return file; } }
+        public override string FileName { get { return file; } set { file = value; } }
         public override bool CanWrite { get { return canWrite; } }
         /// <summary>
     }

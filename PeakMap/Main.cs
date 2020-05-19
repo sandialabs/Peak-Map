@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -447,11 +448,8 @@ namespace PeakMap
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 //delete the file if we are overwriting with the save dialog
-                if (dialog.GetType() == typeof(SaveFileDialog))
-                {
-                    if (File.Exists(dialog.FileName))
-                        File.Delete(dialog.FileName);
-                }
+                if (dialog.GetType() == typeof(SaveFileDialog) && File.Exists(dialog.FileName))
+                    File.Delete(dialog.FileName);
 
                 libLabel.Text = "Library: Loading";
                 statusLabel.Text = "Loading Library";
@@ -466,20 +464,7 @@ namespace PeakMap
                     statusLabel.Text = "Idle";
                     libLabel.Text = "Library: " + libGen.FileName;
                     librarySettingsToolStripMenuItem.Enabled = true;
-                    //fill the peaks grid with the nuclides
-                    if (mode == WindowMode.library) 
-                    {
-                        foreach (DataRow nuc in libGen.NuclideLibrary.Tables["MATCHEDNUCLIDES"].Rows)
-                        {
-                            DataRow addedNuc = lines.Peaks.NewRow();
-                            //don't add repat nuclides
-                            if (lines.Peaks.Select("MATCHNAME = '" + nuc["NAME"] + "'").Length > 0)
-                                return;
-                            addedNuc["MATCHNAME"] = nuc["NAME"];
-                            lines.Peaks.Rows.Add(addedNuc);
-                        }
-
-                    }
+                    FillWithLibrary();
                 }
                 catch (Exception ex)
                 {
@@ -498,11 +483,31 @@ namespace PeakMap
             }
 
             //turn on writing matchedLinesGrid.Rows.Count > 0 &&
-            closeLibraryToolStripMenuItem.Enabled = true;
+            SaveLibraryToolStripMenuItem.Enabled = true;
+            saveAsToolStripMenuItem.Enabled = true;
 
             ToggleLinesToolStripMenuItems(libGen != null);
 
             rightClickWriteToolStripMenuItem.Enabled = libGen != null;
+        }
+        /// <summary>
+        /// Fill the peaks grid the loaded library nuclides
+        /// </summary>
+        private void FillWithLibrary()
+        {                    //fill the peaks grid with the nuclides
+            if (mode == WindowMode.library && libGen != null) 
+            {
+                foreach (DataRow nuc in libGen.NuclideLibrary.Tables["MATCHEDNUCLIDES"].Rows)
+                {
+                    DataRow addedNuc = lines.Peaks.NewRow();
+                    //don't add repat nuclides
+                    if (lines.Peaks.Select("MATCHNAME = '" + nuc["NAME"] + "'").Length > 0)
+                        return;
+                    addedNuc["MATCHNAME"] = nuc["NAME"];
+                    lines.Peaks.Rows.Add(addedNuc);
+                }
+
+            }
         }
         /// <summary>
         /// Allow only one tool strip item to be check at a time
@@ -530,7 +535,6 @@ namespace PeakMap
         /// <param name="text"></param>
         private async void ImportPastedTextAsync(string text)
         {
-
             //try to split the 
             string[] delims = { Environment.NewLine, ",", "|", " ", "\t", ";" };
             string[] splitText = { "" };
@@ -551,6 +555,8 @@ namespace PeakMap
             switch (mode)
             {
                 case WindowMode.library:
+                    //clean up
+                    lines.ClearMatches();
                     //loop through the pasted array and add them to the matchedNuclides Grid
                     for (int i = 0; i < splitText.Length; i++)
                     {
@@ -657,6 +663,13 @@ namespace PeakMap
         /// <param name="name">Nuclide name</param>
         private void HighlightWrittenLines(string name)
         {
+            matchedNuclidesGrid.ClearSelection();
+            //select the nuclide
+            if (matchedNuclidesGrid.Rows.Count > 0)
+                matchedNuclidesGrid.CurrentCell = matchedNuclidesGrid.Rows.OfType<DataGridViewRow>().Where(r => r.Cells["NAME"].Value != null && r.Cells["NAME"].Value.ToString().Equals(name.Trim(' '))).FirstOrDefault().Cells["NAME"];
+
+            GetLibraryLines();
+
             DataRow[] foundLines = libGen.NuclideLibrary.Tables["MATCHEDLINES"].Select("NAME = '" + name.Trim() + "'");
             //highlight the matched lines
             foreach (DataRow row in foundLines)
@@ -760,11 +773,15 @@ namespace PeakMap
                 {
                     try
                     {
-                        lines.ClearMatches();
+                        //lines.ClearMatches();
                         matchedLinesGrid.Refresh();
                         string nucName = peaksGrid.CurrentRow.Cells["MATCHNAME"].Value.ToString();
                         //get the exact name nuclides
-                        lines.SetNuclides(nucName, 0, true);
+                        lines.SetNuclides(nucName, lines.Matches.Rows.Count, true);
+                        if(matchedNuclidesGrid.Rows.Count > 1) { 
+                        //    int index = matchedNuclidesGrid.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["NAME"].Value.ToString().Equals(nucName)).First().Index;
+                        //    matchedNuclidesGrid.Rows[index].Selected = true;
+                        }
                         //highlight the lines that were written to the library
                         HighlightWrittenLines(nucName);
                     }
@@ -982,7 +999,7 @@ namespace PeakMap
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CloseLibraryToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveLibraryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -992,6 +1009,24 @@ namespace PeakMap
             {
                 MessageBox.Show(ex.Message, "Library Save Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// Handle the SaveAsToolStripMenuItem Click
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FileDialog fdialog = new SaveFileDialog()
+            {
+                InitialDirectory = @"C:\GENIE2K\CAMFILES",
+                Filter = "(*.nlb)|*.nlb|(*.cnf)|*.cnf|(*.tlb)|*.tlb|All Files (*.*)|*.*",
+                DefaultExt = ".nlb",
+                CheckFileExists = false,
+            };
+            if (fdialog.ShowDialog() == DialogResult.OK && libGen != null)
+                libGen.FileName = fdialog.FileName;
         }
 
         /// <summary>
@@ -1151,6 +1186,7 @@ namespace PeakMap
 
             this.peaksGrid.ReadOnly = true;
             this.matchedLinesGrid.Sort(matchedLinesGrid.Columns["ENERGY"], ListSortDirection.Ascending);
+            FillWithLibrary();
 
         }
 
@@ -1385,6 +1421,7 @@ namespace PeakMap
         {
             Close();
         }
+
 
         #endregion
 

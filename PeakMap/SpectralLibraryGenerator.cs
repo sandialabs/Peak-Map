@@ -290,7 +290,9 @@ namespace PeakMap
 
                 DataRow nuc = lib.Tables["MATCHEDNUCLIDES"].NewRow();
                 nuc.ItemArray = nuclide.ItemArray;
-                nuc["ID"] = lib.Tables["MATCHEDNUCLIDES"].Rows.Count + 1;
+                while (lib.Tables["MATCHEDNUCLIDES"].Select("ID = " + nuc["ID"]).Length > 0)
+                    nuc["ID"] =+ 1;
+
                 lib.Tables["MATCHEDNUCLIDES"].Rows.Add(nuc);
                 SetKeyLine(writeLines);
                 int ln = 0;
@@ -333,6 +335,22 @@ namespace PeakMap
             lib.Tables["MATCHEDNUCLIDES"].AcceptChanges();
         }
         /// <summary>
+        /// Clears the lines of energy from the library
+        /// </summary>
+        /// <param name="energy">energy line to clear</param>
+        public void ClearLines(double energy) 
+        {
+            //remove pending state changes
+            lib.Tables["MATCHEDLINES"].AcceptChanges();
+
+            //Get the lines and delete them
+            foreach (DataRow line in lib.Tables["MATCHEDLINES"].Rows.OfType<DataRow>().Where(r => Math.Abs(energy - (double)r["ENERGY"]) < ResolutionLimit))
+                line.Delete();
+            //accpet the changes
+            lib.Tables["MATCHEDLINES"].AcceptChanges();
+
+        }
+        /// <summary>
         /// Clears the nuclide and its lines from the library
         /// </summary>
         /// <param name="nuclide">nuclide to clear</param>
@@ -348,7 +366,7 @@ namespace PeakMap
             //if the file exists it will be overwirtten 
             if (File.Exists(file)) 
                 File.Delete(file);
-
+            
             WriteDataToFile();
         }
 

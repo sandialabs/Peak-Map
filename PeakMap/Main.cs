@@ -710,12 +710,19 @@ namespace PeakMap
         /// <param name="e"></param>
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //close the spectral data
-            if (specdata != null)
-                specdata.CloseFile();
-            //close the libary genertation file
-            if (libGen != null && libGen.CanWrite)
-                libGen.SaveFile();
+            try
+            {
+                //close the spectral data
+                if (specdata != null)
+                    specdata.CloseFile();
+                //close the libary genertation file
+                if (libGen != null && libGen.CanWrite)
+                    libGen.SaveFile();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception");
+            }
         }
         /// <summary>
         /// Load Drag and drop file
@@ -1004,6 +1011,8 @@ namespace PeakMap
             try
             {
                 libGen.SaveFile();
+                MessageBox.Show("It is good practice to open the library in the Genie2K Library editor to reveiw and save before using in Genie2K for analysis", 
+                    "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -1297,13 +1306,25 @@ namespace PeakMap
 
                 //clear the library
                 if (libGen != null)
-                    libGen.ClearNuclide((string)boundRow["MATCHNAME"]);
-
-                if (mode == WindowMode.matching)
-                    boundRow["MATCHNAME"] = DBNull.Value;
-
+                {
+                    if (mode == WindowMode.matching)
+                    {
+                        libGen.ClearLines((double)boundRow["ENERGY"]);
+                        boundRow["MATCHNAME"] = DBNull.Value;
+                    }
+                    else
+                    {
+                        libGen.ClearNuclide((string)boundRow["MATCHNAME"]);
+                        boundRow.Delete();
+                    }
+                }
                 else
-                    boundRow.Delete();
+                {
+                    if (mode == WindowMode.matching)
+                        boundRow["MATCHNAME"] = DBNull.Value;
+                    else
+                        boundRow.Delete();
+                }
 
                 peaksGrid.Refresh();
                 
@@ -1328,13 +1349,25 @@ namespace PeakMap
 
                 //clear the library
                 if (libGen != null)
-                    libGen.ClearNuclide((string)boundRow["MATCHNAME"]);
-
-                if (mode == WindowMode.matching)
-                    boundRow["MATCHNAME"] = DBNull.Value;
+                {
+                    if (mode == WindowMode.matching)
+                    {
+                        libGen.ClearLines((double)boundRow["ENERGY"]);
+                        boundRow["MATCHNAME"] = DBNull.Value;
+                    }
+                    else
+                    {
+                        libGen.ClearNuclide((string)boundRow["MATCHNAME"]);
+                        boundRow.Delete();
+                    }
+                }
                 else
-                    boundRow.Delete();
-
+                {
+                    if (mode == WindowMode.matching)
+                        boundRow["MATCHNAME"] = DBNull.Value;
+                    else
+                        boundRow.Delete();
+                }
                 peaksGrid.Refresh();
 
             }

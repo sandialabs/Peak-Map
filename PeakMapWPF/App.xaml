@@ -1,0 +1,77 @@
+﻿<!--/********************************************************************************************************************************************************************************************************************************************************                          
+NOTICE:
+
+For five (5) years from 1/21/2020 the United States Government is granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, and perform 
+publicly and display publicly, by or on behalf of the Government. There is provision for the possible extension of the term of this license. Subsequent to that period or any extension granted, the United States Government is granted for itself
+and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, distribute copies to the public, perform publicly and display publicly, and to permit others to do so. The
+specific term of the license can be identified by inquiry made to National Technology and Engineering Solutions of Sandia, LLC or DOE.
+ 
+NEITHER THE UNITED STATES GOVERNMENT, NOR THE UNITED STATES DEPARTMENT OF ENERGY, NOR NATIONAL TECHNOLOGY AND ENGINEERING SOLUTIONS OF SANDIA, LLC, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY, 
+EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY INFORMATION, APPARATUS, PRODUCT, OR PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD
+NOT INFRINGE PRIVATELY OWNED RIGHTS.
+ 
+Any licensee of this software has the obligation and responsibility to abide by the applicable export control laws, regulations, and general prohibitions relating to the export of technical data. Failure to obtain an export control license or other 
+authority from the Government may result in criminal liability under U.S. laws.
+ 
+                                             (End of Notice)
+*********************************************************************************************************************************************************************************************************************************************************/-->
+
+<Application x:Class="PeakMapWPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:PeakMapWPF"
+             xmlns:views="clr-namespace:PeakMapWPF.Views"
+             xmlns:viewModels="clr-namespace:PeakMapWPF.ViewModels"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>        
+        <ControlTemplate x:Key="MouseOverControl"  TargetType="{x:Type Control}">
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#ff901a"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <Style x:Name="DataGridStyle" x:Key="DataGridStyle" TargetType="{x:Type DataGrid}">
+            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource DataGridHeaderStyle}"/>
+            <Setter Property="RowStyle" Value="{DynamicResource RowHighlights}"/>
+            <Setter Property="CellStyle" Value="{DynamicResource DataGridCellStyle}"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+        </Style>
+        <Style x:Key="DataGridHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        </Style>
+ 
+        <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="Width" Value="auto"/>
+        </Style>
+
+        <Style x:Key="RowHighlights" TargetType="{x:Type DataGridRow}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#FFe6cc" Opacity="10"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#ff8000" Opacity="50"/>
+            </Style.Resources>
+        </Style>        
+        <Style x:Key="MenuItemStyle" TargetType="{x:Type MenuItem}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.MenuHighlightBrushKey}" Color="#ff901a" Opacity="50"/>
+            </Style.Resources>
+        </Style>
+        <Style x:Key="MenuStyle" TargetType="{x:Type Menu}">
+            <Style.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.MenuHighlightBrushKey}" Color="#ff901a" Opacity="50"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.MenuBarBrushKey}" Color="#ff901a" Opacity="50"/>
+            </Style.Resources>
+        </Style>
+
+        <DataTemplate DataType="{x:Type viewModels:MainWindowMatchingViewModel}">
+            <views:MatchingControl />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:MainWindowLibraryViewModel}">
+            <views:LibraryControl />
+        </DataTemplate>
+
+    </Application.Resources>
+</Application>

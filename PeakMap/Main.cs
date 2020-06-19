@@ -33,7 +33,7 @@ namespace PeakMap
     {
         SpectralData specdata;
         SpectralLibraryGenerator libGen;
-        readonly LineMatch lines;
+        readonly Matches matches;
         private readonly IDataLibrary library;
         int winWidth;
         int gridWidth;
@@ -52,25 +52,25 @@ namespace PeakMap
         {
             InitializeComponent();
             library = new ICRPData();
-            lines = new LineMatch(library);
+            matches = new Matches(library);
             mode = WindowMode.matching;
             //initilize the binding sources
 
             //Peaks grid
             using (BindingSource bindingSource = new BindingSource())
             {
-                this.peaksGrid.DataSource = bindingSource.DataSource = lines.Peaks;
+                this.peaksGrid.DataSource = bindingSource.DataSource = matches.Peaks;
                 System.Collections.Specialized.StringCollection peakCols = Properties.Settings.Default.PEAKS;
                 FormatColumns(this.peaksGrid, peakCols);
 
                 //Matches Grid
-                this.matchedNuclidesGrid.DataSource = bindingSource.DataSource = lines.Matches;
+                this.matchedNuclidesGrid.DataSource = bindingSource.DataSource = matches.Nuclides;
                 this.matchedNuclidesGrid.Sort(matchedNuclidesGrid.Columns["SCORE"], ListSortDirection.Descending);
                 System.Collections.Specialized.StringCollection nucCols = Properties.Settings.Default.NUCLIDES;
                 FormatColumns(this.matchedNuclidesGrid, nucCols);
 
                 //Lines Grid
-                this.matchedLinesGrid.DataSource = bindingSource.DataSource = lines.Lines;
+                this.matchedLinesGrid.DataSource = bindingSource.DataSource = matches.Lines;
                 this.matchedLinesGrid.Sort(matchedLinesGrid.Columns["YIELD"], ListSortDirection.Descending);
                 System.Collections.Specialized.StringCollection lineCols = Properties.Settings.Default.LINES;
                 FormatColumns(this.matchedLinesGrid, lineCols);
@@ -101,7 +101,7 @@ namespace PeakMap
                 specdata = Activator.CreateInstance(specType, new string[] { file }) as SpectralData;
 
                 //initilize the spectral data object
-                await specdata.LoadDataAsync(lines.Peaks);
+                await specdata.LoadDataAsync(matches.Peaks);
 
                 this.peaksGrid.Refresh();
 
@@ -113,7 +113,7 @@ namespace PeakMap
                 AqTimeLabel.Text = "Acquisition Time: " + specdata.CountTime;
 
                 //apply the peaks to the lines
-                lines.SpecData = specdata;
+                matches.SpecData = specdata;
             }
             catch (System.Runtime.InteropServices.COMException)
             {
@@ -148,7 +148,7 @@ namespace PeakMap
 
             //clean up before starting
             ClearPeaksHighlighting();
-            lines.ClearMatches();
+            matches.ClearMatches();
             //turn off the event firing
             matchedNuclidesGrid.SelectionChanged -= this.MatchedNuclides_SelectionChanged;
 
@@ -159,7 +159,7 @@ namespace PeakMap
                 return;
             try
             {
-                lines.SetNuclides(energy, specdata.ElapsedWait, (double)peaksGrid.SelectedRows[0].Cells["FWHM"].Value);
+                matches.SetNuclides(energy, specdata.ElapsedWait, (double)peaksGrid.SelectedRows[0].Cells["FWHM"].Value);
             }
             catch (Exception ex)
             {
@@ -183,9 +183,9 @@ namespace PeakMap
         /// </summary>
         private void GetLines()
         {
-            if (lines == null)
+            if (matches == null)
                 return;
-            if (lines.Matches.Rows.Count < 1)
+            if (matches.Nuclides.Rows.Count < 1)
                 return;
 
             ClearPeaksHighlighting();
@@ -194,17 +194,17 @@ namespace PeakMap
             DataRow nuc = ((DataRowView)matchedNuclidesGrid.CurrentRow.DataBoundItem).Row;
             DataRow peak = ((DataRowView)peaksGrid.CurrentRow.DataBoundItem).Row;
 
-            lines.SetLines(nuc, peak);
+            matches.SetLines(nuc, peak);
             //loop thorough the lines, set the MDA, and get and display the matched lines 
-            for (int i = 0; i < lines.Lines.Rows.Count; i++)
+            for (int i = 0; i < matches.Lines.Rows.Count; i++)
             {
-                DataRow line = lines.Lines.Rows[i];
+                DataRow line = matches.Lines.Rows[i];
                 //if ((bool)line["MATCHED"])
                 //    continue;
 
 
                 //get the peaks that matches the lines
-                DataRow[] foundPeaks = lines.GetPeakMatches(line);
+                DataRow[] foundPeaks = matches.GetPeakMatches(line);
                 //highlight the matched lines
                 foreach (DataRow row in foundPeaks)
                 {
@@ -216,7 +216,7 @@ namespace PeakMap
             }
 
             //display the line match socre
-            lineMatchScore.Text = (lines.ScoreLineMatch()).ToString("P3");
+            lineMatchScore.Text = (matches.ScoreLineMatch()).ToString("P3");
             //refresh.
             this.matchedLinesGrid.Refresh();
 
@@ -226,12 +226,12 @@ namespace PeakMap
         /// </summary>
         private void GetLibraryLines()
         {
-            if (lines == null)
+            if (matches == null)
                 return;
-            if (lines.Matches.Rows.Count < 1 || (DataRowView)matchedNuclidesGrid.CurrentRow.DataBoundItem == null)
+            if (matches.Nuclides.Rows.Count < 1 || (DataRowView)matchedNuclidesGrid.CurrentRow.DataBoundItem == null)
                 return;
             DataRow nuc = ((DataRowView)matchedNuclidesGrid.CurrentRow.DataBoundItem).Row;
-            lines.SetLines(nuc);
+            matches.SetLines(nuc);
             this.matchedLinesGrid.Refresh();
         }
         /// <summary>
@@ -285,12 +285,12 @@ namespace PeakMap
                     {
                         case WriteType.All:
                             if (showDaughtersToolStripMenuItem.Checked)
-                                writeLines = lines.Lines.Select().CopyToDataTable();
+                                writeLines = matches.Lines.Select().CopyToDataTable();
                             else
-                                writeLines = lines.Lines.Select(" NAME ='" + nuc["NAME"] + "'").CopyToDataTable();
+                                writeLines = matches.Lines.Select(" NAME ='" + nuc["NAME"] + "'").CopyToDataTable();
                             break;
                         case WriteType.Matched:
-                            writeLines = lines.Lines.Select("MATCHED = True").CopyToDataTable();
+                            writeLines = matches.Lines.Select("MATCHED = True").CopyToDataTable();
                             break;
                         case WriteType.Selected:
                             //get the selected rows
@@ -300,7 +300,7 @@ namespace PeakMap
                                 return;
                             }
                             ////loop through the rows and add them to the array. 
-                            writeLines = lines.Lines.Clone();
+                            writeLines = matches.Lines.Clone();
                             for (int i = 0; i < matchedLinesGrid.SelectedRows.Count; i++)
                                 writeLines.ImportRow(((DataRowView)matchedLinesGrid.SelectedRows[i].DataBoundItem).Row);
                             writeLines.AcceptChanges();
@@ -311,19 +311,19 @@ namespace PeakMap
                                 //get the minimum yeild from the user
                                 if (selector.ShowDialog() == DialogResult.OK)
                                     if (showDaughtersToolStripMenuItem.Checked)
-                                        writeLines = lines.Lines.Select("YIELD >= " + selector.Yield.ToString()).CopyToDataTable();
+                                        writeLines = matches.Lines.Select("YIELD >= " + selector.Yield.ToString()).CopyToDataTable();
                                     else
-                                        writeLines = lines.Lines.Select("YIELD >= " + selector.Yield.ToString() + " AND NAME ='" + nuc["NAME"] + "'").CopyToDataTable();
+                                        writeLines = matches.Lines.Select("YIELD >= " + selector.Yield.ToString() + " AND NAME ='" + nuc["NAME"] + "'").CopyToDataTable();
                                 else
                                     return;
                             }
                             break;
                         default:
-                            writeLines = lines.Lines.Select().CopyToDataTable();
+                            writeLines = matches.Lines.Select().CopyToDataTable();
                             break;
                     }
                     //write the nuclides to the library
-                    libGen.WriteNuclide(nuc, writeLines);
+                    libGen.WriteNuclide(nuc, writeLines, CombineLinesCallBack);
                 }
 
                 //write the matched nuclide to the peaks grid
@@ -353,12 +353,12 @@ namespace PeakMap
                 //if we are in library mode just keep a running list of nuclides added
                 else
                 {
-                    DataRow addedNuc = lines.Peaks.NewRow();
+                    DataRow addedNuc = matches.Peaks.NewRow();
                     //don't add repat nuclides
-                    if (lines.Peaks.Select("MATCHNAME = '" + nuc["NAME"] + "'").Length > 0)
+                    if (matches.Peaks.Select("MATCHNAME = '" + nuc["NAME"] + "'").Length > 0)
                         return;
                     addedNuc["MATCHNAME"] = nuc["NAME"];
-                    lines.Peaks.Rows.Add(addedNuc);
+                    matches.Peaks.Rows.Add(addedNuc);
                 }
 
                 peaksGrid.Refresh();
@@ -369,6 +369,17 @@ namespace PeakMap
                 MessageBox.Show("There was an exeption while writing to the library:\n" + ex.Message, "Error while writing to library", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private bool? CombineLinesCallBack(string energies) 
+        {
+            DialogResult rlt = MessageBox.Show($"Lines of energies: {energies} keV are possibly unresovable, do you wish to combine them?", "Possible Unresolvable Lines", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (rlt == DialogResult.Cancel)
+                return null;
+            else if (rlt == DialogResult.OK)
+                return true;
+            else
+                return false;
         }
 
         /// <summary>
@@ -499,12 +510,12 @@ namespace PeakMap
             {
                 foreach (DataRow nuc in libGen.NuclideLibrary.Tables["MATCHEDNUCLIDES"].Rows)
                 {
-                    DataRow addedNuc = lines.Peaks.NewRow();
+                    DataRow addedNuc = matches.Peaks.NewRow();
                     //don't add repat nuclides
-                    if (lines.Peaks.Select("MATCHNAME = '" + nuc["NAME"] + "'").Length > 0)
+                    if (matches.Peaks.Select("MATCHNAME = '" + nuc["NAME"] + "'").Length > 0)
                         return;
                     addedNuc["MATCHNAME"] = nuc["NAME"];
-                    lines.Peaks.Rows.Add(addedNuc);
+                    matches.Peaks.Rows.Add(addedNuc);
                 }
 
             }
@@ -556,7 +567,7 @@ namespace PeakMap
             {
                 case WindowMode.library:
                     //clean up
-                    lines.ClearMatches();
+                    matches.ClearMatches();
                     //loop through the pasted array and add them to the matchedNuclides Grid
                     for (int i = 0; i < splitText.Length; i++)
                     {
@@ -566,7 +577,7 @@ namespace PeakMap
 
                         try
                         {
-                            lines.SetNuclides(splitText[i], lines.Matches.Rows.Count);
+                            matches.SetNuclides(splitText[i], matches.Nuclides.Rows.Count);
                         }
                         catch (Exception ex)
                         {
@@ -587,9 +598,9 @@ namespace PeakMap
                         //only add doubles
                         if (double.TryParse(splitText[i], out double energy))
                         {
-                            DataRow row = lines.Peaks.NewRow();
+                            DataRow row = matches.Peaks.NewRow();
                             row["ENERGY"] = energy;
-                            lines.Peaks.Rows.Add(row);
+                            matches.Peaks.Rows.Add(row);
                         }
                         else
                         {
@@ -625,7 +636,7 @@ namespace PeakMap
         {
             if (specdata != null)
                 specdata.CloseFile();
-            lines.Clear();
+            matches.Clear();
             //refresh the data grid views
             peaksGrid.Refresh();
             matchedNuclidesGrid.Refresh();
@@ -732,7 +743,7 @@ namespace PeakMap
         private async void Form1_DragDrop(object sender, DragEventArgs e)
         {
             //only allow one type of spec data
-            lines.Clear();
+            matches.Clear();
             this.peaksGrid.ReadOnly = true;
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             await GetSpecDataAsync(files[0]);
@@ -766,10 +777,10 @@ namespace PeakMap
                 return;
             if (peaksGrid.CurrentRow.Index != -1)
             {
-                if (lines != null)
+                if (matches != null)
                 {
                     if (mode == WindowMode.matching)
-                        lines.Lines.Clear();
+                        matches.Lines.Clear();
                     matchedLinesGrid.Refresh();
                 }
 
@@ -784,7 +795,7 @@ namespace PeakMap
                         matchedLinesGrid.Refresh();
                         string nucName = peaksGrid.CurrentRow.Cells["MATCHNAME"].Value.ToString();
                         //get the exact name nuclides
-                        lines.SetNuclides(nucName, lines.Matches.Rows.Count, true);
+                        matches.SetNuclides(nucName, matches.Nuclides.Rows.Count, true);
                         if(matchedNuclidesGrid.Rows.Count > 1) { 
                         //    int index = matchedNuclidesGrid.Rows.Cast<DataGridViewRow>().Where(r => r.Cells["NAME"].Value.ToString().Equals(nucName)).First().Index;
                         //    matchedNuclidesGrid.Rows[index].Selected = true;
@@ -813,9 +824,9 @@ namespace PeakMap
                 if (specdata == null)
                     await GetSpecDataAsync("User");
 
-                if (lines != null)
+                if (matches != null)
                 {
-                    lines.Lines.Clear();
+                    matches.Lines.Clear();
                     matchedLinesGrid.Refresh();
                 }
                 if (peaksGrid["ENERGY", e.RowIndex].Value == null)
@@ -1054,7 +1065,7 @@ namespace PeakMap
         /// <param name="e"></param>
         private void LineMatchSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (Settings settingDialog = new Settings(lines))
+            using (Settings settingDialog = new Settings(matches))
             {
                 settingDialog.ShowDialog();
             }
@@ -1098,7 +1109,7 @@ namespace PeakMap
         {
             if (mode == WindowMode.matching)
                 return;
-            lines.Clear();
+            matches.Clear();
             mode = WindowMode.matching;
             UncheckOtherToolStripMenuItems((ToolStripMenuItem)sender);
             modeStatusLabel.Text = "Mode: Matching";
@@ -1217,11 +1228,11 @@ namespace PeakMap
                     return;
 
                 //clear the previous matches
-                lines.ClearMatches();
+                matches.ClearMatches();
                 //Find the nuclides assoicated with the entry;
                 try
                 {
-                    lines.SetNuclides(nuc);
+                    matches.SetNuclides(nuc);
                 }
                 catch (Exception ex)
                 {
@@ -1270,7 +1281,7 @@ namespace PeakMap
         /// <param name="e"></param>
         private void ClearMatchesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DataRow[] rows = lines.Peaks.Select("MATCHNAME IS NOT NULL");
+            DataRow[] rows = matches.Peaks.Select("MATCHNAME IS NOT NULL");
             foreach (DataRow row in rows)
             {
                 //lines.ClearMatches();

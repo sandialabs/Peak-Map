@@ -43,6 +43,8 @@ namespace PeakMap
         protected DataSet lib;
         [Browsable(false)]
         public DataSet NuclideLibrary { get { return lib; } }
+
+        public delegate bool? CombineLinesCallBack(string energies);
     
 
         protected bool performLineComb;
@@ -102,7 +104,7 @@ namespace PeakMap
         /// </summary>
         /// <param name="writeLines">DataTable of lines to check</param>
         /// <param name="resolutionLimt">The lower FWHM where lines are resolved</param>
-        protected void MergeUnresolvableLines(DataTable writeLines, double resLimit = 0.5)
+        protected void MergeUnresolvableLines(DataTable writeLines, CombineLinesCallBack combineLinesCallBack,  double resLimit = 0.5)
         {
             resolutionLimt = resLimit - resolutionLimt < 1e-6 ? ResolutionLimit : resLimit;
             int j = 0;
@@ -128,12 +130,12 @@ namespace PeakMap
                 if (messageDisplay == null)
                     messageDisplay = new MessageDisplay();
 
-                DialogResult result = messageDisplay.ShowMessage("Lines of energies: " + energies + " keV are possibly unresovable, do you wish to combine them?", "Possible Unresolvable Lines", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                bool? result = combineLinesCallBack(energies.ToString());
 
                 //DialogResult result = MessageBox.Show("Lines of energies: " + energies + " keV are possibly unresovable, do you wish to combine them?", "Possible Unresolvable Lines", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Cancel)
+                if (result == false)
                     return;
-                else if (result == DialogResult.No)
+                else if (result == null)
                 {
                     j++;
                     continue;
@@ -256,12 +258,12 @@ namespace PeakMap
         /// </summary>
         /// <param name="nuclide"></param>
         /// <param name="writeLines"></param>
-        public void WriteNuclide(DataRow nuclide, DataTable writeLines) 
+        public void WriteNuclide(DataRow nuclide, DataTable writeLines, CombineLinesCallBack combineLinesCallBack) 
         {
             if ((string)nuclide["NAME"] == "D.E." || (string)nuclide["NAME"] == "S.E." || ((string)nuclide["NAME"]).Contains("Sum"))
                 return;
             //check for nuclide duplicates
-            IEnumerable<DataRow> nucDup = lib.Tables["MATCHEDNUCLIDES"].AsEnumerable().Where(row => nuclide["NAME"].ToString().Equals(row.Field<string>("NAME")));
+            IEnumerable<DataRow> nucDup = lib.Tables["MATCHEDNUCLIDES"].AsEnumerable().Where(row => nuclide["NAME"].ToString().Trim().Equals(row.Field<string>("NAME").Trim())) ;
             if (nucDup.Count() > 0)
             {
                 //check for line duplicates
@@ -286,7 +288,7 @@ namespace PeakMap
             else
             {
                 if (performLineComb)
-                    MergeUnresolvableLines(writeLines);
+                    MergeUnresolvableLines(writeLines, combineLinesCallBack);
 
                 DataRow nuc = lib.Tables["MATCHEDNUCLIDES"].NewRow();
                 nuc.ItemArray = nuclide.ItemArray;

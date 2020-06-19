@@ -1,0 +1,123 @@
+﻿<!--/********************************************************************************************************************************************************************************************************************************************************                          
+NOTICE:
+
+For five (5) years from 1/21/2020 the United States Government is granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, and perform 
+publicly and display publicly, by or on behalf of the Government. There is provision for the possible extension of the term of this license. Subsequent to that period or any extension granted, the United States Government is granted for itself
+and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, distribute copies to the public, perform publicly and display publicly, and to permit others to do so. The
+specific term of the license can be identified by inquiry made to National Technology and Engineering Solutions of Sandia, LLC or DOE.
+ 
+NEITHER THE UNITED STATES GOVERNMENT, NOR THE UNITED STATES DEPARTMENT OF ENERGY, NOR NATIONAL TECHNOLOGY AND ENGINEERING SOLUTIONS OF SANDIA, LLC, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY, 
+EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY INFORMATION, APPARATUS, PRODUCT, OR PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD
+NOT INFRINGE PRIVATELY OWNED RIGHTS.
+ 
+Any licensee of this software has the obligation and responsibility to abide by the applicable export control laws, regulations, and general prohibitions relating to the export of technical data. Failure to obtain an export control license or other 
+authority from the Government may result in criminal liability under U.S. laws.
+ 
+                                             (End of Notice)
+*********************************************************************************************************************************************************************************************************************************************************/-->
+
+
+<Window x:Class="PeakMapWPF.Views.SpectralSettingsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PeakMapWPF.Views" xmlns:u="clr-namespace:PeakMapWPF"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="800" >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,5" VerticalAlignment="Top" 
+                  ItemsSource="{Binding EfficiencyModels}" 
+                  SelectedItem="{Binding CurrentModel}" 
+                  IsSynchronizedWithCurrentItem="True" Padding="12"/>
+        <StackPanel  Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,5" VerticalAlignment="Top">
+            <TextBlock Text="{Binding Order}"   Padding="12" Margin="5,0"/>
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Right"  HorizontalAlignment="Right">
+                <Button Content="⏶" HorizontalContentAlignment="Center" CommandParameter="up" Command="{Binding UpDownCommand}"/>
+                <Button Content="⏷" HorizontalContentAlignment="Center" CommandParameter="down" Command="{Binding UpDownCommand}"/>
+            </StackPanel>
+        </StackPanel>
+        <TextBlock Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="5,0,0,5" TextAlignment="Center"
+               Text="{Binding EfficiencyEquation}" TextWrapping="WrapWithOverflow"/>
+
+        <DataGrid Grid.Column="1" Grid.Row="2"  Grid.ColumnSpan="2" Margin="0,0,5,0"
+                  ItemsSource="{Binding Path=EfficiencyMeasurements, Mode=TwoWay}"
+                  AutoGenerateColumns="False" HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Energy" Binding="{Binding Energy,Mode=TwoWay, StringFormat=f2}"/>
+                <DataGridTextColumn Header="Efficiency" Binding="{Binding Efficiency,Mode=TwoWay, StringFormat=e4}"/>
+                <DataGridTextColumn Header="Uncertainty" Binding="{Binding EfficiencyUncertainty,Mode=TwoWay, StringFormat=e4}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Canvas Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2" Background="LightGray" Margin="5,5,0,0">
+            <u:DataPiping.DataPipes>
+                <u:DataPipeCollection>
+                    <u:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Path=ActualWidth}"
+                                            Target="{Binding Path=CanvasWidth, Mode=OneWayToSource}"/>
+                    <u:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Path=ActualHeight}"
+                                            Target="{Binding Path=CanvasHeight, Mode=OneWayToSource}"/>
+                </u:DataPipeCollection>
+            </u:DataPiping.DataPipes>
+            <Polyline Points="{Binding CurvePoints}" Stroke="Black" StrokeThickness="1" Panel.ZIndex="0"/>
+            <ItemsControl x:Name="LineItems" ItemsSource="{Binding LineItems}" Background="Transparent">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Canvas>
+                            <Line StrokeThickness="{Binding StrokeWeight}" 
+                                  Stroke="{Binding LineStroke}" 
+                                  StrokeDashArray="{Binding LineDashArray}"
+                                  X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}" />
+                        </Canvas>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl x:Name="RectangleItems" ItemsSource="{Binding RectangleItems}" Background="Transparent">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Canvas>
+                            <Rectangle StrokeThickness="{Binding StrokeWeight}" Stroke="Black" Width="{Binding Width}" Height="{Binding Height}">
+                                <Rectangle.RenderTransform>
+                                    <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                                </Rectangle.RenderTransform>
+                            </Rectangle>
+                        </Canvas>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <ItemsControl x:Name="TextItems" ItemsSource="{ Binding TextItems}" Background="Transparent">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Canvas>
+                            <Label Content="{Binding Text}" 
+                                   HorizontalContentAlignment="{Binding TextHorizontalAlignment}"
+                                   VerticalContentAlignment="{Binding TextVerticalAlignment}"
+                                   Height="{Binding Height}" Width="{Binding Width}">
+                                <Label.RenderTransform>
+                                    <TranslateTransform X="{Binding X}" Y="{Binding Y}"/>
+                                </Label.RenderTransform>
+                            </Label>
+                        </Canvas>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </Canvas>
+        <Button Grid.Column="4" Grid.Row="3"  IsDefault="True" Command="{Binding OkCommand}" Content="OK" Padding="30,6" Margin="5,10,0,0"/>
+    </Grid>
+</Window>

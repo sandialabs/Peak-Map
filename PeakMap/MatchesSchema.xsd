@@ -1,21 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
-NOTICE:
-
-For five (5) years from 1/21/2020 the United States Government is granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, and perform
-publicly and display publicly, by or on behalf of the Government. There is provision for the possible extension of the term of this license. Subsequent to that period or any extension granted, the United States Government is granted for itself
-and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, distribute copies to the public, perform publicly and display publicly, and to permit others to do so. The
-specific term of the license can be identified by inquiry made to National Technology and Engineering Solutions of Sandia, LLC or DOE.
-
-NEITHER THE UNITED STATES GOVERNMENT, NOR THE UNITED STATES DEPARTMENT OF ENERGY, NOR NATIONAL TECHNOLOGY AND ENGINEERING SOLUTIONS OF SANDIA, LLC, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY,
-EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY INFORMATION, APPARATUS, PRODUCT, OR PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD
-NOT INFRINGE PRIVATELY OWNED RIGHTS.
-
-Any licensee of this software has the obligation and responsibility to abide by the applicable export control laws, regulations, and general prohibitions relating to the export of technical data. Failure to obtain an export control license or other
-authority from the Government may result in criminal liability under U.S. laws.
-
-(End of Notice)
--->
 <xs:schema id="MatchedLibrary" targetNamespace="http://tempuri.org/ICPRLibrary.xsd" xmlns:mstns="http://tempuri.org/ICPRLibrary.xsd" xmlns="http://tempuri.org/ICPRLibrary.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
   <xs:annotation>
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
@@ -29,7 +12,7 @@ authority from the Government may result in criminal liability under U.S. laws.
   <xs:element name="MatchedLibrary" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="MatchedLibrary" msprop:Generator_UserDSName="MatchedLibrary">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="MATCHEDNUCLIDES" msprop:Generator_TableClassName="MATCHEDNUCLIDESDataTable" msprop:Generator_TableVarName="tableMATCHEDNUCLIDES" msprop:Generator_TablePropName="MATCHEDNUCLIDES" msprop:Generator_RowDeletingName="MATCHEDNUCLIDESRowDeleting" msprop:Generator_RowChangingName="MATCHEDNUCLIDESRowChanging" msprop:Generator_RowEvHandlerName="MATCHEDNUCLIDESRowChangeEventHandler" msprop:Generator_RowDeletedName="MATCHEDNUCLIDESRowDeleted" msprop:Generator_UserTableName="MATCHEDNUCLIDES" msprop:Generator_RowChangedName="MATCHEDNUCLIDESRowChanged" msprop:Generator_RowEvArgName="MATCHEDNUCLIDESRowChangeEvent" msprop:Generator_RowClassName="MATCHEDNUCLIDESRow">
+        <xs:element name="MATCHEDNUCLIDES" msprop:Generator_TableClassName="MATCHEDNUCLIDESDataTable" msprop:Generator_TableVarName="tableMATCHEDNUCLIDES" msprop:Generator_RowChangedName="MATCHEDNUCLIDESRowChanged" msprop:Generator_TablePropName="MATCHEDNUCLIDES" msprop:Generator_RowDeletingName="MATCHEDNUCLIDESRowDeleting" msprop:Generator_RowChangingName="MATCHEDNUCLIDESRowChanging" msprop:Generator_RowEvHandlerName="MATCHEDNUCLIDESRowChangeEventHandler" msprop:Generator_RowDeletedName="MATCHEDNUCLIDESRowDeleted" msprop:Generator_RowClassName="MATCHEDNUCLIDESRow" msprop:Generator_UserTableName="MATCHEDNUCLIDES" msprop:Generator_RowEvArgName="MATCHEDNUCLIDESRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID" msdata:AutoIncrementSeed="1" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:short" default="0" />
@@ -46,7 +29,7 @@ authority from the Government may result in criminal liability under U.S. laws.
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="MATCHEDLINES" msprop:Generator_TableClassName="MATCHEDLINESDataTable" msprop:Generator_TableVarName="tableMATCHEDLINES" msprop:Generator_TablePropName="MATCHEDLINES" msprop:Generator_RowDeletingName="MATCHEDLINESRowDeleting" msprop:Generator_RowChangingName="MATCHEDLINESRowChanging" msprop:Generator_RowEvHandlerName="MATCHEDLINESRowChangeEventHandler" msprop:Generator_RowDeletedName="MATCHEDLINESRowDeleted" msprop:Generator_UserTableName="MATCHEDLINES" msprop:Generator_RowChangedName="MATCHEDLINESRowChanged" msprop:Generator_RowEvArgName="MATCHEDLINESRowChangeEvent" msprop:Generator_RowClassName="MATCHEDLINESRow">
+        <xs:element name="MATCHEDLINES" msprop:Generator_TableClassName="MATCHEDLINESDataTable" msprop:Generator_TableVarName="tableMATCHEDLINES" msprop:Generator_RowChangedName="MATCHEDLINESRowChanged" msprop:Generator_TablePropName="MATCHEDLINES" msprop:Generator_RowDeletingName="MATCHEDLINESRowDeleting" msprop:Generator_RowChangingName="MATCHEDLINESRowChanging" msprop:Generator_RowEvHandlerName="MATCHEDLINESRowChangeEventHandler" msprop:Generator_RowDeletedName="MATCHEDLINESRowDeleted" msprop:Generator_RowClassName="MATCHEDLINESRow" msprop:Generator_UserTableName="MATCHEDLINES" msprop:Generator_RowEvArgName="MATCHEDLINESRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="NAME" msprop:Generator_ColumnVarNameInTable="columnNAME" msprop:Generator_ColumnPropNameInRow="NAME" msprop:Generator_ColumnPropNameInTable="NAMEColumn" msprop:Generator_UserColumnName="NAME" type="xs:string" />
@@ -67,7 +50,7 @@ authority from the Government may result in criminal liability under U.S. laws.
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="PEAKS" msprop:Generator_TableClassName="PEAKSDataTable" msprop:Generator_TableVarName="tablePEAKS" msprop:Generator_TablePropName="PEAKS" msprop:Generator_RowDeletingName="PEAKSRowDeleting" msprop:Generator_RowChangingName="PEAKSRowChanging" msprop:Generator_RowEvHandlerName="PEAKSRowChangeEventHandler" msprop:Generator_RowDeletedName="PEAKSRowDeleted" msprop:Generator_UserTableName="PEAKS" msprop:Generator_RowChangedName="PEAKSRowChanged" msprop:Generator_RowEvArgName="PEAKSRowChangeEvent" msprop:Generator_RowClassName="PEAKSRow">
+        <xs:element name="PEAKS" msprop:Generator_TableClassName="PEAKSDataTable" msprop:Generator_TableVarName="tablePEAKS" msprop:Generator_RowChangedName="PEAKSRowChanged" msprop:Generator_TablePropName="PEAKS" msprop:Generator_RowDeletingName="PEAKSRowDeleting" msprop:Generator_RowChangingName="PEAKSRowChanging" msprop:Generator_RowEvHandlerName="PEAKSRowChangeEventHandler" msprop:Generator_RowDeletedName="PEAKSRowDeleted" msprop:Generator_RowClassName="PEAKSRow" msprop:Generator_UserTableName="PEAKS" msprop:Generator_RowEvArgName="PEAKSRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID" msdata:AutoIncrement="true" msprop:Generator_ColumnVarNameInTable="columnID" msprop:Generator_ColumnPropNameInRow="ID" msprop:Generator_ColumnPropNameInTable="IDColumn" msprop:Generator_UserColumnName="ID" type="xs:int" />
@@ -78,6 +61,7 @@ authority from the Government may result in criminal liability under U.S. laws.
               <xs:element name="MATCHNAME" msprop:Generator_ColumnVarNameInTable="columnMATCHNAME" msprop:Generator_ColumnPropNameInRow="MATCHNAME" msprop:Generator_ColumnPropNameInTable="MATCHNAMEColumn" msprop:Generator_UserColumnName="MATCHNAME" type="xs:string" minOccurs="0" />
               <xs:element name="CRITLEVEL" msprop:Generator_ColumnVarNameInTable="columnCRITLEVEL" msprop:Generator_ColumnPropNameInRow="CRITLEVEL" msprop:Generator_ColumnPropNameInTable="CRITLEVELColumn" msprop:Generator_UserColumnName="CRITLEVEL" type="xs:double" default="0" minOccurs="0" />
               <xs:element name="CONTINUUM" msprop:Generator_ColumnVarNameInTable="columnCONTINUUM" msprop:Generator_ColumnPropNameInRow="CONTINUUM" msprop:Generator_ColumnPropNameInTable="CONTINUUMColumn" msprop:Generator_UserColumnName="CONTINUUM" type="xs:double" default="0" minOccurs="0" />
+              <xs:element name="TENTATIVEMATCH" msprop:Generator_ColumnVarNameInTable="columnTENTATIVEMATCH" msprop:Generator_ColumnPropNameInRow="TENTATIVEMATCH" msprop:Generator_ColumnPropNameInTable="TENTATIVEMATCHColumn" msprop:Generator_UserColumnName="TENTATIVEMATCH" type="xs:boolean" default="false" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -99,8 +83,8 @@ authority from the Government may result in criminal liability under U.S. laws.
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="MATCHEDNUCLIDES_ASSOCLINES" msdata:parent="MATCHEDNUCLIDES" msdata:child="MATCHEDLINES" msdata:parentkey="NAME" msdata:childkey="NAME" msprop:Generator_UserChildTable="MATCHEDLINES" msprop:Generator_ChildPropName="GetMATCHEDLINESRows" msprop:Generator_UserRelationName="MATCHEDNUCLIDES_ASSOCLINES" msprop:Generator_ParentPropName="MATCHEDNUCLIDESRow" msprop:Generator_RelationVarName="relationMATCHEDNUCLIDES_ASSOCLINES" msprop:Generator_UserParentTable="MATCHEDNUCLIDES" />
-      <msdata:Relationship name="PEAKS_MATCHEDNUCLIDES" msdata:parent="PEAKS" msdata:child="MATCHEDNUCLIDES" msdata:parentkey="MATCHNAME" msdata:childkey="NAME" msprop:Generator_UserChildTable="MATCHEDNUCLIDES" msprop:Generator_ChildPropName="GetMATCHEDNUCLIDESRows" msprop:Generator_UserRelationName="PEAKS_MATCHEDNUCLIDES" msprop:Generator_ParentPropName="PEAKSRow" msprop:Generator_RelationVarName="relationPEAKS_MATCHEDNUCLIDES" msprop:Generator_UserParentTable="PEAKS" />
+      <msdata:Relationship name="MATCHEDNUCLIDES_ASSOCLINES" msdata:parent="MATCHEDNUCLIDES" msdata:child="MATCHEDLINES" msdata:parentkey="NAME" msdata:childkey="NAME" msprop:Generator_UserChildTable="MATCHEDLINES" msprop:Generator_ChildPropName="GetMATCHEDLINESRows" msprop:Generator_UserRelationName="MATCHEDNUCLIDES_ASSOCLINES" msprop:Generator_RelationVarName="relationMATCHEDNUCLIDES_ASSOCLINES" msprop:Generator_UserParentTable="MATCHEDNUCLIDES" msprop:Generator_ParentPropName="MATCHEDNUCLIDESRow" />
+      <msdata:Relationship name="PEAKS_MATCHEDNUCLIDES" msdata:parent="PEAKS" msdata:child="MATCHEDNUCLIDES" msdata:parentkey="MATCHNAME" msdata:childkey="NAME" msprop:Generator_UserChildTable="MATCHEDNUCLIDES" msprop:Generator_ChildPropName="GetMATCHEDNUCLIDESRows" msprop:Generator_UserRelationName="PEAKS_MATCHEDNUCLIDES" msprop:Generator_RelationVarName="relationPEAKS_MATCHEDNUCLIDES" msprop:Generator_UserParentTable="PEAKS" msprop:Generator_ParentPropName="PEAKSRow" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

@@ -15,6 +15,7 @@ authority from the Government may result in criminal liability under U.S. laws.
  
                                              (End of Notice)
 *********************************************************************************************************************************************************************************************************************************************************/
+using Accord;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -425,6 +426,9 @@ namespace PeakMap
         {
             switch (originalUnit)
             {
+                case "u":
+                    halfLife *= 1.15714E-11;
+                    break;
                 case "us":
                     halfLife *= 1.15714E-11;
                     break;
@@ -543,8 +547,10 @@ namespace PeakMap
         {
             string output;
             //get the atomic number and isomeric state (m,n,m2,etc.)
-            string atmNum = ""; string isoState = ""; string nucName; string hyphen; string numState = "";
-            input = input.ToLower();
+            string atmNum = ""; string isoState = ""; string nucName; string hyphen; string numState = "";char chain = '+';
+            //see if it is a chain
+            bool isChain = input.Contains(chain);
+            input = input.ToLower().Trim(chain);
             //Match numStateMatch = new Regex(@"([\d]{1,3}[m,n]{1}[\d])|([0-9]{1,3}[m,n]{1})[^A-Za-z]|(?![A-Za-z])[\d]+.").Match(input);
             Match numStateMatch = new Regex(@"(?![A-Za-z])[\d]+[m, n]?").Match(input);
             if (numStateMatch.Success)
@@ -568,7 +574,7 @@ namespace PeakMap
 
             hyphen = (String.IsNullOrEmpty(nucName) || String.IsNullOrEmpty(numState)) ? "" : "-";
 
-            output = nucName.ToUpper() + hyphen + atmNum + isoState.ToLower();
+            output = nucName.ToUpper() + hyphen + atmNum + isoState.ToLower() + (isChain ? chain.ToString() : "");
             //Match nuc = new Regex().Matche(input);
             return output;
         }

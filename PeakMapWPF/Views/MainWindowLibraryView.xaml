@@ -1,0 +1,217 @@
+﻿<Window x:Class="PeakMapWPF.Views.MainWindowLibaryView"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PeakMapWPF"
+        xmlns:commands="clr-namespace:PeakMapWPF.Commands"
+        xmlns:properties="clr-namespace:PeakMapWPF.Properties" xmlns:views="clr-namespace:PeakMapWPF.Views"
+        mc:Ignorable="d" FontFamily="Segoe UI" 
+        Title="Peak Map" Height="500" Width="500" x:Name="MainWindowView"
+        Icon="icon.ico" AllowDrop="True" DragEnter="Window_DragEnter"
+        local:FileDragDropService.FileDragDropTarget="{Binding}" local:FileDragDropService.IsFileDragDropEnabled="True">
+    <Window.Resources>
+        <DiscreteObjectKeyFrame x:Key="FlagKey" Value="{Binding ColumnVisibility}" />
+        <Style x:Key="DataGridStyle" TargetType="{x:Type DataGrid}">
+            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource DataGridHeaderStyle}"/>
+            <Setter Property="RowStyle" Value="{DynamicResource HighlightedRow}"/>
+            <Setter Property="CellStyle" Value="{DynamicResource DataGridCellStyle}"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+        </Style>
+        <Style x:Key="DataGridHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="DataGridCellStyle" TargetType="{x:Type DataGridCell}">
+            <Setter Property="HorizontalContentAlignment" Value="Right"/>
+            <Setter Property="Width" Value="auto"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="1.2*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4">
+            <MenuItem Header="_File">
+                <MenuItem x:Name="NewLibMenuItem" Header="_New Library..." 
+                          Command="{Binding FileMenuCommand}" CommandParameter="{Binding ElementName=NewLibMenuItem, Path=Header}"
+                          AutomationProperties.HelpText="Create a new Library" 
+                          InputGestureText="CTRL+N"/>
+                <MenuItem x:Name="OpenLibMenuItem" Header="_Open Library..." 
+                           Command="{Binding FileMenuCommand}" CommandParameter="{Binding ElementName=OpenLibMenuItem, Path=Header}"
+                          AutomationProperties.HelpText="Open existing Spectra" 
+                          InputGestureText="CTRL+O"/>
+                <MenuItem x:Name="SaveLibMenuItem" Header="_Save Library" 
+                          Command="{Binding FileMenuCommand}" CommandParameter="{Binding ElementName=SaveLibMenuItem, Path=Header}"
+                          AutomationProperties.HelpText="save the working library" 
+                          InputGestureText="CTRL+S"/>
+                <MenuItem x:Name="SaveAsLibMenuItem" Header="Save Library _As..." 
+                          Command="{Binding FileMenuCommand}" CommandParameter="{Binding ElementName=SaveAsLibMenuItem, Path=Header}"
+                          AutomationProperties.HelpText="Save the working library as"/>
+                <Separator/>
+                <MenuItem x:Name="ExitLibMenuItem" Header="_Exit" 
+                          Command="{Binding ExitCommand}" CommandParameter="{Binding ElementName=MainWindowView}"
+                          AutomationProperties.HelpText="Exit the application" 
+                          InputGestureText="ALT+F4"/>
+            </MenuItem>
+            <MenuItem Header="_Lines">
+                <MenuItem x:Name="WriteSelMenuItem" Header="Write _Selected" 
+                          Command="{Binding LinesMenuCommand}" CommandParameter="{Binding ElementName=WriteSelMenuItem, Path=Header}"
+                          IsCheckable="True" IsChecked="{Binding IsWriteSelChecked}"
+                          AutomationProperties.HelpText="Write slected lines" 
+                          InputGestureText="CTRL+H"/>
+                <MenuItem x:Name="WriteAllMenuItem" Header="Write _All" 
+                          Command="{Binding LinesMenuCommand}" CommandParameter="{Binding ElementName=WriteAllMenuItem, Path=Header}"
+                          IsCheckable="True" IsChecked="{Binding IsWriteAllChecked}"
+                          AutomationProperties.HelpText="Write all displayed lines" 
+                          InputGestureText="CTRL+A"/>
+                <Separator/>
+                <MenuItem x:Name="WriteMenuItem" Header="_Write" 
+                          Command="{Binding LinesMenuCommand}" CommandParameter="{Binding ElementName=WriteAllMenuItem, Path=Header}"
+                          AutomationProperties.HelpText="Write via the selected method" 
+                          InputGestureText="CTRL+INS"/>
+            </MenuItem>
+            <MenuItem Header="_Settings">
+                <MenuItem x:Name="MatchingSettingsMenuItem" Header="_Matching..."  
+                          Command="{Binding SettingsMenuCommand}" CommandParameter="{Binding ElementName=MatchingSettingsMenuItem, Path=Header}"/>
+                <MenuItem x:Name="LibrarySettingsMenuItem" Header="_Library..." 
+                           Command="{Binding SettingsMenuCommand}" CommandParameter="{Binding ElementName=LibrarySettingsMenuItem, Path=Header}"/>
+                <Separator/>
+                <MenuItem Header="Mo_de">
+                    <MenuItem x:Name="MatchingModeMenuItem" Header="_Matching" 
+                              Command="{Binding SettingsMenuCommand}" CommandParameter="matching mode"
+                              AutomationProperties.HelpText="Change to matching mode" 
+                              InputGestureText="F5"/>
+
+                    <MenuItem x:Name="LibraryModeMenuItem" Header="_Library" 
+                               Command="{Binding SettingsMenuCommand}" CommandParameter="library mode"
+                              AutomationProperties.HelpText="Change to library mode" 
+                              InputGestureText="F6"/>
+                </MenuItem>
+            </MenuItem>
+            <!--<MenuItem Header="_Advanced">
+                <MenuItem x:Name="RebuildDBMenuItem" Header="_Rebuild Library Database..." 
+                          Command="{x:Static commands:PeakMapCommands.RebuildDBCmd}"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem x:Name="HelpMenuItem" Header="_About" 
+                          Command="{x:Static commands:PeakMapCommands.AboutCmd}"/>
+            </MenuItem>-->
+        </Menu>
+
+        <DataGrid x:Name="LibraryGrid" Grid.Column="1" Grid.Row="3" Grid.RowSpan="5" Margin="0,0,5,0" 
+            ItemsSource="{Binding Path=LibraryNuclides}"
+            AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}"
+            SelectedItem="{Binding Path=SelectedLibrayNuclide, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}" 
+            IsReadOnly="{Binding IsInputUser}" SelectionMode="Single" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="No." Binding="{Binding Path=ID, StringFormat=F0}" MinWidth="40"/>
+                <DataGridTextColumn Header="Id"  Width="*" Binding="{Binding Path=NAME}"/>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu ItemsSource="{Binding SelectedLibrayNuclides}">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command" Value="{Binding Action}"/>
+                            <Setter Property="CommandParameter" Value="{Binding Name}"/>
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <DockPanel Grid.Row="3" Grid.Column="2">
+            <TextBlock Text="Search for Nuclides" Margin="5,0,0,2"/>
+            <TextBox Text="{Binding SearchNuclide,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged}" Margin="5,0,0,2"/>
+        </DockPanel>
+                <DataGrid x:Name="MatchedNuclidesGrid" Grid.Row="4" Grid.Column="2" Margin="5,0,0,2" IsReadOnly="True"
+                  ItemsSource="{Binding Path=Nuclides}" 
+                  SelectedItem="{Binding Path=SelectedNuclide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, TargetNullValue={x:Static CollectionView.NewItemPlaceholder}}" 
+                  AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}">
+                    <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Path=NAME}" Width="1.8*"/>
+                    <DataGridTextColumn Header="Half-Life" Binding="{Binding Path=HALF_LIFE,StringFormat=F2}" Width="2*"/>
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Path=HALF_LIFE_UNIT}" Width="*"/>
+                    </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Orange" Opacity="50"/>
+                    </Style.Resources>
+                </Style>
+            </DataGrid.RowStyle>
+                </DataGrid>
+                <Expander x:Name="LineFilterExp" Grid.Row="6" Grid.Column="2" Header="Line Filters" Margin="5,0,0,5">
+            <WrapPanel Orientation="Horizontal">
+                <CheckBox x:Name="DaughterCheckBox" IsChecked="{Binding DaughtersFilter, Mode=TwoWay}" Content="Daughter Lines" Margin="10"/>
+                <CheckBox x:Name="XRayCheckBox" IsChecked="{Binding GammaFilter, Mode=TwoWay}" Content="x-Rays" Margin="10" />
+                <CheckBox x:Name="γRayCheckBox" IsChecked="{Binding XRayFilter, Mode=TwoWay}" Content="γ-Rays" Margin="10"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Lower Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
+                    <TextBox x:Name="LEnergyCutoffText" Width="60" Margin="2.5,10,10,10" 
+                             Text="{Binding LowerEnergy, Mode=TwoWay}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Upper Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
+                    <TextBox x:Name="UEnergyCutoffText" Width="60" Margin="2.5,10,10,10"
+                             Text="{Binding UpperEnergy, Mode=TwoWay}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Lower Yield Cutoff (keV)" Margin="10,10,2.5,10"/>
+                    <TextBox x:Name="YieldCutoffText" Width="60" Margin="2.5,10,10,10"
+                             Text="{Binding LowerYield, Mode=TwoWay}"/>
+                </StackPanel>
+            </WrapPanel>
+        </Expander>
+        <views:CustomDataGrid x:Name="MatchedLinesGrid" Grid.Row="7" Grid.Column="2" Margin="5,0,0,0" IsReadOnly="True"
+                  ItemsSource="{Binding Lines}" SelectionMode="Extended"
+                              SelectedItem="{Binding SelectedLine}"
+                  SelectedItemsList="{Binding SelectedLines, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Energy" Binding="{Binding Path=ENERGY, StringFormat=F2}" Width=".9*"/>
+                <DataGridTextColumn Header="Yield (%)" Binding="{Binding Path=YIELD, StringFormat=F2}" Width=".9*"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Path=TYPE}" Width="*"/>
+                <DataGridTextColumn Header="Nuclide" Binding="{Binding Path=NAME}" Width=".9*"/>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Orange" Opacity="50"/>
+                    </Style.Resources>
+                </Style>
+            </DataGrid.RowStyle>
+        </views:CustomDataGrid>
+        <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2">
+            <TextBlock Text="{Binding Path=LibraryFile, Mode=OneWay, StringFormat='Library File: {0}'}" Margin="20,0,20,0"/>
+        </StackPanel>
+    </Grid>
+
+    <Window.InputBindings>
+        <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Open Input"/>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Close Input"/>
+        <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Open Library"/>
+        <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="New Library"/>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="save Library"/>
+
+        <KeyBinding Key="A" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write All"/>
+        <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write Matched"/>
+        <KeyBinding Key="H" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write Highlighted"/>
+        <KeyBinding Key="Insert" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write"/>
+
+    </Window.InputBindings>
+
+</Window>

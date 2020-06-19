@@ -524,7 +524,7 @@ namespace CAMInputOutput
 
 
                 string blkName = Enum.GetName(typeof(CAMBlock), secId);
-                Debug.WriteLine("secID: 0x{0:X} Sec: {1} at 0x{2:X} ", secId, blkName, loc);
+                //Debug.WriteLine("secID: 0x{0:X} Sec: {1} at 0x{2:X} ", secId, blkName, loc);
 
                 //Debug.WriteLine("Header Data");
                 //for (int j = 0; j < 17; j++)
@@ -537,29 +537,29 @@ namespace CAMInputOutput
                 //Debug.WriteLine("\t 0x04: {0:X}", BitConverter.ToUInt16(readData, (int)(loc + 0x04)));
                 //Debug.WriteLine("\t 0x0E: {0:X}", BitConverter.ToUInt16(readData, (int)(loc + 0x0E)));
                 //Debug.WriteLine("\t 0x22: {0:X}", BitConverter.ToUInt16(readData, (int)(loc + 0x22)));
-                Debug.WriteLine("secID: 0x{0,5:X} Sec: {1,6} at 0x{2,5:X} \n\t0x04\t 0x{3,5:X} \n\t0x06\t 0x{4,5:X} \n\t0x08\t 0x{5,5:X} " +
-                    "\n\t0x0E\t 0x{6,5:X} \n\t0x10\t 0x{7,5:X} \n\t0x012\t 0x{8,5:X} \n\t0x14\t 0x{9,5:X} \n\t0x16\t 0x{10,5:X} \n\t0x18\t 0x{11,5:X} \n\t0x1A\t 0x{12,5:X} \n\t0x1C\t 0x{13,5:X} " +
-                    "\n\t0x1E\t 0x{14,5:X} \n\t0x20\t 0x{15,5:X} \n\t0x22\t 0x{16,5:X}  \n\t0x24\t 0x{17,5:X} \n\t0x26\t 0x{18,5:X} \n\t0x28\t 0x{19,5:X} \n\t0x2A\t 0x{20,5:X} \n\t0x2C\t 0x{21,5:X} \n\t0x2E\t 0x{22,5:X}", secId, blkName, loc,
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x04)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x06)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x08)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x0E)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x10)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x12)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x14)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x16)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x18)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x1A)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x1C)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x1E)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x20)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x22)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x24)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x26)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x28)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x2A)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x2C)),
-                    BitConverter.ToUInt16(readData, (int)(loc + 0x2E)));
+                //Debug.WriteLine("secID: 0x{0,5:X} Sec: {1,6} at 0x{2,5:X} \n\t0x04\t 0x{3,5:X} \n\t0x06\t 0x{4,5:X} \n\t0x08\t 0x{5,5:X} " +
+                //    "\n\t0x0E\t 0x{6,5:X} \n\t0x10\t 0x{7,5:X} \n\t0x012\t 0x{8,5:X} \n\t0x14\t 0x{9,5:X} \n\t0x16\t 0x{10,5:X} \n\t0x18\t 0x{11,5:X} \n\t0x1A\t 0x{12,5:X} \n\t0x1C\t 0x{13,5:X} " +
+                //    "\n\t0x1E\t 0x{14,5:X} \n\t0x20\t 0x{15,5:X} \n\t0x22\t 0x{16,5:X}  \n\t0x24\t 0x{17,5:X} \n\t0x26\t 0x{18,5:X} \n\t0x28\t 0x{19,5:X} \n\t0x2A\t 0x{20,5:X} \n\t0x2C\t 0x{21,5:X} \n\t0x2E\t 0x{22,5:X}", secId, blkName, loc,
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x04)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x06)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x08)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x0E)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x10)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x12)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x14)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x16)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x18)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x1A)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x1C)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x1E)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x20)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x22)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x24)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x26)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x28)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x2A)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x2C)),
+                //    BitConverter.ToUInt16(readData, (int)(loc + 0x2E)));
 
             }
             return (Lookup<CAMBlock, UInt32>)blockInfo.ToLookup(p => p.Key, p => p.Value);

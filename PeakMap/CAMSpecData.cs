@@ -186,7 +186,7 @@ namespace PeakMap
             EfficiencyPoint[] effpts = await effCalTask;
 
             //assign the efficiency points
-            effMeas = new System.Collections.ObjectModel.ObservableCollection<EfficiencyMeasurement>();
+            effMeas = new ObservableEntityCollection<EfficiencyMeasurement>();
             for (int i =0; i< effpts.Length;i++ ) 
                 effMeas.Add( new EfficiencyMeasurement(effpts[i].Energy, effpts[i].Efficiency, effpts[i].EfficiencyUncertainty));
             effMeas.CollectionChanged += EffMeas_CollectionChanged;

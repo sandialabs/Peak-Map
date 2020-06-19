@@ -30,7 +30,7 @@ namespace PeakMap
         /// Load with Line mathc settings
         /// </summary>
         /// <param name="lineMatch"></param>
-        public Settings(LineMatch lineMatch)
+        public Settings(Matches lineMatch)
         {
             InitializeComponent();
             //propertyGrid.AutoScaleMode = AutoScaleMode.Font;

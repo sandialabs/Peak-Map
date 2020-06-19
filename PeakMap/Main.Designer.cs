@@ -493,7 +493,7 @@ namespace PeakMap
             // lineMatchSettingsToolStripMenuItem
             // 
             this.lineMatchSettingsToolStripMenuItem.Name = "lineMatchSettingsToolStripMenuItem";
-            this.lineMatchSettingsToolStripMenuItem.Size = new System.Drawing.Size(200, 34);
+            this.lineMatchSettingsToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.lineMatchSettingsToolStripMenuItem.Text = "&Matching...";
             this.lineMatchSettingsToolStripMenuItem.Click += new System.EventHandler(this.LineMatchSettingsToolStripMenuItem_Click);
             // 
@@ -501,7 +501,7 @@ namespace PeakMap
             // 
             this.spectralToolStripMenuItem.Enabled = false;
             this.spectralToolStripMenuItem.Name = "spectralToolStripMenuItem";
-            this.spectralToolStripMenuItem.Size = new System.Drawing.Size(200, 34);
+            this.spectralToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.spectralToolStripMenuItem.Text = "&Spectral...";
             this.spectralToolStripMenuItem.Click += new System.EventHandler(this.SpectralToolStripMenuItem_Click);
             // 
@@ -509,7 +509,7 @@ namespace PeakMap
             // 
             this.librarySettingsToolStripMenuItem.Enabled = false;
             this.librarySettingsToolStripMenuItem.Name = "librarySettingsToolStripMenuItem";
-            this.librarySettingsToolStripMenuItem.Size = new System.Drawing.Size(200, 34);
+            this.librarySettingsToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.librarySettingsToolStripMenuItem.Text = "&Library...";
             this.librarySettingsToolStripMenuItem.Click += new System.EventHandler(this.LibraryToolStripMenuItem_Click);
             // 
@@ -519,7 +519,7 @@ namespace PeakMap
             this.matchingToolStripMenuItem,
             this.librayOnlyToolStripMenuItem});
             this.modeToolStripMenuItem.Name = "modeToolStripMenuItem";
-            this.modeToolStripMenuItem.Size = new System.Drawing.Size(200, 34);
+            this.modeToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.modeToolStripMenuItem.Text = "&Mode";
             // 
             // matchingToolStripMenuItem
@@ -569,7 +569,7 @@ namespace PeakMap
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(195, 34);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(270, 34);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
             // 

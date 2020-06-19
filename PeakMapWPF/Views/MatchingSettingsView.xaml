@@ -1,0 +1,94 @@
+﻿<!--/********************************************************************************************************************************************************************************************************************************************************                          
+NOTICE:
+
+For five (5) years from 1/21/2020 the United States Government is granted for itself and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, and perform 
+publicly and display publicly, by or on behalf of the Government. There is provision for the possible extension of the term of this license. Subsequent to that period or any extension granted, the United States Government is granted for itself
+and others acting on its behalf a paid-up, nonexclusive, irrevocable worldwide license in this data to reproduce, prepare derivative works, distribute copies to the public, perform publicly and display publicly, and to permit others to do so. The
+specific term of the license can be identified by inquiry made to National Technology and Engineering Solutions of Sandia, LLC or DOE.
+ 
+NEITHER THE UNITED STATES GOVERNMENT, NOR THE UNITED STATES DEPARTMENT OF ENERGY, NOR NATIONAL TECHNOLOGY AND ENGINEERING SOLUTIONS OF SANDIA, LLC, NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY, 
+EXPRESS OR IMPLIED, OR ASSUMES ANY LEGAL RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF ANY INFORMATION, APPARATUS, PRODUCT, OR PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD
+NOT INFRINGE PRIVATELY OWNED RIGHTS.
+ 
+Any licensee of this software has the obligation and responsibility to abide by the applicable export control laws, regulations, and general prohibitions relating to the export of technical data. Failure to obtain an export control license or other 
+authority from the Government may result in criminal liability under U.S. laws.
+ 
+                                             (End of Notice)
+*********************************************************************************************************************************************************************************************************************************************************/-->
+
+
+<Window x:Class="PeakMapWPF.Views.MatchingSettingsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PeakMapWPF.Views"
+        mc:Ignorable="d"
+        Title="MatchingSettingsView" Height="320" Width="350">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+    <TreeView  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+        <TreeViewItem Header="Algorithm Settings" IsExpanded="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" MinWidth="180"/>
+                    <ColumnDefinition Width="*" MinWidth="60"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Half-Life Constant" Margin="5,2" 
+                           ToolTip="Turn on or off the half life scoring."/>
+                    <CheckBox Grid.Row="0" Grid.Column="1" Margin="0,2" HorizontalAlignment="Center" IsChecked="{Binding EnableHalfLifeScore}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Half-Life Constant" Margin="5,2"
+                           ToolTip="The constant to adjust the severity of the half-life penalty"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding HalfLifeConstant}"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0"  Text="Line Deveation Constant" Margin="5,2"
+                           ToolTip="The constant to adjust the severity of the deviation of peak centroid to line energy penalty"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding LineDeviationConstant}"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0"  Text="Sum Peak Penalty" Margin="5,2"
+                           ToolTip="The penalty assigned to possible sum peaks for not sum peaks not being likely"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding SumPeakPenalty}"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0"  Text="Unmatched Line Constant" Margin="5,2"
+                           ToolTip="The constant to adjust the severity of the Line Match score"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding UnmatchedLineConstant}"/>
+            </Grid>
+        </TreeViewItem>
+        <TreeViewItem Header="Limit Settings" IsExpanded="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" MinWidth="180"/>
+                    <ColumnDefinition Width="*" MinWidth="60"/>
+                </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Parent/Daughter Half-Life Ratio" Margin="5,2"
+                           ToolTip="The ratio of the parent's half-life to the daughter's to serve as indication if the pair are in equilibrium and will be added as a pair or a single nuclide"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Margin="0,2" HorizontalContentAlignment="Center" Text="{Binding ParentDaughterRatio}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Score Limit" Margin="5,2"
+                           ToolTip="The cutoff for lowest score to be included in the nuclides grid"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding ScoreLimit}"/>
+            </Grid>
+        </TreeViewItem>
+    </TreeView>
+        <Button Grid.Row="2" Grid.Column="2" IsDefault="True" Command="{Binding OkCommand}" Content="OK" Padding="18,6" Margin="12,10,12,0"/>
+    </Grid>
+</Window>

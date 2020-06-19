@@ -24,21 +24,44 @@ using System.Threading.Tasks;
 using System.Linq;
 using Accord.Math;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
+using System.Collections.Specialized;
 
 namespace PeakMap
 {
 
-    public struct EfficiencyMeasurement
+    public class EfficiencyMeasurement : INotifyPropertyChanged
     {
         private  double ene;
         private  double eff;
         private  double effUnc;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [Category("Efficiency"),Description("Energy of measuremnt")]
-        public double Energy { get { return ene; }set { ene = value; } }
+        public double Energy { get { return ene; }
+            set 
+            { 
+                ene = value;
+                OnPropertyChanged("Energy");
+            } 
+        }
         [Category("Efficiency"), Description("Efficiciency at energy")]
-        public double Efficiency { get { return eff; } set { eff = value; } }
+        public double Efficiency { get { return eff; } 
+            set 
+            {
+                eff = value;
+                OnPropertyChanged("Efficiency");
+            } 
+        }
         [Category("Efficiency"), Description("Uncertainty in efficiciency at energy")]
-        public double EfficiencyUncertainty { get { return effUnc; } set { effUnc = value; } }
+        public double EfficiencyUncertainty { get { return effUnc; } 
+            set 
+            { 
+                effUnc = value;
+                OnPropertyChanged("EfficiencyUncertainty");
+            } 
+        }
         /// <summary>
         /// Constructor of EfficiencyMeasurement object
         /// </summary>
@@ -58,6 +81,41 @@ namespace PeakMap
         public override string ToString()
         {
             return ene.ToString("E2") +"," +eff.ToString("E2");
+        }
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+    }
+    /// <summary>
+    /// extension to ObeservaleCollection when an entity changes
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class ObservableEntityCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
+    {
+        public ObservableEntityCollection() : base()
+        {
+            this.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(ObservableEntityCollection_CollectionChanged);
+        }
+
+        private void ObservableEntityCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (T item in e.OldItems)
+                    item.PropertyChanged -= EntityViewModelPropertyChanged;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (T item in e.NewItems)
+                    item.PropertyChanged += EntityViewModelPropertyChanged;
+            }
+        }
+
+        private void EntityViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            NotifyCollectionChangedEventArgs args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            OnCollectionChanged(args);
         }
     }
     /// <summary>
@@ -124,7 +182,7 @@ namespace PeakMap
         protected string file;
         protected int order;
         private int numMeas;
-        protected ObservableCollection<EfficiencyMeasurement> effMeas;
+        protected ObservableEntityCollection<EfficiencyMeasurement> effMeas;
 
         protected uint[] spectrum;
         private double[] splineCoeff;
@@ -139,7 +197,7 @@ namespace PeakMap
         Description("Model for calibration fit"),
         DefaultValue(0.1)
         ]
-        public CalibrationModel CalModel { get { return calModel; } set { calModel = value; } }
+        public CalibrationModel CalModel { get { return calModel; } set { calModel = value; calParams = GetCalibrationParameters(); } }
         /// <summary>
         /// Gets or sets the curve fit parameters
         /// </summary>
@@ -155,7 +213,7 @@ namespace PeakMap
         [Category("Calibration"),
         DisplayName("Efficiency Points"),
         Description("Efficiency points to fit curve to")]
-        public ObservableCollection<EfficiencyMeasurement> EfficiencyPoints { 
+        public ObservableEntityCollection<EfficiencyMeasurement> EfficiencyPoints { 
             get {
                 numMeas = effMeas.Count;
                 return effMeas; 
@@ -172,7 +230,7 @@ namespace PeakMap
         [Category("Calibration"),
         DisplayName("Calibration Polynomial Order"),
         Description("The order of the calibration curve polynomial")]
-        public int Order { get { return order; } set { order = value; } }
+        public int Order { get { return order; } set { order = value; calParams = GetCalibrationParameters(); } }
         /// <summary>
         /// Gets or sets the elapsed wait time
         /// </summary>
@@ -331,11 +389,11 @@ namespace PeakMap
             }
 
             //invert and multiply
-            double[,] AT = Matrix.Transpose(A);
-            double[,] eqs = Matrix.Dot(AT, A);
-            double[] var = Matrix.Dot(AT, eff);
-            double[,] inverse = Matrix.Inverse(eqs);
-            return Matrix.Dot(var, inverse).ToList();
+            double[,] AT = Accord.Math.Matrix.Transpose(A);
+            double[,] eqs = Accord.Math.Matrix.Dot(AT, A);
+            double[] var = Accord.Math.Matrix.Dot(AT, eff);
+            double[,] inverse = Accord.Math.Matrix.Inverse(eqs);
+            return Accord.Math.Matrix.Dot(var, inverse).ToList();
         }
 
         /// <summary>
@@ -467,8 +525,8 @@ namespace PeakMap
         protected void EffMeas_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             //ignore the rest action
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
-                return;
+            //if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset)
+            //    return;
             if(((ObservableCollection<EfficiencyMeasurement>)sender).Count == numMeas)
                 RefreshCalibrationParameters();
         }

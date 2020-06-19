@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PeakMap
 {
-    class UserSpecData : SpectralData
+    public class UserSpecData : SpectralData
     {
 
         [Browsable(false)]
@@ -15,7 +15,7 @@ namespace PeakMap
         public UserSpecData(string inpfile)
         {
             //calParams = new List<double> { -1.0e-4, 1.4e-17, -8.7e-19 };
-            effMeas = new System.Collections.ObjectModel.ObservableCollection<EfficiencyMeasurement>();
+            effMeas = new ObservableEntityCollection<EfficiencyMeasurement>();
             double eff = 0.9999999999999;
             double effunc = 0.000000000005;
             effMeas.Add(new EfficiencyMeasurement(Properties.Settings.Default.LOWERELIMT, eff, effunc));
@@ -104,6 +104,9 @@ namespace PeakMap
         /// <summary>
         /// Closes the specral file
         /// </summary>
-        public override void CloseFile() { }
+        public override void CloseFile() 
+        {
+            data.Clear();
+        }
     }
 }

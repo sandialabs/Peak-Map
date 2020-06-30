@@ -142,7 +142,7 @@ namespace PeakMap
         /// </summary>
         public void ClearMatches()
         {
-            ClearTenativeMatches();
+            //ClearTenativeMatches();
             if (matches.Tables["MATCHEDNUCLIDES"] != null && matches.Tables["MATCHEDNUCLIDES"].Rows.Count > 0)
                 matches.Tables["MATCHEDNUCLIDES"].Clear();
             if (matches.Tables["MATCHEDLINES"] != null && matches.Tables["MATCHEDLINES"].Rows.Count > 0)
@@ -161,7 +161,7 @@ namespace PeakMap
             DataRow[] lines = matches.Tables["MATCHEDLINES"].Select("NAME = '" + nuc["NAME"] + "'");
             foreach (DataRow line in lines)
                 line.Delete();
-            ClearTenativeMatches();
+            ClearTenativeMatches((string)nuc["NAME"]);
             //commit the deletions
             matches.AcceptChanges();
         }
@@ -182,7 +182,7 @@ namespace PeakMap
                 //mark for deletion
                 nuc.Delete();
             }
-            ClearTenativeMatches();
+            ClearTenativeMatches(name);
             //commit the deletions
             matches.AcceptChanges();
         }
@@ -198,6 +198,7 @@ namespace PeakMap
 
             matches.Tables["PEAKS"].Columns["ID"].AutoIncrementSeed = 0;
             matches.Tables["PEAKS"].Columns["ID"].AutoIncrementStep = 1;
+            matches.AcceptChanges();
         }
 
         /// <summary>
@@ -389,6 +390,8 @@ namespace PeakMap
                 throw new NullReferenceException("Library is not defined");
             if (specData == null)
                 throw new NullReferenceException("Spectal Data is not defined");
+
+
 
             double area = double.TryParse(peak["AREA"].ToString(), out area) ? area : 0.0;
             double mda = double.TryParse(peak["CRITLEVEL"].ToString(), out mda) ? 2.71 + 2*mda : 0.0;
@@ -609,14 +612,45 @@ namespace PeakMap
             //set the tenativematch flag
             foreach (DataRow peak in foundPeaks)
             {
-                peak["TENTATIVEMATCH"] = true;
-                //add only the matchnmae only if the match is null
+                //add only the matchname only if the match is null
                 if (peak["MATCHNAME"] == DBNull.Value)
+                {
                     peak["MATCHNAME"] = matchName;
+                    peak["TENTATIVEMATCH"] = true;
+                }
                 //avoid duplicates
                 else if ((string)peak["MATCHNAME"] != matchName)
+                {
                     peak["MATCHNAME"] = (string)peak["MATCHNAME"] + "," + matchName;
+                    peak["TENTATIVEMATCH"] = true;
+                }
             }
+        }
+        /// <summary>
+        /// Clear the tenative matches of a given nuclide
+        /// <param name="name">Nuclide to clear tenative match</param>
+        /// </summary>
+        public void ClearTenativeMatches(string name) 
+        {
+            //clear out the old tenative matches
+            DataRow[] oldMatches = matches.Tables["Peaks"].Select("TENTATIVEMATCH = true");
+            foreach (DataRow peak in oldMatches)
+            {
+                peak["TENTATIVEMATCH"] = false;
+                //remove the only the tenative nuclide
+                //peak["MATCHNAME"] = peak["MATCHNAME"].ToString().Replace(name,"");
+                string matchName = peak["MATCHNAME"].ToString();
+                if (matchName.EndsWith(name))
+                {
+                    peak["MATCHNAME"] = matchName.Remove(matchName.Length - name.Length);
+                }
+
+                peak["MATCHNAME"] = peak["MATCHNAME"].ToString().TrimEnd(',');
+                //if we have cleared out all the nucldes then set it to DBNull
+                if (peak["MATCHNAME"].ToString() == "")
+                    peak["MATCHNAME"] = DBNull.Value;
+            }
+
         }
         /// <summary>
         /// Clear the tenative matches
@@ -628,9 +662,9 @@ namespace PeakMap
             foreach (DataRow peak in oldMatches)
             {
                 peak["TENTATIVEMATCH"] = false;
+                //remove the only the tenative nuclide
                 peak["MATCHNAME"] = DBNull.Value;
             }
-
         }
         /// <summary>
         /// Set the Matches to persist (i.e. MATCHNAME != DBnull and TENATIVEMATCH = false;
@@ -654,6 +688,8 @@ namespace PeakMap
             peak["MATCHNAME"] = peak["MATCHNAME"] == DBNull.Value || String.IsNullOrEmpty((string)peak["MATCHNAME"]) ?
                 "" : (string)peak["MATCHNAME"].ToString().Replace(matchName,"");
 
+            peak["MATCHNAME"] = peak["MATCHNAME"].ToString().TrimEnd(',');
+            peak["MATCHNAME"] = peak["MATCHNAME"].ToString().TrimStart(',');
             //ensure empty values are DBNull.Value
             if (String.IsNullOrEmpty((string)peak["MATCHNAME"]))
                 peak["MATCHNAME"] = DBNull.Value;

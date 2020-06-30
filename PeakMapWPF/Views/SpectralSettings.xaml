@@ -24,7 +24,7 @@ authority from the Government may result in criminal liability under U.S. laws.
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PeakMapWPF.Views" xmlns:u="clr-namespace:PeakMapWPF"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800" >
+        Title="Settings" Height="450" Width="800" Icon="icon.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -54,7 +54,13 @@ authority from the Government may result in criminal liability under U.S. laws.
             </StackPanel>
         </StackPanel>
         <TextBlock Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="5,0,0,5" TextAlignment="Center"
-               Text="{Binding EfficiencyEquation}" TextWrapping="WrapWithOverflow"/>
+               Text="{Binding EfficiencyEquation}" TextWrapping="WrapWithOverflow">
+            <TextBlock.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy Coefficients" Command="{Binding CopyCommand}" CommandParameter="Coefficients"/>
+                </ContextMenu>
+            </TextBlock.ContextMenu>
+        </TextBlock>
 
         <DataGrid Grid.Column="1" Grid.Row="2"  Grid.ColumnSpan="2" Margin="0,0,5,0"
                   ItemsSource="{Binding Path=EfficiencyMeasurements, Mode=TwoWay}"
@@ -64,6 +70,11 @@ authority from the Government may result in criminal liability under U.S. laws.
                 <DataGridTextColumn Header="Efficiency" Binding="{Binding Efficiency,Mode=TwoWay, StringFormat=e4}"/>
                 <DataGridTextColumn Header="Uncertainty" Binding="{Binding EfficiencyUncertainty,Mode=TwoWay, StringFormat=e4}"/>
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Copy Efficiency Triplets" Command="{Binding CopyCommand}" CommandParameter="Efficiency Points"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </DataGrid>
         <Canvas Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2" Background="LightGray" Margin="5,5,0,0">
             <u:DataPiping.DataPipes>
@@ -120,4 +131,7 @@ authority from the Government may result in criminal liability under U.S. laws.
         </Canvas>
         <Button Grid.Column="4" Grid.Row="3"  IsDefault="True" Command="{Binding OkCommand}" Content="OK" Padding="30,6" Margin="5,10,0,0"/>
     </Grid>
+    <Window.InputBindings>
+        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyCommand}" CommandParameter="copy"/>
+    </Window.InputBindings>
 </Window>

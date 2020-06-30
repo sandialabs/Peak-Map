@@ -22,7 +22,7 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
-using Accord.Math;
+
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Collections.Specialized;
@@ -388,12 +388,11 @@ namespace PeakMap
                     throw new ArgumentException("Calibrarion model is not supported");
             }
 
-            //invert and multiply
-            double[,] AT = Accord.Math.Matrix.Transpose(A);
-            double[,] eqs = Accord.Math.Matrix.Dot(AT, A);
-            double[] var = Accord.Math.Matrix.Dot(AT, eff);
-            double[,] inverse = Accord.Math.Matrix.Inverse(eqs);
-            return Accord.Math.Matrix.Dot(var, inverse).ToList();
+            //solve
+            double[,] eqs = Matrix.Dot(A, A, true);
+            double[] var = Matrix.Dot(A, eff,true);
+            double[,] inv = Matrix.Inverse(eqs);
+            return Matrix.Dot(var, inv).ToList();
         }
 
         /// <summary>
@@ -418,22 +417,6 @@ namespace PeakMap
                     matValue[i, j] = weight * Math.Pow(Math.Log(point.Energy), j);
 
             }
-            /**
-            matValue = new double[order, order];
-            varValue = new double[order];
-            for (int k = 0; k < order; k++)
-            {
-                for (int j = 0; j < order; j++)
-                {
-                    foreach (EfficiencyMeasurement point in points)
-                    {
-                        double weight = ComputeNatWeight(point);
-                        matValue[k, j] += weight * Math.Pow(Math.Log(point.Energy), j - 1) * Math.Pow(Math.Log(point.Energy), k - 1);
-                        varValue[k] += j == 0 ? weight * Math.Log(point.Efficiency) * Math.Pow(Math.Log(point.Energy), k - 1) : 0;
-                    }
-                }
-            }
-            **/
         }
         /// <summary>
         /// Compute the weight
@@ -465,20 +448,6 @@ namespace PeakMap
                     matValue[i, j] = weight * Math.Pow(1 / point.Energy, j-1);
                 
             }
-            /**
-            for (int k = 0; k < order; k++)
-            {
-                for (int j = 0; j < order; j++)
-                {
-                    foreach (EfficiencyMeasurement point in points)
-                    {
-                        double weight = ComputeLinWeight(point);
-                        matValue[k, j] += weight * Math.Pow(1 / point.Energy, j - 1) * Math.Pow(1 / point.Energy, k - 1);
-                        varValue[k] += j == 0 ? weight * Math.Log10(point.Efficiency) * Math.Pow(1 / point.Energy, k - 1) : 0;
-                    }
-                }
-            }
-            **/
         }
 
         /// <summary>
@@ -503,24 +472,6 @@ namespace PeakMap
                     matValue[i, j] = weight * Math.Pow(Math.Log(ca / point.Energy), j);
 
             }
-            /**
-            double ca = (points[0].Energy + points[points.Count-1].Energy) / 2;
-            matValue = new double[order, order];
-            varValue = new double[order];
-            for (int k = 0; k < order; k++)
-            {
-                for (int j = 0; j < order; j++)
-                {
-
-                    foreach (EfficiencyMeasurement point in points)
-                    {
-                        double weight = ComputeEmpWeight(point);
-                        matValue[k, j] += weight * Math.Pow(ca / point.Energy, j - 1) * Math.Pow(ca / point.Energy, k - 1);
-                        varValue[k] += j == 0 ? weight * Math.Log(point.Efficiency) * Math.Pow(Math.Log(ca / point.Energy), k - 1) : 0;
-                    }
-                }
-            }
-            **/
         }
         protected void EffMeas_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -529,6 +480,213 @@ namespace PeakMap
             //    return;
             if(((ObservableCollection<EfficiencyMeasurement>)sender).Count == numMeas)
                 RefreshCalibrationParameters();
+        }
+        #endregion
+
+        #region PeakFitting
+        public void GetPeaks(double peakThreshold, double knotThreshold)
+        {
+            //smooth the spectrum and get the peaks and knots
+            GetPeaksandKnots(peakThreshold, knotThreshold, out PeakSignal[] peaks, out knots);
+            using (StreamWriter fs = new StreamWriter(new FileStream(@"C:\GENIE2K\Knots.txt", FileMode.Create)))
+            {
+                foreach (Tuple<int, double> knot in knots)
+                    fs.WriteLine("{0}\t{1}", knot.Item1, knot.Item2);
+            }
+            splineCoeff = FitContinuum(knots, BoundaryCondition.Natural);
+        }
+
+        /// <summary>
+        /// Get the fitted continuum in a channel
+        /// </summary>
+        /// <param name="channel">the channel</param>
+        /// <returns>The fitted continuum value</returns>
+        public double GetContiuumValue(int channel)
+        {
+            if (splineCoeff == null || splineCoeff.Length < 1)
+                throw new InvalidOperationException("The spline has not been generated");
+            if (knots == null || knots.Length < 1)
+                throw new InvalidOperationException("There are no spline knots defined");
+
+            //Comparer<Tuple<int,double>> comparer = Comparer<Tuple<int, double>>.Create((x, y) => x.Item1.CompareTo(y.Item1));
+            //Comparer<int>.Create(.Default.Compare(f1.Item1, f2.Item1);
+            //get the lower index in the knots array
+
+            int i = Array.BinarySearch(knots, channel, new KnotComparer<Tuple<int, double>>());//, comparer);
+            //The search will return a bitwiswe complemnet if it isn't found
+            i = i < 0 ? ~i : i;
+            int i0 = i - 1;
+            double h = knots[i].Item1 - knots[i0].Item1;
+            double counts = Math.Pow(knots[i].Item1 - channel, 3) / (6 * h) * splineCoeff[i0] +
+                 Math.Pow(channel - knots[i0].Item1, 3) / (6 * h) * splineCoeff[i] +
+                (knots[i0].Item2 / h - splineCoeff[i0] * h / 6) * (knots[i].Item1 - channel) +
+                (knots[i].Item2 / h - splineCoeff[i] * h / 6) * (channel - knots[i0].Item1);
+
+            return counts;
+        }
+        /// <summary>
+        /// Perform cubic splines given the knots
+        /// </summary>
+        /// <param name="knots">knots(channel,counts)</param>
+        /// <param name="boundary">Boundary condtion for the first and last knot, 
+        /// Clamped (f'(0)=f'(n)=0) or Natural (f''(0)=f''(n)=0) </param>
+        /// <returns>The array of spline coefficients</returns>
+        private double[] FitContinuum(Tuple<int, double>[] knots, BoundaryCondition boundary)
+        {
+            int n = knots.Length;
+            //initilize the right-hand side
+            double[] d = new double[n];
+            //initilize the left-hand side coefficients
+            double[,] A = new double[n, n];
+            //build the system of equations
+            for (int i = 1; i < n - 1; i++)
+            {
+                //create simplification variables
+                double h0 = knots[i].Item1 - knots[i - 1].Item1;
+                double h1 = knots[i + 1].Item1 - knots[i].Item1;
+                double h2 = knots[i + 1].Item1 - knots[i - 1].Item1;
+                //fill the matrix
+                A[i, i - 1] = h0 / h2;
+                A[i, i] = 2;
+                A[i, i + 1] = h1 / h2;
+                //second divided difference
+                d[i] = 6 * ((knots[i + 1].Item2 - knots[i].Item2) / h1 - (knots[i].Item2 - knots[i - 1].Item2) / h0) / h2;
+            }
+            //do the boundry equations (first and Last)
+            if (boundary == BoundaryCondition.Natural)
+            {
+                A[0, 0] = 1;
+                A[0, 1] = 0;
+                d[0] = 0;
+                A[n - 1, n - 2] = 0;
+                A[n - 1, n - 1] = 1;
+                d[n - 1] = 0;
+            }
+            else
+            {
+                A[0, 0] = 2;
+                A[0, 1] = 1;
+                d[0] = ((knots[1].Item2 - knots[0].Item2) / (knots[1].Item1 - knots[0].Item1)) / (knots[1].Item1 - knots[0].Item1);
+                A[n - 1, n - 2] = 1;
+                A[n - 1, n - 1] = 2;
+                d[n - 1] = (0 - (knots[n].Item2 - knots[n - 1].Item2) / (knots[n].Item1 - knots[n - 1].Item1)) / (knots[n].Item1 - knots[n - 1].Item1);
+            }
+
+            return Matrix.Tridiagonal(A, d);
+        }
+
+        /// <summary>
+        /// Perform cubic splines given the knots
+        /// </summary>
+        /// <param name="channels">array of channels representing knots</param>
+        /// <param name="counts">array of counts assoicated with the channel</param>
+        /// <param name="boundary">Boundary condtion for the first and last knot, 
+        /// Clamped (f'(0)=f'(n)=0) or Natural (f''(0)=f''(n)=0) </param>
+        /// <returns>The array of spline coefficients</returns>
+        private void FitContinuum(int[] channels, double[] counts, BoundaryCondition boundary)
+        {
+            var knots = channels.Zip(counts, Tuple.Create);
+            FitContinuum(knots.ToArray<Tuple<int, double>>(), boundary);
+        }
+
+        /// <summary>
+        /// Get the smoothed/filtered spectrum
+        /// </summary>
+        /// <returns>The Second difference smoothed spectrum</returns>
+        private void GetPeaksandKnots(double peakThreshold, double knotThreshold, out PeakSignal[] peaks, out Tuple<int, double>[] knots)
+        {
+            double[] ss = new double[spectrum.Length];
+            List<PeakSignal> pks = new List<PeakSignal>();
+            List<Tuple<int, double>> kts = new List<Tuple<int, double>>();
+            //get the maximum number of iterations
+            int mIrt = spectrum.Length - 2 * GetWidth(spectrum.Length) - 1;
+            int peakNo = 0; bool isPeak = false; int highTailCh = 0;
+            //loop through the entire spectra convolving the filter with the spectra
+            for (int j = 2 * GetWidth(0); j < mIrt; j++)
+            {
+                int M = GetWidth(j);
+                double dd = 0;
+                double sd = 0;
+                //loop through the filter and get the second difference and the variance
+                for (int i = j - M; i < j + 2 * M - 1; i++)
+                {
+                    uint cts = spectrum[i];
+                    dd += GetFilterCoeff(i, j, M) * cts;
+                    sd += Math.Pow(GetFilterCoeff(i, j, M), 2) * cts;
+                }
+                //copute the second difference
+                ss[j] = dd / Math.Sqrt(sd);
+
+                //determine if the second difference is part of a peak, knot, or nothing
+                if (ss[j] >= peakThreshold)
+                {
+
+                    //begining of the peak, roll back and add the low tail
+                    if (!isPeak)
+                    {
+                        //Add a knot at the base of the peak if it isn't part of a multiplet
+                        if ((pks.LastOrDefault<PeakSignal>().Channel <= j - M - 1 && kts.Count > 0) &&
+                                kts.LastOrDefault<Tuple<int, double>>().Item1 != j - M - 1)
+                            kts.Add(new Tuple<int, double>(j - M - 1, (int)spectrum[j - M - 1]));
+
+                        //low tail
+                        for (int i = j - M; i < j; i++)
+                            pks.Add(new PeakSignal(peakNo, i, (int)spectrum[i], ss[i]));
+
+                        peakNo++;
+
+                    }
+                    pks.Add(new PeakSignal(peakNo, j, (int)spectrum[j], ss[j]));
+                    isPeak = true;
+                }
+                //if it is not a peak
+                else
+                {
+                    //add the first channel after a peak
+                    if (isPeak)
+                    {
+                        pks.Add(new PeakSignal(peakNo, j, (int)spectrum[j], ss[j]));
+                        highTailCh = j + M;
+                        isPeak = false;
+                    }
+                    //add the rest of the high tail
+                    else if (j < highTailCh && !(isPeak))
+                        pks.Add(new PeakSignal(peakNo, j, (int)spectrum[j], ss[j]));
+                    //add a knot at the end of the high tail
+                    else if (j == highTailCh && !(isPeak))
+                        kts.Add(new Tuple<int, double>(j, (int)spectrum[j]));
+                    //add a knot at a feature
+                    else if (peakThreshold < ss[j] && ss[j] >= knotThreshold)
+                        kts.Add(new Tuple<int, double>(j, (int)spectrum[j]));
+                }
+
+            }
+            using (StreamWriter fs = new StreamWriter(new FileStream(@"C:\GENIE2K\ss.txt", FileMode.Create)))
+            {
+                foreach (double s in ss)
+                    fs.WriteLine("{0}", s);
+            }
+            //cast the peaks and knot collections into arrays
+            peaks = pks.ToArray();
+            knots = kts.ToArray();
+        }
+        /// <summary>
+        /// Get the coefficient for the filter
+        /// </summary>
+        /// <param name="i">channel</param>
+        /// <param name="j">transformed channel</param>
+        /// <param name="M">Width</param>
+        /// <returns></returns>
+        private static double GetFilterCoeff(int i, int j, int M)
+        {
+            if (j - M <= i && i <= j - 1)
+                return 1;
+            else if (j <= i && i <= j + M - 1)
+                return -2;
+            else if (j + M <= i && i <= j + 2 * M - 1)
+                return 1;
+            else
+                throw new ArgumentOutOfRangeException("Unable to compute the filter coefficent");
         }
         #endregion
         /// <summary>

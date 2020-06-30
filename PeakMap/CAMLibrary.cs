@@ -106,11 +106,12 @@ namespace PeakMap
             {
                 File.Delete(file);
             }
-
+            int nucID = 1;
             foreach (DataRow nuclide in lib.Tables["MATCHEDNUCLIDES"].Rows)
             {
                 DataRow[] nucLines = lib.Tables["MATCHEDLINES"].Select("NAME = '" + nuclide["NAME"] + "'", "ENERGY ASC");
                 //always do the lines first
+                
                 foreach (DataRow nucLine in nucLines)
                 {
                     Line line = new Line
@@ -120,7 +121,7 @@ namespace PeakMap
                         EnergyUncertainty = nucLine["ENERGYUNC"] == DBNull.Value ? GetUncertainty((double)nucLine["ENERGY"]) : (double)nucLine["ENERGYUNC"],
                         AbundanceUncertainty = nucLine["YIELDUNC"] == DBNull.Value ? GetUncertainty((double)nucLine["YIELD"]) : (double)nucLine["YIELDUNC"],
                         IsKeyLine = (bool)nucLine["ISKEY"],
-                        NuclideIndex = (int)(short)nuclide["ID"]
+                        NuclideIndex = nucID
                     };
                     //add the line
                     camfile.AddLine(line);
@@ -132,10 +133,11 @@ namespace PeakMap
                     HalfLife = (double)nuclide["HALF_LIFE"],
                     HalfLifeUnit = ((string)nuclide["HALF_LIFE_UNIT"]).Trim(),
                     HalfLifeUncertainty = GetUncertainty((double)nuclide["HALF_LIFE"]),
-                    Index = (int)(short)nuclide["ID"]
+                    Index = nucID
                 };
                 //add the nuclide
                 camfile.AddNuclide(nuc);
+                nucID++;
             }
             camfile.CreateFile(file);
             
@@ -180,7 +182,7 @@ namespace PeakMap
                 DataRow nucRow = lib.Tables["MATCHEDLINES"].NewRow();
                 //check if the name has changed, if so reset the line number
                 //ln = name != nucs[line.NuclideIndex-1].Name ? 0 : ln;
-                name = nucs[line.NuclideIndex -  1].Name;
+                name = nucs.Where(r => r.Index == line.NuclideIndex).First().Name;
                 nucRow["NAME"] = name;
                 nucRow["LINENUMBER"] = ln ;
                 nucRow["ENERGY"] = line.Energy;

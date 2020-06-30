@@ -52,7 +52,6 @@ namespace PeakMapWPF.ViewModels
             get { return matches.Peaks.DefaultView; }
             set
             {
-
                 OnPropertyChanged("Peaks");
             }
         }
@@ -94,8 +93,8 @@ namespace PeakMapWPF.ViewModels
                 new ContextAction { Name = $"Paste", Action = PastedTextCommand }
             };
 
-
             CurrentModeViewModel = this;
+            Lines.Sort = "[YIELD] DESC";
         }
 
         /// <summary>
@@ -134,7 +133,9 @@ namespace PeakMapWPF.ViewModels
         /// </summary>
         private void GetHighlightedPeaks()
         {
-            matches.ClearTenativeMatches();
+            if (SelectedNuclide == null)
+                return;
+            matches.ClearTenativeMatches((string)SelectedNuclide["NAME"]);
             //loop thorough the lines, set the MDA, and get and display the matched lines 
             foreach (DataRowView line in Lines)
             {
@@ -171,22 +172,22 @@ namespace PeakMapWPF.ViewModels
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                DialogViewModel dialogViewModel = new DialogViewModel("Could not open: " + file, "Exeption: Bad File", true);
+                DialogViewModel dialogViewModel = new DialogViewModel("Could not open: " + file, "Exeption: Bad File", true,false);
                 dialogService.ShowDialog(dialogViewModel);
             }
             catch (IndexOutOfRangeException)
             {
-                DialogViewModel dialogViewModel = new DialogViewModel("File: " + file + " did not contain any peak inforamtion", "Exeption: Bad File", true);
+                DialogViewModel dialogViewModel = new DialogViewModel("File: " + file + " did not contain any peak inforamtion", "Exeption: Bad File", true, false);
                 dialogService.ShowDialog(dialogViewModel);
             }
             catch (System.IO.IOException)
             {
-                DialogViewModel dialogViewModel = new DialogViewModel("File: " + file + " is in use by another program", "Exeption: File in Use", true);
+                DialogViewModel dialogViewModel = new DialogViewModel("File: " + file + " is in use by another program", "Exeption: File in Use", true, false);
                 dialogService.ShowDialog(dialogViewModel);
             }
             catch (Exception ex)
             {
-                DialogViewModel dialogViewModel = new DialogViewModel(ex.Message + ":\n" + ex.StackTrace, "General Exception", true);
+                DialogViewModel dialogViewModel = new DialogViewModel(ex.Message + ":\n" + ex.StackTrace, "General Exception", true, false);
                 dialogService.ShowDialog(dialogViewModel);
             }
 
@@ -200,17 +201,22 @@ namespace PeakMapWPF.ViewModels
         {
             if (specdata == null)
                 await GetSpecDataAsync("User");
+            if(SelectedNuclide != null)
+                matches.ClearTenativeMatches((string)SelectedNuclide["NAME"]);
 
+            string sort = Nuclides.Sort;
             //clear all the matches
             matches.ClearMatches();
 
             try
             {
-                //cehck the inputs
+                //check the inputs
                 if (SelectedPeak["ENERGY"] == DBNull.Value)
                     return;
 
                 matches.SetNuclides((double)SelectedPeak["ENERGY"], specdata.ElapsedWait, (double)SelectedPeak["FWHM"]);
+
+                Nuclides.Sort = sort;
             }
             catch (Exception ex)
             {
@@ -223,6 +229,7 @@ namespace PeakMapWPF.ViewModels
         {
             if (!base.CanGetLines())
                 return;
+
             //set the lines
             matches.SetLines(SelectedNuclide.Row, SelectedPeak.Row);
 
@@ -286,13 +293,13 @@ namespace PeakMapWPF.ViewModels
             if (menuName.Contains("peaks") && menuName.Contains("all"))
             {
                 //get the nuclide name
-                string nucName = menuName.Split(' ')[1];
+                string nucName = menuName.Split(' ')[1].ToUpper();
 
                 //get the peak we need
                 DataRow[] matchedPeaks = Peaks.Table.Select($"MATCHNAME LIKE '*{nucName}*'");
                 foreach (DataRow peak in matchedPeaks)
                 {
-                    libGen.ClearNuclide(peak);
+                    libGen.ClearNuclide(nucName);
                     matches.ClearPersistentMatch(peak, nucName);
                 }
             }
@@ -375,18 +382,24 @@ namespace PeakMapWPF.ViewModels
             string filename = fileDialogService.OpenFileDialog(FileOperation.Open);
 
             if (filename != null)
+            {
+                CloseInput();
                 await GetSpecDataAsync(filename);
+            }
         }
         /// <summary>
         /// close the open input
         /// </summary>
         private void CloseInput()
         {
+            if (specdata == null)
+                return;
+
             specdata.CloseFile();
+            matches.Clear();
             IsInputUser = false;
             specdata = null;
             OnPropertyChanged("InputFile");
-
         }
 
         protected override void PasteCommand_Executed(object context)
@@ -402,7 +415,10 @@ namespace PeakMapWPF.ViewModels
         {
             string menuName = context.ToString().ToLowerInvariant();
             if (menuName.Contains("open") && menuName.Contains("input"))
+            {
+               
                 await OpenInput();
+            }
 
             else if (menuName.Contains("close") && menuName.Contains("input"))
                 CloseInput();
@@ -418,9 +434,9 @@ namespace PeakMapWPF.ViewModels
         {
             string menuName = context.ToString().ToLowerInvariant();
             if (menuName.Contains("close") && menuName.Contains("input"))
-                return InputFile != null;
-            else if (menuName.Contains("spectral"))
                 return specdata != null;
+            else if (menuName.Contains("input"))
+                return true;
             else
                 return base.CanFileMenuExecute(context);
         }

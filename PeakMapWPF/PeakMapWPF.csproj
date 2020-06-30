@@ -143,7 +143,6 @@
       <Name>PeakMap</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Page Include="Views\LibraryControl.xaml">
       <SubType>Designer</SubType>

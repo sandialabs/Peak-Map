@@ -36,7 +36,7 @@ namespace PeakMapWPF.ViewModels
 
             IsError = iserror;
             YesNoCancel = yesNoCancel;
-            OKButtonContent = "Yes";
+            OKButtonContent = YesNoCancel ? "Yes" : "Ok";
         }
 
         public string OKButtonContent { get; }

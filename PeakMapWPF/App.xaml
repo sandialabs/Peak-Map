@@ -35,7 +35,7 @@ authority from the Government may result in criminal liability under U.S. laws.
             <Setter Property="ColumnHeaderStyle" Value="{DynamicResource DataGridHeaderStyle}"/>
             <Setter Property="RowStyle" Value="{DynamicResource RowHighlights}"/>
             <Setter Property="CellStyle" Value="{DynamicResource DataGridCellStyle}"/>
-            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="RowHeaderWidth" Value="0"/>
         </Style>
         <Style x:Key="DataGridHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>

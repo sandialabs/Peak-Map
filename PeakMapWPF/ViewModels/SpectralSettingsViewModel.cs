@@ -37,12 +37,15 @@ namespace PeakMapWPF.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly SpectralData data;
+        public RelayCommand CopyCommand { get; private set; }
+
         public SpectralSettingsViewModel(SpectralData data)
         {
             OkCommand = new RelayCommand(P => CloseRequested?.Invoke(this, new DialogCloseRequestEventArgs(true)));
             CancelCommand = new RelayCommand(P => CloseRequested?.Invoke(this, new DialogCloseRequestEventArgs(false)));
 
             UpDownCommand = new RelayCommand(UpDownCommand_Execute, CanUpDownExecute);
+            CopyCommand = new RelayCommand(CopyCommand_Execute, CanCopyExecute);
 
             this.data = data;
             RectangleItems = new ObservableCollection<Rectangle>();
@@ -52,6 +55,7 @@ namespace PeakMapWPF.ViewModels
             EfficiencyMeasurements.CollectionChanged += EfficiencyMeasurements_CollectionChanged;
             WriteEfficiencyEquation();
         }
+
 
         #region properties
         public ICommand OkCommand { get; }
@@ -113,7 +117,7 @@ namespace PeakMapWPF.ViewModels
             {
                 OnPropertyChanged("EfficiencyMeasurements");
                 DrawGraph();
-
+                //WriteEfficiencyEquation();
             }
         }
 
@@ -149,7 +153,7 @@ namespace PeakMapWPF.ViewModels
                 data.CalModel = value;
                 OnPropertyChanged("CurrentModel");
                 DrawGraph();
-                WriteEfficiencyEquation();
+                //WriteEfficiencyEquation();
             }
         }
         /// <summary>
@@ -163,7 +167,7 @@ namespace PeakMapWPF.ViewModels
                 data.Order = value;
                 OnPropertyChanged("Order");
                 DrawGraph();
-                WriteEfficiencyEquation();
+
             }
         }
 
@@ -222,6 +226,70 @@ namespace PeakMapWPF.ViewModels
                 Order--;
         }
         /// <summary>
+        /// Check to see if data can be copied
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private bool CanCopyExecute(object obj)
+        {
+            string param = obj.ToString().ToLowerInvariant();
+            if (param.Contains("coefficients"))
+            {
+                return data.CalibrationParams != null && data.CalibrationParams.Count > 0;
+            }
+            else if (param.Contains("points")) 
+            {
+                return data.EfficiencyPoints != null && data.EfficiencyPoints.Count > 0;
+            }
+            else 
+            {
+                return (data.CalibrationParams != null && data.CalibrationParams.Count > 0) && 
+                    (data.EfficiencyPoints != null&& data.EfficiencyPoints.Count > 0);
+            }
+        }
+        /// <summary>
+        /// Copy data to the clipboard
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CopyCommand_Execute(object obj)
+        {
+            string param = obj.ToString().ToLowerInvariant();
+            if (param.Contains("coefficients"))
+            {
+                StringBuilder copyString = new StringBuilder();
+                foreach (double calParam in this.data.CalibrationParams)
+                {
+                    copyString.AppendLine(calParam.ToString());
+                }
+                Clipboard.SetText(copyString.ToString());
+            }
+            else if (param.Contains("points"))
+            {
+                StringBuilder copyString = new StringBuilder();
+                foreach (EfficiencyMeasurement measurement in this.data.EfficiencyPoints)
+                {
+                    copyString.AppendLine($"{measurement.Energy}\t{measurement.Efficiency}\t{measurement.EfficiencyUncertainty}");
+                }
+                Clipboard.SetText(copyString.ToString());
+            }
+            else
+            {
+                StringBuilder copyString = new StringBuilder();
+                foreach (double calParam in this.data.CalibrationParams)
+                {
+                    copyString.Append($"{calParam}\t");
+                }
+                copyString.Append(Environment.NewLine);
+                foreach (EfficiencyMeasurement measurement in this.data.EfficiencyPoints)
+                {
+                    copyString.AppendLine($"{measurement.Energy}\t{measurement.Efficiency}\t{measurement.EfficiencyUncertainty}");
+                }
+                Clipboard.SetText(copyString.ToString());
+
+            }
+        }
+
+        /// <summary>
         /// Event handlert when the efficiency measurment collection changed
         /// </summary>
         /// <param name="sender"></param>
@@ -229,21 +297,22 @@ namespace PeakMapWPF.ViewModels
         private void EfficiencyMeasurements_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             DrawGraph();
-            WriteEfficiencyEquation();
+            //WriteEfficiencyEquation();
         }
         /// <summary>
         /// Generates the efficiency equaiton string
         /// </summary>
         private void WriteEfficiencyEquation() 
         {
-            if (data.CalibrationParams == null)
+            if (data.CalibrationParams == null || data.CalibrationParams.Count < 1)
                 return;
             StringBuilder eqBuilder = new StringBuilder();
             switch (data.CalModel) 
             {
                 case (SpectralData.CalibrationModel.Linear):
                     eqBuilder.Append(String.Format("log(ε) = {0:e6} • E", data.CalibrationParams[0]));
-                    eqBuilder.Append(String.Format(" + {0:e6}", data.CalibrationParams[1]));
+                    if(data.CalibrationParams.Count > 1)
+                        eqBuilder.Append(String.Format(" + {0:e6}", data.CalibrationParams[1]));
                     for (int i = 2; i < data.Order; i++)
                     {
                         string pow;
@@ -477,6 +546,7 @@ namespace PeakMapWPF.ViewModels
                     x, y + EfficiencyMeasurements[i].EfficiencyUncertainty * yconv));
 
             }
+            WriteEfficiencyEquation();
         }
         /// <summary>
         /// Compute the range between tickes

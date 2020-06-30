@@ -23,30 +23,39 @@ authority from the Government may result in criminal liability under U.S. laws.
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PeakMapWPF.Views"
         mc:Ignorable="d"
-        Title="{Binding DialogTitle}" MinHeight="200" MinWidth="350" SizeToContent="WidthAndHeight" Icon="icon.ico" WindowStartupLocation="CenterOwner">
+        Title="{Binding DialogTitle}" MinHeight="200" MinWidth="350" SizeToContent="WidthAndHeight" 
+            Icon="icon.ico" 
+            WindowStartupLocation="CenterOwner">
     <DockPanel>
        
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="12" HorizontalAlignment="Right">
             <Button IsDefault="True" Command="{Binding OkCommand}" Content="{Binding OKButtonContent}" Padding="18,6" Margin="12,0"/>
-            <Button Command="{Binding NullCommand}" Content="No" Padding="18,6" >
+            <Button Command="{Binding NullCommand}" Content="No" >
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Visibility" Value="Visible"/>
+                        <Setter Property="Padding" Value="18,6"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding HasNull, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                            <DataTrigger Binding="{Binding YesNoCancel, UpdateSourceTrigger=PropertyChanged}" Value="False">
                                 <Setter Property="Visibility" Value="Hidden"/>
+                                <Setter Property="Padding" Value="0,6"/>
+                                <Setter Property="Margin" Value="0"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>
             </Button>
-            <Button IsCancel="True"  Command="{Binding CancelCommand}" Content="Cancel" Padding="12,6" Margin="12,0">
+            <Button IsCancel="True"  Command="{Binding CancelCommand}" Content="Cancel">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Visibility" Value="Visible"/>
+                        <Setter Property="Padding" Value="12,6"/>
+                        <Setter Property="Margin" Value="12,0"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsError, UpdateSourceTrigger=PropertyChanged}" Value="True">
                                 <Setter Property="Visibility" Value="Hidden"/>
+                                <Setter Property="Padding" Value="0,6"/>
+                                <Setter Property="Margin" Value="0"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>

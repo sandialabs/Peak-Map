@@ -90,19 +90,6 @@ namespace PeakMapWPF.ViewModels
             }
         }
 
-
-        private string _currentMode = "library";
-        public string CurrentMode
-        {
-            get { return _currentMode; }
-            set
-            {
-                _currentMode = value;
-                OnPropertyChanged("CurrentMode");
-            }
-        }
-
-
         public virtual string LibraryFile
         {
             get { return _libraryFile; }
@@ -112,20 +99,22 @@ namespace PeakMapWPF.ViewModels
             }
         }
 
+        private readonly DataView _nuclides;
         public virtual DataView Nuclides
         {
-            get {
-                DataView sortedView = matches.Nuclides.DefaultView;
-                sortedView.Sort = "SCORE DESC";
-                return sortedView;
+            get
+            {
+                return _nuclides;
             }
-
         }
 
         public DataRowView SelectedNuclide 
         { get { return _selectedNuclide; }
             set 
             {
+                if (matches != null && _selectedNuclide != null && _selectedNuclide.Row.RowState != DataRowState.Detached)
+                    matches.ClearTenativeMatches(_selectedNuclide["NAME"].ToString());
+
                 _selectedNuclide = value;
                 OnPropertyChanged("SelectedNuclide");
                 if (value != null)
@@ -143,10 +132,13 @@ namespace PeakMapWPF.ViewModels
                 OnPropertyChanged("SelectedLines");
             }
         }
-
+        private readonly DataView _lines;
         public DataView Lines 
         {
-            get { return matches.Lines.DefaultView; }
+            get { 
+                //DataView sortedView = matches.Lines.DefaultView;
+                //sortedView.Sort = "ENERGY ASC";
+                return _lines; }
         }
 
         public double LineMatchScore
@@ -333,7 +325,11 @@ namespace PeakMapWPF.ViewModels
             this.fileDialogService = fileDialogService;
 
             _selectedLines = new ArrayList();
-            
+            _nuclides = matches.Nuclides.DefaultView;
+            _nuclides.Sort = "SCORE DESC";
+            _lines = matches.Lines.DefaultView;
+
+
             SetLinesFilter();
 
         }
@@ -366,26 +362,30 @@ namespace PeakMapWPF.ViewModels
             matches.SetLines(SelectedNuclide.Row);
         }
 
-
+        protected virtual string GetLibraryFilename(FileOperation operation) 
+        {
+            fileDialogService.IntialDirectory = @"C:\GENIE2K\CAMFILES";
+            fileDialogService.Filter = "(*.nlb)|*.nlb|(*.cnf)|*.cnf|(*.tlb)|*.tlb|All Files (*.*)|*.*";
+            fileDialogService.DefaultExt = ".nlb";
+            return fileDialogService.OpenFileDialog(operation);
+           
+        }
         /// <summary>
         /// Load the data or creates a new file to save the library
         /// </summary>
         protected virtual async Task GetLibraryFileAsync(FileOperation operation)
         {
             //put the defualts in to make browsing eaiser
-            fileDialogService.IntialDirectory = @"C:\GENIE2K\CAMFILES";
-            fileDialogService.Filter = "(*.nlb)|*.nlb|(*.cnf)|*.cnf|(*.tlb)|*.tlb|All Files (*.*)|*.*";
-            fileDialogService.DefaultExt = ".nlb";
-            string fileName = fileDialogService.OpenFileDialog(operation);
-            
+            string fileName = GetLibraryFilename(operation);
+            bool overwrite = operation == FileOperation.New;
             if (fileName != null)
             {
-                await GetLibrayDataAsync(fileName);
+                await GetLibrayDataAsync(fileName, overwrite);
             }
 
         }
 
-        protected async Task GetLibrayDataAsync(string fileName) 
+        protected async Task GetLibrayDataAsync(string fileName, bool overwrite = false) 
         {
             if (String.IsNullOrWhiteSpace(fileName))
                 return;
@@ -397,7 +397,8 @@ namespace PeakMapWPF.ViewModels
                 libGen = Activator.CreateInstance(libType, new string[] { fileName }) as SpectralLibraryGenerator;
 
                 //initilize the library data object
-                await libGen.LoadLibraryAsync(fileName);
+                if(!overwrite)
+                    await libGen.LoadLibraryAsync(fileName);
 
                 LibraryFile = fileName;
                 //FillWithLibrary();
@@ -511,12 +512,15 @@ namespace PeakMapWPF.ViewModels
             else if (menuName.Contains("new") && menuName.Contains("library"))
                 await GetLibraryFileAsync(FileOperation.New);
             else if (menuName.Contains("as") && menuName.Contains("library"))
-                libGen.SaveFile();
-            else if (menuName.Contains("save") && menuName.Contains("library"))
             {
-                await GetLibraryFileAsync(FileOperation.New);
+                libGen.FileName = GetLibraryFilename(FileOperation.New);
                 libGen.SaveFile();
             }
+            else if (menuName.Contains("save") && menuName.Contains("library"))
+            {
+                libGen.SaveFile();
+            }
+
                 
         }
         protected virtual bool CanFileMenuExecute(object context)
@@ -524,7 +528,10 @@ namespace PeakMapWPF.ViewModels
             string menuName = context.ToString().ToLowerInvariant();
             if (menuName.Contains("save"))
                 return LibraryFile != null;
-            return true;
+            if (menuName.Contains("library") && (menuName.Contains("new") || menuName.Contains("open")))
+                return true;
+
+            return false;
         }
 
         protected virtual void LinesMenuCommand_Executed(object context) 
@@ -585,25 +592,24 @@ namespace PeakMapWPF.ViewModels
             return false; 
         }
 
-        private void ModeMenuCommand_Executed(object context) 
+        private void ModeMenuCommand_Executed(object context)
         {
             //string menuName = context.ToString().ToLowerInvariant();
             Window win = context as Window;
 
             MainWindowViewModel model;
-            if(win.DataContext.GetType() == typeof(MainWindowLibraryViewModel))
-            { 
+            if (win.DataContext.GetType() == typeof(MainWindowLibraryViewModel))
+            {
                 model = new MainWindowMatchingViewModel(dialogService, fileDialogService);
-                CurrentMode = "matching";
-               
-                //Application.Current.MainWindow.DataContext = model;
             }
-            else //if(win.DataContext.GetType() == typeof(MainWindowMatchingViewModel))
+            else
             {
                 model = new MainWindowLibraryViewModel(dialogService, fileDialogService);
-                CurrentMode = "library";
-                CurrentModeViewModel = model;
-                //Application.Current.MainWindow.DataContext = model;
+            }
+            if (libGen != null) 
+            { 
+                model.libGen = libGen;
+                model.LibraryFile = libGen.FileName;
             }
             CurrentModeViewModel = model;
             win.DataContext = CurrentModeViewModel;

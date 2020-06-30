@@ -1,4 +1,4 @@
-﻿using Accord.Math;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -48,7 +48,7 @@ namespace PeakMap
             //get the diagonal (d), above diagonal (ad), and below diagonal (bd_ elements
             double[] d = new double[n];
             double[] ad = new double[n - 1];
-            double[] bd = new double[n - 1];
+            double[] bd = new double[n ];
             ad[0] = A[0, 1]/A[0,0];
             d[0] = A[0, 0];
             for (int i = 1; i < n-1; i++) 
@@ -61,7 +61,7 @@ namespace PeakMap
             bd[n - 1] = A[n - 1, n - 2];
             b[0] /=  d[0];
             //compute abi and bi
-            for (int i = 1; i < n - 2; i++) 
+            for (int i = 1; i < n - 1; i++) 
             {
                 ad[i] /= (d[i] - bd[i] * ad[i - 1]);
                 b[i] = (b[i] - bd[i] * b[i - 1]) / (d[i] - bd[i] * ad[i - 1]);
@@ -88,11 +88,10 @@ namespace PeakMap
         {
 
             int m = transposeA ? A.GetLength(0) : A.GetLength(1);
-
-            if (m != b.Length)
-                throw new ArgumentException("The number of columns in A must be equal to the number of rows in b");
-
             int n = transposeA ? A.GetLength(1) : A.GetLength(0);
+
+            if (m != b.Length && n != b.Length)
+                throw new ArgumentException("The number of columns in A must be equal to the number of rows in b");
 
             double[] C = new double[n];
             //A is not transposed
@@ -119,6 +118,52 @@ namespace PeakMap
                         sum += A[j, i] * b[j];
                     }
                     C[i] = sum;
+                }
+            }
+            return C;
+        }
+
+        /// <summary>
+        /// Compute the dot produts between a matrix and vector
+        /// </summary>
+        /// <param name="A">matrix</param>
+        /// <param name="b">vector</param>
+        /// <param name="transposeA">Transpose A</param>
+        /// <returns></returns>
+        public static double[] Dot(double[] a, double[,] B, bool transposeB = false)
+        {
+
+            int m = transposeB ? B.GetLength(1) : B.GetLength(0);
+            int p = transposeB ? B.GetLength(0) : B.GetLength(1);
+
+            if (m != a.Length && m != 1)
+                throw new ArgumentException("The number of columns in A must be equal to the number of rows in B");
+
+            double[] C = new double[p];
+            //A is not transposed
+            if (!transposeB)
+            {
+                for (int j = 0; j < p;j++)
+                {
+                    double sum = 0;
+                    for (int k = 0;k < m; k++)
+                    {
+                        sum += a[k] * B[k,j];
+                    }
+                    C[j] = sum;
+                }
+            }
+            //A is transposed
+            else if (transposeB)
+            {
+                for (int j = 0; j < p; j++)
+                {
+                    double sum = 0;
+                    for (int k = 0; k < m; k++)
+                    {
+                        sum += a[k] * B[j, k];
+                    }
+                    C[j] = sum;
                 }
             }
             return C;

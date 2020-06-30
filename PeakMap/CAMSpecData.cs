@@ -53,6 +53,7 @@ namespace PeakMap
 
         public override void CloseFile()
         {
+
         }
         /// <summary>
         /// Gets spectral the region around and energy 

@@ -22,6 +22,7 @@ namespace PeakMap
             effMeas.Add(new EfficiencyMeasurement((Properties.Settings.Default.LOWERELIMT + Properties.Settings.Default.UPPERELIMIT) / 2, eff, effunc));
             effMeas.Add(new EfficiencyMeasurement(Properties.Settings.Default.UPPERELIMIT, eff, effunc));
             order = 2;
+            GetCalibrationParameters();
 
             effMeas.CollectionChanged += EffMeas_CollectionChanged;
             acqTime = DateTime.MinValue;

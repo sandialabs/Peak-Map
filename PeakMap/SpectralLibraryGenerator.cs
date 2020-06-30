@@ -358,7 +358,7 @@ namespace PeakMap
         /// <param name="nuclide">nuclide to clear</param>
         public void ClearNuclide(DataRow nuclide)
         {
-            ClearNuclide((string)nuclide["NAME"]);
+            ClearNuclide((string)nuclide["MATCHNAME"]);
         }
         /// <summary>
         /// Save the library file

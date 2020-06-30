@@ -85,6 +85,7 @@ namespace PeakMap
             effMeas.Add(new EfficiencyMeasurement(Properties.Settings.Default.UPPERELIMIT, eff, effunc));
             order = 2;
             effMeas.CollectionChanged += EffMeas_CollectionChanged;
+            GetCalibrationParameters();
             //define the defult delimiter
             delimiter = ',';
             //define the defult column order

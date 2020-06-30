@@ -48,8 +48,9 @@ namespace PeakMapWPF.ViewModels
                     matches.ClearMatches();
                     return;
                 }
-
+                string sort = Nuclides.Sort;
                 matches.SetNuclides(value);
+                Nuclides.Sort = sort;
             } 
         }
         public override DataView Nuclides
@@ -86,10 +87,9 @@ namespace PeakMapWPF.ViewModels
             LinesMenuCommand = new RelayCommand(LinesMenuCommand_Executed, CanLinesMenuExecute);
             SettingsMenuCommand = new RelayCommand(SettingsMenuCommand_Executed, CanSettingsMenuExecute);
 
-            CurrentMode = "library";
-
             CurrentModeViewModel = this;
-            
+            Lines.Sort = "[ENERGY]";
+
         }
         protected async override Task GetLibraryFileAsync(FileOperation operation)
         {

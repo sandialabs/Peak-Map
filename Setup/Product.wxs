@@ -9,8 +9,8 @@
 		<Feature Id="ProductFeature" Title="Installer" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 			<ComponentGroupRef Id="SQLiteComponents"/>
-			<ComponentGroupRef Id="AccordComponents"/>
-			<ComponentRef Id="Manual"/>
+			<!--<ComponentGroupRef Id="AccordComponents"/>-->
+			<!--<ComponentRef Id="Manual"/>-->
 		</Feature>
 	</Product>
 
@@ -26,6 +26,7 @@
 				</Directory>
 			</Directory>
 			<Directory Id="ProgramMenuFolder">
+				<Directory Id="AppProgramMenuFolder" Name="Peak Map"/>
 			</Directory>
 		</Directory>
 	</Fragment>
@@ -33,57 +34,61 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER" >
 			<Component Id="ProductComponent" Guid="B1A84C8F-E362-4E12-B57C-9F66F253F66F" Win64="yes">
-				<File Source="$(var.PeakMap.TargetPath)" DiskId="1" KeyPath="yes"/>
-				<Shortcut Id="pgrmMenuSrtcut" Directory="ProgramMenuFolder" Name="Peak Map" WorkingDirectory="INSTALLFOLDER" Icon="icon.ico" IconIndex="0" Advertise="yes"/>
-				<RemoveFolder Id="ProgramMenuProductFolder" On="uninstall"/>
+				<File Source="$(var.PeakMapWPF.TargetPath)" DiskId="1" KeyPath="yes"/>
+				<Shortcut Id="pgrmMenuSrtcut" Directory="AppProgramMenuFolder" Name="Peak Map" WorkingDirectory="INSTALLFOLDER" Icon="icon.ico" IconIndex="0" Advertise="yes"/>
+				<File Id="UserManual" Name="UsersManual.pdf" DiskId="1" Source="$(var.SolutionDir)\Manual\UsersManual.pdf">
+					<Shortcut Id="UserManualSrtcut" Directory="AppProgramMenuFolder" Name="Users Manual" WorkingDirectory="INSTALLFOLDER" Advertise="yes"/>
+				</File>
+				<RemoveFolder Id="CleanUpShortcut" Directory="AppProgramMenuFolder" On="uninstall"/>
 			</Component>
 			<Component Id="Config" Guid="F1A672F2-C82B-4D6E-B68F-41C5CA825BA7" Win64="yes">
-				<File Source="$(var.PeakMap.TargetDir)\$(var.PeakMap.TargetFileName).config" DiskId="1" KeyPath="yes"/>
+				<File Source="$(var.PeakMapWPF.TargetDir)\$(var.PeakMapWPF.TargetFileName).config" DiskId="1" KeyPath="yes"/>
 			</Component>
 			<Component Id="CAMIOLibrary" Guid="64EB556A-D479-40AD-847A-20DFF36600E4" Win64="yes">
-				<File Id="CAMIODLL" Name="CAMInputOutput.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)CamInputOutput.dll" KeyPath="yes"/>
+				<File Id="CAMIODLL" Name="CAMInputOutput.dll" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)CamInputOutput.dll" KeyPath="yes"/>
+			</Component>
+			<Component Id="PeakMapLibrary" Guid="2561B87E-9BB9-4DBC-895A-8C4613926476" Win64="yes">
+				<File Id="PEAKMAPDLL" Name="PeakMap.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)PeakMap.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="data" Guid="4E4729C6-0256-4F8E-86BB-177D5FAD7028" Win64="yes">
-				<File Id="GammaDatabase" Name="GammaData.sqlite" DiskId="1" Source="$(var.PeakMap.TargetDir)\GammaData.sqlite" KeyPath="yes"/>
+				<File Id="GammaDatabase" Name="GammaData.sqlite" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)\GammaData.sqlite" KeyPath="yes"/>
 			</Component>
 			<Component Id="ICRPSchema" Guid="BEF33394-B79E-4820-89B4-595F268FA744" Win64="yes">
-				<File Id="ICRPLibrary" Name="ICRPLibrary.xsd" DiskId="1" Source="$(var.PeakMap.TargetDir)\ICRPLibrary.xsd" KeyPath="yes"/>
+				<File Id="ICRPLibrary" Name="ICRPLibrary.xsd" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)\ICRPLibrary.xsd" KeyPath="yes"/>
 			</Component>
 			<Component Id="MatchesSchema" Guid="09130E76-8BBB-4BD0-8E34-B8428DD547DA" Win64="yes">
-				<File Id="MatchesSchemaFl" Name="MatchesSchema.xsd" DiskId="1" Source="$(var.PeakMap.TargetDir)\MatchesSchema.xsd" KeyPath="yes"/>
+				<File Id="MatchesSchemaFl" Name="MatchesSchema.xsd" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)\MatchesSchema.xsd" KeyPath="yes"/>
 			</Component>
 			<Component Id="License" Guid="1851EE13-F4A2-4727-BFB0-1613DCD420BB" Win64="yes">
-				<File Id="LicenseRTF" Name="LICENSE.rtf" DiskId="1" Source="$(var.PeakMap.TargetDir)\LICENSE.rtf" KeyPath="yes"/>
+				<File Id="LicenseRTF" Name="LICENSE.rtf" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)\LICENSE.rtf" KeyPath="yes"/>
 			</Component>
 		</ComponentGroup>
-		<Component Id="Manual" Guid="905E8ADD-F690-47B4-B971-A76F2494F41F" Directory="ManDir" Win64="yes">
-			<File Id="UserManual" Name="UsersManual.pdf" DiskId="1" Source="$(var.SolutionDir)\Manual\UsersManual.pdf"/>
-			<!--<Shortcut Id="UserManualSrtcut" Directory="ProgramMenuProductFolder" Name="Users Manual" WorkingDirectory="INSTALLFOLDER" Advertise="no"/>-->
-		</Component>
+		<!--<Component Id="Manual" Guid="905E8ADD-F690-47B4-B971-A76F2494F41F" Directory="ManDir" Win64="yes">-->
+			
 		<ComponentGroup Id="SQLiteComponents">
 			<Component Id="SQLite" Directory="INSTALLFOLDER" Guid="E071F60F-411C-4CA3-BC1A-0BB92A5E64EF" Win64="yes">
-				<File Id="SQLiteDLL" Name="System.Data.SQLite.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)System.Data.SQLite.dll" KeyPath="yes"/>
+				<File Id="SQLiteDLL" Name="System.Data.SQLite.dll" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)System.Data.SQLite.dll" KeyPath="yes"/>
 			</Component>
-			<Component Id="SQLiteEF6" Directory="INSTALLFOLDER" Guid="159B5C0F-D6C3-459D-BA3B-10DD3266EF0B" Win64="yes">
-				<File Id="SQLiteEF6DLL" Name="System.Data.SQLite.EF6.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)System.Data.SQLite.EF6.dll" KeyPath="yes"/>
-			</Component>
-			<Component Id="SQLiteLinq" Directory="INSTALLFOLDER" Guid="48F26B57-5133-466F-A8E3-0853392CEAFE" Win64="yes">
-				<File Id="SQLiteLinqDLL" Name="System.Data.SQLite.Linq.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)System.Data.SQLite.Linq.dll" KeyPath="yes"/>
-			</Component>
-			<Component Id="EntityFramework" Directory="INSTALLFOLDER" Guid="D4314939-2F1C-45C2-98ED-B3989E065B7B" Win64="yes">
-				<File Id="EntityFrameworkDLL" Name="EntityFramework.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)EntityFramework.dll" KeyPath="yes"/>
-			</Component>
-			<Component Id="EFSqlServer" Directory="INSTALLFOLDER" Guid="C6D08942-757C-4FA2-A2B3-BAEEDFC0D13C" Win64="yes">
-				<File Id="EFSqlServerDLL" Name="EntityFramework.SqlServer.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)EntityFramework.SqlServer.dll" KeyPath="yes"/>
-			</Component>
+			<!--<Component Id="SQLiteEF6" Directory="INSTALLFOLDER" Guid="159B5C0F-D6C3-459D-BA3B-10DD3266EF0B" Win64="yes">
+				<File Id="SQLiteEF6DLL" Name="System.Data.SQLite.EF6.dll" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)System.Data.SQLite.EF6.dll" KeyPath="yes"/>
+			</Component>-->
+			<!--<Component Id="SQLiteLinq" Directory="INSTALLFOLDER" Guid="48F26B57-5133-466F-A8E3-0853392CEAFE" Win64="yes">
+				<File Id="SQLiteLinqDLL" Name="System.Data.SQLite.Linq.dll" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)System.Data.SQLite.Linq.dll" KeyPath="yes"/>
+			</Component>-->
+			<!--<Component Id="EntityFramework" Directory="INSTALLFOLDER" Guid="D4314939-2F1C-45C2-98ED-B3989E065B7B" Win64="yes">
+				<File Id="EntityFrameworkDLL" Name="EntityFramework.dll" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)EntityFramework.dll" KeyPath="yes"/>
+			</Component>-->
+			<!--<Component Id="EFSqlServer" Directory="INSTALLFOLDER" Guid="C6D08942-757C-4FA2-A2B3-BAEEDFC0D13C" Win64="yes">
+				<File Id="EFSqlServerDLL" Name="EntityFramework.SqlServer.dll" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)EntityFramework.SqlServer.dll" KeyPath="yes"/>
+			</Component>-->
 			<Component Id="SQLite_x86"  Directory="DIR_x86" Guid="12C91ADA-726E-4F27-BE49-AD229D61DC3D" Win64="yes">
-				<File Id="SQLliteInterop_x86" Name="SQLite.Interop.dll" Source="$(var.PeakMap.TargetDir)x86\SQLite.Interop.dll" DiskId="1"/>
+				<File Id="SQLliteInterop_x86" Name="SQLite.Interop.dll" Source="$(var.PeakMapWPF.TargetDir)x86\SQLite.Interop.dll" DiskId="1"/>
 			</Component>
 			<Component Id="SQLite_x64" Directory="DIR_x64" Guid="9ADE4BAC-D925-4C24-AA58-8820D42059D3" Win64="yes">
-				<File Id="SQLliteInterop_x64" Name="SQLite.Interop.dll" Source="$(var.PeakMap.TargetDir)x64\SQLite.Interop.dll" DiskId="1"/>
+				<File Id="SQLliteInterop_x64" Name="SQLite.Interop.dll" Source="$(var.PeakMapWPF.TargetDir)x64\SQLite.Interop.dll" DiskId="1"/>
 			</Component>
 		</ComponentGroup>
-		<ComponentGroup  Id="AccordComponents" Directory="INSTALLFOLDER">
+		<!--<ComponentGroup  Id="AccordComponents" Directory="INSTALLFOLDER">
 			<Component Id="Accord" Guid="ED3FA8DC-78D0-4369-96D7-48E6C126521A" Win64="yes" > 
 				<File Id="AccordDLL" Name="Accord.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)Accord.dll" KeyPath="yes"/>
 			</Component>
@@ -93,8 +98,8 @@
 			<Component Id="AccordMathCore" Guid="20D81F4C-8B5A-47F5-A1A6-33D28652174F" Win64="yes">
 				<File Id="AccordMathCore" Name="Accord.Math.Core.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)Accord.Math.Core.dll" KeyPath="yes"/>
 			</Component>
-		</ComponentGroup>
-		<Icon Id="icon.ico" SourceFile="$(var.PeakMap.ProjectDir)\icon.ico"/>
+		</ComponentGroup>-->
+		<Icon Id="icon.ico" SourceFile="$(var.PeakMapWPF.ProjectDir)Views\icon.ico"/>
 		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
 	</Fragment>

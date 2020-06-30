@@ -29,22 +29,20 @@ namespace PeakMapWPF
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            MainWindow mainWin = new MainWindow();
             _ = new FileDragDropService();
-            IDialogService dialogService = new DialogService(MainWindow);
+            IDialogService dialogService = new DialogService(mainWin);
             dialogService.Register<DialogViewModel, DialogView>();
             dialogService.Register<SpectralSettingsViewModel, SpectralSettingsView>();
             dialogService.Register<MatchSettingsViewModel, MatchingSettingsView>();
             dialogService.Register<LibrarySettingsViewModel, LibrarySettingsView>();
 
-            IFileDialogService fileDialogService = new FileDialogService(MainWindow);
-
-            //var viewModel = new ViewModels.MainWindowViewModel(dialogService, fileDialogService);
-            //var view = new MainWindow { DataContext = viewModel };
+            IFileDialogService fileDialogService = new FileDialogService(mainWin);
 
             var viewModel = new ViewModels.MainWindowMatchingViewModel(dialogService, fileDialogService);
-            var view = new MainWindow { DataContext = viewModel };
+            mainWin.DataContext = viewModel;
 
-            view.ShowDialog();
+            mainWin.ShowDialog();
         }
     }
 }

@@ -24,7 +24,7 @@ authority from the Government may result in criminal liability under U.S. laws.
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PeakMapWPF.Views"
         mc:Ignorable="d"
-        Title="MatchingSettingsView" Height="320" Width="350">
+        Title="MatchingSettingsView" Height="320" Width="350" Icon="icon.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>

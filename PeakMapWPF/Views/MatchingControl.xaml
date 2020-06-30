@@ -128,7 +128,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                   SelectedItemsList="{Binding SelectedLines, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                   AutoGenerateColumns="False" Style="{StaticResource DataGridStyle}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Energy" Binding="{Binding Path=ENERGY}" Width="*"/>
+                <DataGridTextColumn Header="Energy" Binding="{Binding Path=ENERGY,StringFormat=F2}" Width="*"/>
                 <DataGridTextColumn Header="Yield (%)" Binding="{Binding Path=YIELD, StringFormat=F2}" Width="*"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding Path=TYPE}" Width="Auto"/>
                 <DataGridTextColumn Header="Efficiency (%)" Binding="{Binding EFFICIENCY, StringFormat=E3}" Width="*"/>

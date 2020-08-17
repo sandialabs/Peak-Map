@@ -23,8 +23,9 @@ authority from the Government may result in criminal liability under U.S. laws.
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PeakMapWPF.Views" xmlns:u="clr-namespace:PeakMapWPF"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="800" Icon="icon.ico">
+        Title="Settings" Height="500" Width="800" Icon="icon.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -37,32 +38,34 @@ authority from the Government may result in criminal liability under U.S. laws.
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-
-        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,0,5,5" VerticalAlignment="Top" 
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,5,5,5" VerticalAlignment="Top" 
                   ItemsSource="{Binding EfficiencyModels}" 
                   SelectedItem="{Binding CurrentModel}" 
-                  IsSynchronizedWithCurrentItem="True" Padding="12"/>
-        <StackPanel  Grid.Column="2" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,5,5" VerticalAlignment="Top">
-            <TextBlock Text="{Binding Order}"   Padding="12" Margin="5,0"/>
+                  IsSynchronizedWithCurrentItem="True" />
+        <StackPanel  Grid.Column="2" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,5,5" VerticalAlignment="Top">
+            <TextBlock Text="{Binding Order}"   Margin="5,0"/>
             <StackPanel Orientation="Vertical" DockPanel.Dock="Right"  HorizontalAlignment="Right">
-                <Button Content="⏶" HorizontalContentAlignment="Center" CommandParameter="up" Command="{Binding UpDownCommand}"/>
-                <Button Content="⏷" HorizontalContentAlignment="Center" CommandParameter="down" Command="{Binding UpDownCommand}"/>
+                <Button Content="⏶" HorizontalContentAlignment="Center" Padding="0,-3" CommandParameter="up" Command="{Binding UpDownCommand}"/>
+                <Button Content="⏷" HorizontalContentAlignment="Center"  Padding="0,-3" CommandParameter="down" Command="{Binding UpDownCommand}"/>
             </StackPanel>
         </StackPanel>
-        <TextBlock Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="5,0,0,5" TextAlignment="Center"
-               Text="{Binding EfficiencyEquation}" TextWrapping="WrapWithOverflow">
+        <TextBlock Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,0,0,0" TextAlignment="Center"
+               Text="{Binding EfficiencyEquation}" TextWrapping="WrapWithOverflow" Background="LightGray">
             <TextBlock.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Copy Coefficients" Command="{Binding CopyCommand}" CommandParameter="Coefficients"/>
                 </ContextMenu>
             </TextBlock.ContextMenu>
         </TextBlock>
-
-        <DataGrid Grid.Column="1" Grid.Row="2"  Grid.ColumnSpan="2" Margin="0,0,5,0"
+        <TextBlock Text="Sample Date" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,5,0"/>
+        <DatePicker Grid.Row="1" Grid.Column="2" HorizontalContentAlignment="Center" VerticalAlignment="Center"
+                    SelectedDate="{Binding Path=SampleDate,Mode=TwoWay, TargetNullValue={x:Static System:DateTime.Now}}"/>
+        <DataGrid Grid.Column="1" Grid.Row="3"  Grid.ColumnSpan="2" Margin="0,0,5,0"
                   ItemsSource="{Binding Path=EfficiencyMeasurements, Mode=TwoWay}"
                   AutoGenerateColumns="False" HeadersVisibility="Column">
             <DataGrid.Columns>
@@ -76,7 +79,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-        <Canvas Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="2" Background="LightGray" Margin="5,5,0,0">
+        <Canvas Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="2" Background="LightGray" Margin="5,5,0,0">
             <u:DataPiping.DataPipes>
                 <u:DataPipeCollection>
                     <u:DataPipe Source="{Binding RelativeSource={RelativeSource AncestorType={x:Type Canvas}}, Path=ActualWidth}"
@@ -127,9 +130,8 @@ authority from the Government may result in criminal liability under U.S. laws.
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-
         </Canvas>
-        <Button Grid.Column="4" Grid.Row="3"  IsDefault="True" Command="{Binding OkCommand}" Content="OK" Padding="30,6" Margin="5,10,0,0"/>
+        <Button Grid.Column="4" Grid.Row="4"  IsDefault="True" Command="{Binding OkCommand}" Content="OK" Padding="30,6" Margin="5,10,0,0"/>
     </Grid>
     <Window.InputBindings>
         <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyCommand}" CommandParameter="copy"/>

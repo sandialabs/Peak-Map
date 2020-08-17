@@ -359,6 +359,7 @@ namespace PeakMapWPF.ViewModels
             if (!CanGetLines())
                 return;
 
+            SetLinesFilter();
             matches.SetLines(SelectedNuclide.Row);
         }
 
@@ -380,6 +381,7 @@ namespace PeakMapWPF.ViewModels
             bool overwrite = operation == FileOperation.New;
             if (fileName != null)
             {
+                matches.ClearPersistentMatches();
                 await GetLibrayDataAsync(fileName, overwrite);
             }
 

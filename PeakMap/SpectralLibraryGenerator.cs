@@ -23,7 +23,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace PeakMap
 {
@@ -50,7 +49,7 @@ namespace PeakMap
         protected bool performLineComb;
         protected double resolutionLimt;
         protected double keyLimit;
-        protected IDisplay messageDisplay;
+
         /// <summary>
         /// Gets or sets wether perfrom line combining
         /// </summary>
@@ -125,10 +124,6 @@ namespace PeakMap
                 foreach (DataRow srow in unresLines)
                     energies.Append(srow["ENERGY"].ToString() + ", ");
                 energies.Remove(energies.Length - 2, 2);
-
-                //if the display is not initilized 
-                if (messageDisplay == null)
-                    messageDisplay = new MessageDisplay();
 
                 bool? result = combineLinesCallBack(energies.ToString());
 
@@ -268,6 +263,10 @@ namespace PeakMap
             {
                 //check for line duplicates
                 int ln = lib.Tables["MATCHEDLINES"].Select("NAME = '" + (string)nuclide["NAME"] + "'").Length;
+
+                if (performLineComb)
+                    MergeUnresolvableLines(writeLines, combineLinesCallBack);
+
                 int keyLine = (int)GetKeyLine(writeLines)["LINENUMBER"];
                 foreach (DataRow writeLine in writeLines.Rows)
                 {
@@ -292,8 +291,11 @@ namespace PeakMap
 
                 DataRow nuc = lib.Tables["MATCHEDNUCLIDES"].NewRow();
                 nuc.ItemArray = nuclide.ItemArray;
-                while (lib.Tables["MATCHEDNUCLIDES"].Select("ID = " + nuc["ID"]).Length > 0)
-                    nuc["ID"] =+ 1;
+                int id = int.Parse(nuc["ID"].ToString());
+                while (lib.Tables["MATCHEDNUCLIDES"].Select("ID = '" +id+"'").Length > 0)
+                    id ++ ;
+
+                nuc["ID"] = id;
 
                 lib.Tables["MATCHEDNUCLIDES"].Rows.Add(nuc);
                 SetKeyLine(writeLines);

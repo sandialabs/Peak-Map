@@ -54,6 +54,7 @@ namespace PeakMapWPF.ViewModels
 
             EfficiencyMeasurements.CollectionChanged += EfficiencyMeasurements_CollectionChanged;
             WriteEfficiencyEquation();
+
         }
 
 
@@ -200,6 +201,15 @@ namespace PeakMapWPF.ViewModels
                 DrawGraph();
             }
         }
+        public DateTime SampleDate
+        {
+            get { return data.CollectionTime; }
+            set { 
+                data.CollectionTime = value;
+                OnPropertyChanged("SampleDate");
+            }
+        }
+
         #endregion
         /// <summary>
         /// Can the UpDownCommand execute

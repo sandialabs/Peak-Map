@@ -52,7 +52,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Half-Life Constant" Margin="5,2" 
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Score Half-Life" Margin="5,2" 
                            ToolTip="Turn on or off the half life scoring."/>
                     <CheckBox Grid.Row="0" Grid.Column="1" Margin="0,2" HorizontalAlignment="Center" IsChecked="{Binding EnableHalfLifeScore}"/>
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Half-Life Constant" Margin="5,2"

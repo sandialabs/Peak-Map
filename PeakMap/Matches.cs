@@ -23,7 +23,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
 namespace PeakMap
 {
@@ -489,8 +488,9 @@ namespace PeakMap
                 else
                 {
                     //check for repeats
-                    bool repeatNuc = matches.Tables["MATCHEDNUCLIDES"].AsEnumerable().Any(row => (string)nuc["NAME"] == row.Field<string>("NUCLIDE"));
-                    bool repeat = matches.Tables["MATCHEDNUCLIDES"].AsEnumerable().Any(row => (string)nuc["NAME"] == row.Field<string>("NUCLIDE") &&
+                    bool repeatNuc = matches.Tables["MATCHEDNUCLIDES"].AsEnumerable().Any(row => (string)nuc["NAME"] == row.Field<string>("NAME"));
+                    bool repeatParent = matches.Tables["MATCHEDNUCLIDES"].AsEnumerable().Any(row => (string)nuc["PARENT"] == row.Field<string>("NAME"));
+                    bool repeat = matches.Tables["MATCHEDNUCLIDES"].AsEnumerable().Any(row => (string)nuc["NAME"] == row.Field<string>("NAME") &&
                                                                                               (double)nuc["HALF_LIFE"] == row.Field<double>("HALF_LIFE") &&
                                                                                               (string)nuc["HALF_LIFE_UNIT"] == row.Field<string>("HALF_LIFE_UNIT"));
                     //only add parents who's daughters have shorter half lives
@@ -506,7 +506,10 @@ namespace PeakMap
                             matches.Tables["MATCHEDNUCLIDES"].Rows.Add(id, nucName, 1 * score, nuc["NAME"], nuc["HALF_LIFE"], nuc["HALF_LIFE_UNIT"]);
                             id++;
                         }
-                        matches.Tables["MATCHEDNUCLIDES"].Rows.Add(id, nuc["PARENT"], 1 * score, nuc["NAME"], nuc["PARENT_HALF_LIFE"], nuc["PARENT_HALF_LIFE_UNIT"]);
+                        if (!repeatParent)
+                        {
+                            matches.Tables["MATCHEDNUCLIDES"].Rows.Add(id, nuc["PARENT"], 1 * score, nuc["NAME"], nuc["PARENT_HALF_LIFE"], nuc["PARENT_HALF_LIFE_UNIT"]);
+                        }
                         id++;
 
                     }
@@ -674,6 +677,16 @@ namespace PeakMap
             DataRow[] oldMatches = matches.Tables["Peaks"].Select("TENTATIVEMATCH = true");
             foreach (DataRow peak in oldMatches)
                 peak["TENTATIVEMATCH"] = false;
+        }
+        /// <summary>
+        /// Clear all the persistant matches
+        /// </summary>
+        public void ClearPersistentMatches() 
+        {
+            foreach(DataRow peak in Peaks.Rows) 
+            {
+                ClearPersistentMatch(peak);
+            }
         }
         /// <summary>
         /// Clear a persistent Match

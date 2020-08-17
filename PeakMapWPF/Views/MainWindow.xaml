@@ -106,7 +106,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                           Command="{Binding LinesMenuCommand}" CommandParameter="{Binding ElementName=WriteSelMenuItem, Path=Header}"
                           IsCheckable="True" IsChecked="{Binding IsWriteSelChecked}"
                           AutomationProperties.HelpText="Write slected lines" 
-                          InputGestureText="CTRL+S"/>
+                          InputGestureText="CTRL+H"/>
                 <MenuItem x:Name="WriteMatchedMenuItem" Header="Write _Matched" 
                           Command="{Binding LinesMenuCommand}" CommandParameter="{Binding ElementName=WriteMatchedMenuItem, Path=Header}"
                           IsCheckable="True" IsChecked="{Binding IsWriteMatchedChecked}"
@@ -116,7 +116,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                           Command="{Binding LinesMenuCommand}" CommandParameter="{Binding ElementName=WriteAllMenuItem, Path=Header}"
                           IsCheckable="True" IsChecked="{Binding IsWriteAllChecked}"
                           AutomationProperties.HelpText="Write all displayed lines" 
-                          InputGestureText="CTRL+A"/>
+                          InputGestureText="CTRL+W"/>
                 <Separator/>
                 <MenuItem x:Name="WriteMenuItem" Header="_Write" 
                           Command="{Binding LinesMenuCommand}" CommandParameter="write"
@@ -166,7 +166,7 @@ authority from the Government may result in criminal liability under U.S. laws.
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding FileMenuCommand}" CommandParameter="New Library"/>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="{Binding FileMenuCommand}" CommandParameter="save Library"/>
         
-        <KeyBinding Key="A" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write All"/>
+        <KeyBinding Key="W" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write All"/>
         <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write Matched"/>
         <KeyBinding Key="H" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write Highlighted"/>
         <KeyBinding Key="Insert" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write"/>

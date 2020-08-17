@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CAMInputOutput;
 using System.IO;
+using PeakMap.Properties;
 
 namespace PeakMap
 {
@@ -37,7 +38,7 @@ namespace PeakMap
             performLineComb = true;
             camfile = new CAMIO();
             resolutionLimt = 0.5;
-            messageDisplay = new MessageDisplay();
+
         }
         /// <summary>
         /// Constructor for CAMLibrary
@@ -52,22 +53,9 @@ namespace PeakMap
             performLineComb = true;
             InitilizeLib();
             resolutionLimt = 0.5;
-            messageDisplay = new MessageDisplay();
+
         }
-        /// <summary>
-        /// Constructor for CAMLibrary
-        /// </summary>
-        /// <param name="inpfile"></param>
-        /// <param name="display"></param>
-        public CAMLibrary(string inpfile, IDisplay display)
-        {
-            file = inpfile;
-            camfile = new CAMIO();
-            InitilizeLib();
-            performLineComb = true;
-            resolutionLimt = 0.5;
-            messageDisplay = display;
-        }
+
         /// <summary>
         /// Initilize library
         /// </summary>
@@ -179,6 +167,10 @@ namespace PeakMap
             int ln = 0; string name = "";
             foreach (Line line in lines) 
             {
+                //check for bad lines
+                if (line.Abundance < Settings.Default.LOWERYIELD || line.Energy < Settings.Default.LOWERELIMT)
+                    continue;
+
                 DataRow nucRow = lib.Tables["MATCHEDLINES"].NewRow();
                 //check if the name has changed, if so reset the line number
                 //ln = name != nucs[line.NuclideIndex-1].Name ? 0 : ln;

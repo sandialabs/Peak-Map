@@ -23,7 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
+
 
 namespace PeakMap
 {
@@ -40,7 +40,7 @@ namespace PeakMap
         {
             performLineComb = true;
             InitilizeLib();
-            messageDisplay = new MessageDisplay();
+
         }
         /// <summary>
         /// Initilize TextLibray Object
@@ -53,28 +53,12 @@ namespace PeakMap
             file = fileName;
             canWrite = true;
         }
-        /// <summary>
-        /// Initilize TextLibray Object
-        /// </summary>
-        /// <param name="fileName">The file name of the libary</param>
-        /// <param name="display">The messagebox display initilization</param>
-        public TextLibrary(string fileName, IDisplay display)
-        {
-            performLineComb = true;
-            InitilizeLib();
-            file = fileName;
-            messageDisplay = display;
-        }
+
         /// <summary>
         /// Initilize TextLibray Object
         /// </summary>
         /// <param name="display">The messagebox display initilization</param>
-        public TextLibrary(IDisplay display)
-        {
-            performLineComb = true;
-            InitilizeLib();
-            messageDisplay = display;
-        }
+
         private void InitilizeLib()
         {
             lib = new DataSet();

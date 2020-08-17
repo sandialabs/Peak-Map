@@ -138,12 +138,6 @@
     <Resource Include="Views\icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PeakMap\PeakMap.csproj">
-      <Project>{b6a03236-3631-486c-a13c-f49b02dc39a9}</Project>
-      <Name>PeakMap</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="Views\LibraryControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,6 +178,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PeakMap\PeakMap.csproj">
+      <Project>{b6a03236-3631-486c-a13c-f49b02dc39a9}</Project>
+      <Name>PeakMap</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

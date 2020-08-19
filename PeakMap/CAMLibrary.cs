@@ -149,7 +149,6 @@ namespace PeakMap
 
             //get the data from the file async
             Task<Nuclide[]> nucTask = Task.Run(() => camfile.GetNuclides().ToArray());
-            Task<Line[]> linesTask = Task.Run(() => camfile.GetLines().ToArray());
 
             //parse the nuclides
             Nuclide[] nucs = await nucTask;
@@ -157,25 +156,24 @@ namespace PeakMap
             {
                 DataRow nucRow = lib.Tables["MATCHEDNUCLIDES"].NewRow();
                 nucRow["ID"] = nuc.Index;
-                nucRow["NAME"] = nuc.Name;
+                nucRow["NAME"] = nuc.Name.Trim();
                 nucRow["HALF_LIFE"] = nuc.HalfLife;
-                nucRow["HALF_LIFE_UNIT"] = nuc.HalfLifeUnit;
+                nucRow["HALF_LIFE_UNIT"] = nuc.HalfLifeUnit.Trim();
                 lib.Tables["MATCHEDNUCLIDES"].Rows.Add(nucRow);
             }
             //parse the lines
-            Line[] lines = await linesTask;
-            int ln = 0; string name = "";
+            Line[] lines = camfile.Lines.ToArray();
+            int ln = 0;
             foreach (Line line in lines) 
             {
-                //check for bad lines
-                if (line.Abundance < Settings.Default.LOWERYIELD || line.Energy < Settings.Default.LOWERELIMT)
-                    continue;
 
                 DataRow nucRow = lib.Tables["MATCHEDLINES"].NewRow();
                 //check if the name has changed, if so reset the line number
-                //ln = name != nucs[line.NuclideIndex-1].Name ? 0 : ln;
-                name = nucs.Where(r => r.Index == line.NuclideIndex).First().Name;
-                nucRow["NAME"] = name;
+
+                //check for bad lines
+                Nuclide nuc = nucs.Where(r => r.Index == line.NuclideIndex).FirstOrDefault();
+
+                nucRow["NAME"] = nuc.Name;
                 nucRow["LINENUMBER"] = ln ;
                 nucRow["ENERGY"] = line.Energy;
                 nucRow["ENERGYUNC"] = line.Energy;

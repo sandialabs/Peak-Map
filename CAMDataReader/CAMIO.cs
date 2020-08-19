@@ -216,6 +216,29 @@ namespace CAMInputOutput
         IList<byte[]> lines;
         IList<byte[]> nucs;
 
+        IList<Line> fileLines;
+        IList<Nuclide> fileNuclides;
+
+        public IList<Line> Lines
+        { 
+            get {
+                if (fileLines != null)
+                    return fileLines;
+                else
+                    return null;
+            } 
+        }
+        public IList<Line> Nuclides
+        {
+            get
+            {
+                if (fileNuclides != null)
+                    return fileLines;
+                else
+                    return null;
+            }
+        }
+
         #region defaultBytes
         private readonly byte[] fileHeader = {
             0x00, 0x04, 0x00, 0x00, 0x00, 0x04, 0x00, 0x08, 0x00, 0x00, 0x00, 0xA4, 0x00, 0x00, 0x00, 0x00,
@@ -765,13 +788,14 @@ namespace CAMInputOutput
             if (start.Count() < 1)
                 throw new FileFormatException("There is no nuclide line data in the loaded file");
 
-            IList<Line> fileLines = new List<Line>();
+            List<Line> tempLines = new List<Line>();
 
             //loop through all the blocks
             foreach (UInt32 pos in start)
             {
                 //offset to record 0x22 in header if 0x04 is 0x500
-                UInt16 recOffset = BitConverter.ToUInt16(readData, (int)(pos + 0x04)) == 0x700 ? (UInt16)0 : BitConverter.ToUInt16(readData, (int)(pos + 0x22));
+                UInt16 commonFlag =  BitConverter.ToUInt16(readData, (int)(pos + 0x04));
+                UInt16 recOffset = commonFlag == 0x700  || commonFlag==0x300 ? (UInt16)0 : BitConverter.ToUInt16(readData, (int)(pos + 0x22));
                 //the size of a record 0x20 in header
                 UInt16 recSize = BitConverter.ToUInt16(readData, (int)(pos + 0x20));
                 //get the number of records
@@ -791,15 +815,16 @@ namespace CAMInputOutput
                         IsKeyLine = readData[loc + (UInt32)LineParameterLocation.IsKeyLine] == 0x04,
                         NuclideIndex = readData[loc + (UInt32)LineParameterLocation.NuclideIndex]
                     };
-                    fileLines.Add(line);
+                    tempLines.Add(line);
                 }
 
             }
 
+            fileLines = tempLines.OrderBy(L => L.Energy).ToList<Line>();
             return fileLines;
         }
         /// <summary>
-        /// Read the nuclides from the file
+        /// Read the nuclides and Lines from the file
         /// </summary>
         /// <returns>The nuclides from the file</returns>
         public IList<Nuclide> GetNuclides()
@@ -816,7 +841,14 @@ namespace CAMInputOutput
             if (start.Count() < 1)
                 throw new FileFormatException("There is no nuclide data in the loaded file");
 
-            IList<Nuclide> fileNucs = new List<Nuclide>();
+            fileNuclides = new List<Nuclide>();
+            //get the lines if they don't exist
+            if (fileLines == null || fileLines.Count < 1)
+                GetLines();
+
+            if (fileLines == null || fileLines.Count < 1)
+                throw new FileFormatException("There are no lines in the file");
+
             //loop through all the blocks
             foreach (UInt32 pos in start)
             {
@@ -829,26 +861,29 @@ namespace CAMInputOutput
                 //get the header size
                 UInt16 headSize = BitConverter.ToUInt16(readData, (int)(pos + 0x10));
                 UInt32 lineListOffset = 0x0U;
+                UInt32 lineListLoc = BitConverter.ToUInt16(readData, (int)(pos + 0x20));
 
                 //loop through the records and create and add a nuclide
                 for (int i = 0; i < numRec; i++)
                 {
                     UInt32 loc = pos + headSize + recOffset + lineListOffset + (UInt32)(i * recSize);
+                    //get the first line
+                    int lineIndex = BitConverter.ToUInt16(readData, (int)(loc + lineListLoc + 0x01));
                     Nuclide nuc = new Nuclide
                     {
                         Name = Encoding.ASCII.GetString(readData, (int)(loc + (UInt32)NuclideParameterLocation.Name), 0x8),
                         HalfLifeUnit = Encoding.ASCII.GetString(readData, (int)(loc + (UInt32)NuclideParameterLocation.HalfLifeUnit), 0x2),
                         HalfLife = ConvertTimeSpan(readData, loc + (UInt32)NuclideParameterLocation.HalfLife),
                         HalfLifeUncertainty = ConvertTimeSpan(readData, loc + (UInt32)NuclideParameterLocation.HalfLifeUncertainty),
-                        Index = fileNucs.Count+1
+                        Index = fileLines[lineIndex-1].NuclideIndex
                     };
-                    fileNucs.Add(nuc);
+                    fileNuclides.Add(nuc);
                     UInt32 numLines = ((UInt32)BitConverter.ToUInt16(readData, (int)(loc)) - 0x23AU) / 3U + 1U;
                     lineListOffset += numLines * 0x3U;
                 }
 
             }
-            return fileNucs;
+            return fileNuclides;
 
         }
         /// <summary>

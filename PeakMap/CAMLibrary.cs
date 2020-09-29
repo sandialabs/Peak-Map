@@ -95,11 +95,10 @@ namespace PeakMap
                 File.Delete(file);
             }
             int nucID = 1;
+            //always do the lines first
             foreach (DataRow nuclide in lib.Tables["MATCHEDNUCLIDES"].Rows)
             {
                 DataRow[] nucLines = lib.Tables["MATCHEDLINES"].Select("NAME = '" + nuclide["NAME"] + "'", "ENERGY ASC");
-                //always do the lines first
-                
                 foreach (DataRow nucLine in nucLines)
                 {
                     Line line = new Line
@@ -114,6 +113,18 @@ namespace PeakMap
                     //add the line
                     camfile.AddLine(line);
                 }
+                nucID++;
+            }
+            nucID = 1;
+            foreach (DataRow nuclide in lib.Tables["MATCHEDNUCLIDES"].Rows)
+            {
+                //DataRow[] nucLines = lib.Tables["MATCHEDLINES"].Select("NAME = '" + nuclide["NAME"] + "'", "ENERGY ASC");
+                //
+                
+                //foreach (DataRow nucLine in nucLines)
+                //{
+
+                //}
                 //now do the nuclide
                 Nuclide nuc = new Nuclide
                 {
@@ -179,6 +190,7 @@ namespace PeakMap
                 nucRow["ENERGYUNC"] = line.Energy;
                 nucRow["YIELD"] = line.Abundance;
                 nucRow["YIELDUNC"] = line.AbundanceUncertainty;
+                nucRow["ISKEY"] = line.IsKeyLine;
                 lib.Tables["MATCHEDLINES"].Rows.Add(nucRow);
                 ln++;
             }
@@ -190,7 +202,7 @@ namespace PeakMap
         /// <returns>percision</returns>
         protected override double GetPrecision(double num)
         {
-            return 1e-5;
+            return 1e-4;
         }
 
     }

@@ -485,6 +485,21 @@ namespace PeakMapWPF.ViewModels
 
         }
 
+        private void SaveLibrary() 
+        {
+            try
+            {
+                libGen.SaveFile();
+                this.LibraryFile = libGen.FileName;
+            }
+            catch (Exception ex)
+            {
+                DialogViewModel dialogViewModel = new DialogViewModel($"There was an exeption while writing to the library:\n {ex.Message}", "Library Exception", true);
+                dialogService.ShowDialog(dialogViewModel);
+            }
+        }
+    
+
         #region Commands
 
 
@@ -516,11 +531,13 @@ namespace PeakMapWPF.ViewModels
             else if (menuName.Contains("as") && menuName.Contains("library"))
             {
                 libGen.FileName = GetLibraryFilename(FileOperation.New);
-                libGen.SaveFile();
+
+                if(libGen != null)
+                    SaveLibrary();
             }
             else if (menuName.Contains("save") && menuName.Contains("library"))
             {
-                libGen.SaveFile();
+                SaveLibrary();
             }
 
                 
@@ -544,7 +561,7 @@ namespace PeakMapWPF.ViewModels
                 WriteLines(WriteType.All);
                 IsWriteAllChecked = true;
             }
-            else if (menuName.Contains("write") && menuName.Contains("selected"))
+            else if (menuName.Contains("write") && menuName.Contains("highlighted"))
             {
                 WriteLines(WriteType.Selected);
                 IsWriteSelChecked = true;
@@ -559,7 +576,7 @@ namespace PeakMapWPF.ViewModels
 
             if (menuName.Contains("all"))
                 return SelectedNuclide != null && LibraryFile != null;
-            else if (menuName.Contains("selected"))
+            else if (menuName.Contains("highlighted"))
                 return SelectedLines != null && LibraryFile != null;
             else if (menuName.Contains("write"))
                 return SelectedNuclide != null && LibraryFile != null &&

@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 
 using CAMInputOutput;
+using System.IO;
 
 namespace PeakMap
 {
@@ -184,12 +185,24 @@ namespace PeakMap
             //assign the calibration info
             energyCoeff = await ecalTask;
             shapeCoeff = await shapeCalTask;
-            EfficiencyPoint[] effpts = await effCalTask;
+            //efficiency is not necessary, if there isn't efficiency calibration add some defaults
+            try
+            {
+                effMeas = new ObservableEntityCollection<EfficiencyMeasurement>();
+                EfficiencyPoint[] effpts = await effCalTask;
+                for (int i = 0; i < effpts.Length; i++)
+                    effMeas.Add(new EfficiencyMeasurement(effpts[i].Energy, effpts[i].Efficiency, effpts[i].EfficiencyUncertainty));
+            }
+            catch (FileFormatException)
+            {
+                double eff = 0.9999999999999;
+                double effunc = 0.000000000005;
+                effMeas.Add(new EfficiencyMeasurement(Properties.Settings.Default.LOWERELIMT, eff, effunc));
+                effMeas.Add(new EfficiencyMeasurement((Properties.Settings.Default.LOWERELIMT + Properties.Settings.Default.UPPERELIMIT) / 2, eff, effunc));
+                effMeas.Add(new EfficiencyMeasurement(Properties.Settings.Default.UPPERELIMIT, eff, effunc));
+                order = 2;
+            }
 
-            //assign the efficiency points
-            effMeas = new ObservableEntityCollection<EfficiencyMeasurement>();
-            for (int i =0; i< effpts.Length;i++ ) 
-                effMeas.Add( new EfficiencyMeasurement(effpts[i].Energy, effpts[i].Efficiency, effpts[i].EfficiencyUncertainty));
             effMeas.CollectionChanged += EffMeas_CollectionChanged;
             //assign the peaks
             Peak[] filePeaks = await peakTask;

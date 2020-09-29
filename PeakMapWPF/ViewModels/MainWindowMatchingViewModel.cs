@@ -185,6 +185,11 @@ namespace PeakMapWPF.ViewModels
                 DialogViewModel dialogViewModel = new DialogViewModel("File: " + file + " is in use by another program", "Exeption: File in Use", true, false);
                 dialogService.ShowDialog(dialogViewModel);
             }
+            catch (System.IO.FileFormatException ex) 
+            {
+                DialogViewModel dialogViewModel = new DialogViewModel($"File: {file} \n\n{ex.Message}", "Exeption: File Format", true, false);
+                dialogService.ShowDialog(dialogViewModel);
+            }
             catch (Exception ex)
             {
                 DialogViewModel dialogViewModel = new DialogViewModel(ex.Message + ":\n" + ex.StackTrace, "General Exception", true, false);
@@ -457,7 +462,7 @@ namespace PeakMapWPF.ViewModels
         protected override bool CanLinesMenuExecute(object context)
         {
             string menuName = context.ToString().ToLowerInvariant();
-            if (menuName.Contains("write") && menuName.Contains("matched"))
+            if (menuName.Contains("write") && menuName.Contains("selected"))
             {
                 return SelectedNuclide != null && LibraryFile != null;
             }

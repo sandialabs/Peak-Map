@@ -24,6 +24,8 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Data;
+using System.Collections;
+using System.ComponentModel;
 
 namespace CAMInputOutput
 {
@@ -213,8 +215,8 @@ namespace CAMInputOutput
         private const UInt16 headerSize = 0x800;
         private const UInt16 blockHeaderSize = 0x30;
 
-        IList<byte[]> lines;
-        IList<byte[]> nucs;
+        List<byte[]> lines;
+        List<byte[]> nucs;
 
         IList<Line> fileLines;
         IList<Nuclide> fileNuclides;
@@ -1282,7 +1284,7 @@ namespace CAMInputOutput
                 //numRecords = numRecords + startRecord  > lines.Count ? lines.Count - startRecord : (int)numLineRecords;
                 blockNo = startRecord + numRecords > lines.Count ?   (UInt16)0U:  (UInt16)(blockNo + 1U);
                 //blockList[fileIndex] = GenerateBlock(CAMBlock.NLINES, loc, ((List<byte[]>)lines).GetRange(startRecord, numRecords), blockNo, i == 1);
-                byte[] block = GenerateBlock(CAMBlock.NLINES, loc, ((List<byte[]>)lines).GetRange(startRecord, lines.Count-startRecord), blockNo, startRecord == 0);
+                byte[] block = GenerateBlock(CAMBlock.NLINES, loc, (lines.ToList<byte[]>()).GetRange(startRecord, lines.Count-startRecord), blockNo, startRecord == 0);
                 numRecords = (int)BitConverter.ToUInt16(block, 0x1E);
                 startRecord += numRecords;
                 blockList.Add(block);
@@ -1346,7 +1348,7 @@ namespace CAMInputOutput
         }
 
         /// <summary>
-        /// Add a nuclide to the file
+        /// Add a nuclide to the file after all the lines have been added
         /// </summary>
         /// <param name="nuc">Nuclide to add</param>
         /// <param name="nucNo">The nuclide record number</param>
@@ -1386,6 +1388,8 @@ namespace CAMInputOutput
                 lines.Where(line => line[0x1B] == BitConverter.GetBytes(nucNo)[0]).Select(l => (UInt16)(lines.IndexOf(l) + 1U)).ToArray() :
                 new UInt16[0];
 
+            //IComparer lnNumComparer = new LineNumberComparer();
+            Array.Sort(lineNums);
             nucs.Add(GenerateNuclide(nuc.Name, nuc.HalfLife, nuc.HalfLifeUncertainty, nuc.HalfLifeUnit.ToUpper(), lineNums));
         }
 
@@ -1414,14 +1418,21 @@ namespace CAMInputOutput
             if (nucNo > 255)
                 throw new ArgumentException("Cannot have more than 255 nuclides");
 
-            //if the nuclide alredy exists add lines to it
-            if (nucs != null && nucs.Count > nucNo)
-                AddLinesToNuclide(nucs.ElementAt(nucNo), new byte[] { BitConverter.GetBytes(lines.Count)[0] });
             //initilize the lines
             if (lines == null || lines.Count < 1)
                 lines = new List<byte[]>();
+            //insert in the correct position
+            byte[] lineBytes = GenerateLine(line.Energy, line.EnergyUncertainty, line.Abundance, line.AbundanceUncertainty, line.IsKeyLine, BitConverter.GetBytes(nucNo)[0]);
+            int lnIndex = ~lines.BinarySearch(lineBytes, new LineComparer());
+            if (lnIndex < 0)
+                lines.Insert(~lnIndex,lineBytes);
+            else
+                lines.Insert(lnIndex, lineBytes);
 
-            lines.Add(GenerateLine(line.Energy, line.EnergyUncertainty, line.Abundance, line.AbundanceUncertainty, line.IsKeyLine, BitConverter.GetBytes(nucNo)[0]));
+            //if the nuclide alredy exists add lines to it
+            if (nucs != null && nucs.Count > nucNo)
+                AddLinesToNuclide(nucs.ElementAt(nucNo), new byte[] { BitConverter.GetBytes(lnIndex)[0] });
+            //lines.Add(GenerateLine(line.Energy, line.EnergyUncertainty, line.Abundance, line.AbundanceUncertainty, line.IsKeyLine, BitConverter.GetBytes(nucNo)[0]));
         }
         /// <summary>
         /// Generate the contents of a CAM file file
@@ -1704,7 +1715,7 @@ namespace CAMInputOutput
         /// Add lines to an existing nuclide
         /// </summary>
         /// <param name="nuc">The nuclide</param>
-        /// <param name="lineNums">he record number of the lines to be associated with the nuclide</param>
+        /// <param name="lineNums">the record number of the lines to be associated with the nuclide</param>
         /// <returns></returns>
         protected byte[] AddLinesToNuclide(byte[] nuc, byte[] lineNums)
         {
@@ -1715,6 +1726,8 @@ namespace CAMInputOutput
             nuc[0] = BitConverter.GetBytes((numLines - 1U) * 3U + 0x23AU)[0];
             //Create a byte array and fill it
             byte[] linesList = new byte[numLines * 0x3U];
+
+            Array.Sort(lineNums);
 
             for (UInt16 i = 0; i < numLines; i++)
             {
@@ -1759,7 +1772,7 @@ namespace CAMInputOutput
         /// <param name="pos">The position of the value to covert</param>
         /// <param name="data">The array of bytes to be converted</param>
         /// <returns>A date time</returns>
-        private DateTime ConvertDateTime(byte[] data, UInt32 pos)
+        public static DateTime ConvertDateTime(byte[] data, UInt32 pos)
         {
             if (data.Length < 0x08)
                 throw new ArgumentException("The data input array is not long enough");
@@ -1777,7 +1790,7 @@ namespace CAMInputOutput
         /// </summary>
         /// <param name="input">DateTime to convert</param>
         /// <returns>byte repesetnation of hte DateTime in CAM format</returns>
-        private byte[] DateTimeToCAM(DateTime input)
+        public static byte[] DateTimeToCAM(DateTime input)
         {
             //get the unix epoch
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
@@ -1796,7 +1809,7 @@ namespace CAMInputOutput
         /// <param name="pos">The position of the value to covert</param>
         /// <param name="data">The array of bytes to be converted</param>
         /// <returns>The number of seconds</returns>
-        private double ConvertTimeSpan(byte[] data, UInt32 pos)
+        public static double ConvertTimeSpan(byte[] data, UInt32 pos)
         {
             //check the inputs
             if (data.Length < 0x08)
@@ -1820,7 +1833,7 @@ namespace CAMInputOutput
         /// </summary>
         /// <param name="input">Time span in seconds to convert</param>
         /// <returns>byte represnentaion of the timespan in CAM format</returns>
-        private byte[] TimeSpanToCAM(double input)
+        public static byte[] TimeSpanToCAM(double input)
         {
             Int64 tspan;
             byte[] span;
@@ -1856,7 +1869,7 @@ namespace CAMInputOutput
         /// <param name="pos">The start index of the value to covert</param>
         /// <param name="data">The array of bytes to be converted</param> 
         /// <returns>The floating point value </returns>
-        private double ConvertFloat(byte[] data, UInt32 pos)
+        public static double ConvertFloat(byte[] data, UInt32 pos)
         {
             if (data.Length < 0x04)
                 throw new ArgumentException("The data input array is not long enough");
@@ -1879,7 +1892,7 @@ namespace CAMInputOutput
         /// </summary>
         /// <param name="input">number to be converted</param>
         /// <returns>byte representation in PDP-11 format</returns>
-        private byte[] FloatToCAM(double input)
+        public static byte[] FloatToCAM(double input)
         {
             byte[] word1 = new byte[0x2], word2 = new byte[0x2];
             byte[] inpByte = BitConverter.GetBytes(Convert.ToSingle(input * 4));
@@ -1892,6 +1905,31 @@ namespace CAMInputOutput
         #endregion
 
     }
+    class LineComparer : IComparer<byte[]>
+    {
+        public int Compare(byte[] x, byte[] y)
+        {
+            return Comparer<double>.Default.Compare(CAMIO.ConvertFloat(x, 0x01), CAMIO.ConvertFloat(y, 0x01));
+        }
+    }
 
+    //class LineNumberComparer : IComparer<byte>
+    //{
+    //    public int Compare(byte x, byte y)
+    //    {
+    //        return Comparer<int>.Default.Compare(BitConverter.ToUInt16(x,0), BitConverter.ToUInt16(y, 0));
+    //    }
+    //}
+    //class SortedList : List<byte[]> 
+    //{
+    //    IComparer comparer;
+    //    public SortedList(IComparer comparer) 
+    //    {
+    //        this.comparer = comparer;
+    //    }
+
+    //    public override void Add(object obj)
+
+    //}
 
 }

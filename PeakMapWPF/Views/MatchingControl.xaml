@@ -124,7 +124,7 @@ authority from the Government may result in criminal liability under U.S. laws.
             </WrapPanel>
         </Expander>
         <views:CustomDataGrid x:Name="MatchedLinesGrid" Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" IsReadOnly="True"
-                  ItemsSource="{Binding Lines}" SelectionMode="Extended"
+                  ItemsSource="{Binding Lines}" SelectionMode="Extended" 
                   SelectedItemsList="{Binding SelectedLines, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                   AutoGenerateColumns="False" Style="{StaticResource DataGridStyle}">
             <DataGrid.Columns>

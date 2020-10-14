@@ -143,9 +143,25 @@ namespace PeakMap
         {
             //ClearTenativeMatches();
             if (matches.Tables["MATCHEDNUCLIDES"] != null && matches.Tables["MATCHEDNUCLIDES"].Rows.Count > 0)
+            {
+                string sort = matches.Tables["MATCHEDNUCLIDES"].DefaultView.Sort;
                 matches.Tables["MATCHEDNUCLIDES"].Clear();
+                matches.Tables["MATCHEDNUCLIDES"].DefaultView.Sort = sort;
+            }
+
+            ClearLines();
+        }
+        /// <summary>
+        /// Clear the Lines 
+        /// </summary>
+        public void ClearLines()
+        {
             if (matches.Tables["MATCHEDLINES"] != null && matches.Tables["MATCHEDLINES"].Rows.Count > 0)
+            {
+                string sort = matches.Tables["MATCHEDLINES"].DefaultView.Sort;
                 matches.Tables["MATCHEDLINES"].Clear();
+                matches.Tables["MATCHEDLINES"].DefaultView.Sort = sort;
+            }
         }
         /// <summary>
         /// Clear the lines a nuclide with the given name
@@ -191,7 +207,14 @@ namespace PeakMap
         public void Clear()
         {
             ClearTenativeMatches();
-            matches.Clear();
+            ClearMatches();
+            //matches.Clear();
+            if (matches.Tables["PEAKS"] != null && matches.Tables["PEAKS"].Rows.Count > 0)
+            {
+                string sort = matches.Tables["PEAKS"].DefaultView.Sort;
+                matches.Tables["PEAKS"].Clear();
+                matches.Tables["PEAKS"].DefaultView.Sort = sort;
+            }
             matches.Tables["PEAKS"].Columns["ID"].AutoIncrementSeed = -1;
             matches.Tables["PEAKS"].Columns["ID"].AutoIncrementStep = -1;
 
@@ -395,7 +418,8 @@ namespace PeakMap
             double area = double.TryParse(peak["AREA"].ToString(), out area) ? area : 0.0;
             double mda = double.TryParse(peak["CRITLEVEL"].ToString(), out mda) ? 2.71 + 2*mda : 0.0;
 
-            matches.Tables["MATCHEDLINES"].Clear();
+            //matches.Tables["MATCHEDLINES"].Clear();
+            ClearLines();
             //get the daughters line and its daughters.
             Dictionary<string, double> daughters = lib.GetDaughters((string)nuc["NAME"]);
             //generate a string for the nuclides incuding the daughters 
@@ -459,7 +483,8 @@ namespace PeakMap
         /// <param name="exactName"></param>
         public void SetNuclides(string name, int id = 0,bool exactName = false)
         {
-            matches.Tables["MATCHEDNUCLIDES"].Clear();
+            //matches.Tables["MATCHEDNUCLIDES"].Clear();
+            ClearMatches();
             //convert the nuclide name to ensure it is good. 
             name = exactName ? name : lib.GetNuclideName(name);
 

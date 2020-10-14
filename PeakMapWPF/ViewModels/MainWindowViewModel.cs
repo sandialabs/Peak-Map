@@ -51,6 +51,8 @@ namespace PeakMapWPF.ViewModels
         private IList _selectedLines;
         private double _lineMatchScore;
 
+        //private string _linesSort;
+
         private bool _gammaFilter;
         private bool _xrayFilter;
         private bool _daughtersFilter;
@@ -140,6 +142,12 @@ namespace PeakMapWPF.ViewModels
                 //sortedView.Sort = "ENERGY ASC";
                 return _lines; }
         }
+
+
+        //public string LinesSort { 
+        //    get { return _linesSort; }
+        //    set { _linesSort = value; }
+        //}
 
         public double LineMatchScore
         {
@@ -358,9 +366,10 @@ namespace PeakMapWPF.ViewModels
         {
             if (!CanGetLines())
                 return;
-
+            //_linesSort = _lines.Sort;
             SetLinesFilter();
             matches.SetLines(SelectedNuclide.Row);
+           // _lines.Sort = _linesSort;
         }
 
         protected virtual string GetLibraryFilename(FileOperation operation) 
@@ -576,7 +585,7 @@ namespace PeakMapWPF.ViewModels
 
             if (menuName.Contains("all"))
                 return SelectedNuclide != null && LibraryFile != null;
-            else if (menuName.Contains("highlighted"))
+            else if (menuName.Contains("selected"))
                 return SelectedLines != null && LibraryFile != null;
             else if (menuName.Contains("write"))
                 return SelectedNuclide != null && LibraryFile != null &&

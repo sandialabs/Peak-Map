@@ -209,7 +209,7 @@ namespace PeakMapWPF.ViewModels
             if(SelectedNuclide != null)
                 matches.ClearTenativeMatches((string)SelectedNuclide["NAME"]);
 
-            string sort = Nuclides.Sort;
+            //string sort = Nuclides.Sort;
             //clear all the matches
             matches.ClearMatches();
 
@@ -221,7 +221,7 @@ namespace PeakMapWPF.ViewModels
 
                 matches.SetNuclides((double)SelectedPeak["ENERGY"], specdata.ElapsedWait, (double)SelectedPeak["FWHM"]);
 
-                Nuclides.Sort = sort;
+                //Nuclides.Sort = sort;
             }
             catch (Exception ex)
             {
@@ -235,9 +235,10 @@ namespace PeakMapWPF.ViewModels
             if (!base.CanGetLines())
                 return;
 
+            //LinesSort = Lines.Sort;
             //set the lines
             matches.SetLines(SelectedNuclide.Row, SelectedPeak.Row);
-
+            //Lines.Sort = LinesSort;
             //highlight the matched peaks
             GetHighlightedPeaks();
 
@@ -462,7 +463,7 @@ namespace PeakMapWPF.ViewModels
         protected override bool CanLinesMenuExecute(object context)
         {
             string menuName = context.ToString().ToLowerInvariant();
-            if (menuName.Contains("write") && menuName.Contains("selected"))
+            if (menuName.Contains("write") && menuName.Contains("matched"))
             {
                 return SelectedNuclide != null && LibraryFile != null;
             }

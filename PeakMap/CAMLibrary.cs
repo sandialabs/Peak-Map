@@ -101,6 +101,7 @@ namespace PeakMap
                 DataRow[] nucLines = lib.Tables["MATCHEDLINES"].Select("NAME = '" + nuclide["NAME"] + "'", "ENERGY ASC");
                 foreach (DataRow nucLine in nucLines)
                 {
+
                     Line line = new Line
                     {
                         Abundance = (double)nucLine["YIELD"],
@@ -110,6 +111,7 @@ namespace PeakMap
                         IsKeyLine = (bool)nucLine["ISKEY"],
                         NuclideIndex = nucID
                     };
+
                     //add the line
                     camfile.AddLine(line);
                 }
@@ -187,7 +189,7 @@ namespace PeakMap
                 nucRow["NAME"] = nuc.Name;
                 nucRow["LINENUMBER"] = ln ;
                 nucRow["ENERGY"] = line.Energy;
-                nucRow["ENERGYUNC"] = line.Energy;
+                nucRow["ENERGYUNC"] = line.EnergyUncertainty;
                 nucRow["YIELD"] = line.Abundance;
                 nucRow["YIELDUNC"] = line.AbundanceUncertainty;
                 nucRow["ISKEY"] = line.IsKeyLine;

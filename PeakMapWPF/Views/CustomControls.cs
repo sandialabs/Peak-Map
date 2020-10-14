@@ -44,12 +44,14 @@ namespace PeakMapWPF.Views
         private void CustomDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetCurrentValue(SelectedItemsListProperty, SelectedItems);
+
         }
 
         //create the dependencyProperty
         public static readonly DependencyProperty SelectedItemsListProperty =
             DependencyProperty.Register("SelectedItemsList", typeof(IList), typeof(CustomDataGrid), 
                 new PropertyMetadata(OnSelectedItemsChanged));
+
 
         private static void OnSelectedItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

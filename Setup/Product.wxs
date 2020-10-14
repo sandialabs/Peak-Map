@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Peak Map" Language="1033" Version="1.3.5.3" Manufacturer="Sandia National Laboratories" UpgradeCode="A3CFFEBE-0ABB-4AF8-AE03-E98F0A926D2A">
+	<Product Id="*" Name="Peak Map" Language="1033" Version="1.3.6.0" Manufacturer="Sandia National Laboratories" UpgradeCode="A3CFFEBE-0ABB-4AF8-AE03-E98F0A926D2A">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />

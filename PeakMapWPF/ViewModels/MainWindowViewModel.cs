@@ -570,7 +570,7 @@ namespace PeakMapWPF.ViewModels
                 WriteLines(WriteType.All);
                 IsWriteAllChecked = true;
             }
-            else if (menuName.Contains("write") && menuName.Contains("highlighted"))
+            else if (menuName.Contains("write") && menuName.Contains("selected"))
             {
                 WriteLines(WriteType.Selected);
                 IsWriteSelChecked = true;

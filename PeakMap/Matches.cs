@@ -647,7 +647,7 @@ namespace PeakMap
                     peak["TENTATIVEMATCH"] = true;
                 }
                 //avoid duplicates
-                else if ((string)peak["MATCHNAME"] != matchName)
+                else if (!peak["MATCHNAME"].ToString().Contains(matchName))
                 {
                     peak["MATCHNAME"] = (string)peak["MATCHNAME"] + "," + matchName;
                     peak["TENTATIVEMATCH"] = true;

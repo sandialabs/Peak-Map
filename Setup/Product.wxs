@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Peak Map" Language="1033" Version="1.3.6.0" Manufacturer="Sandia National Laboratories" UpgradeCode="A3CFFEBE-0ABB-4AF8-AE03-E98F0A926D2A">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+	<Product Id="*" Name="Peak Map" Language="1033" Version="1.3.6.0" Manufacturer="Sandia National Laboratories" UpgradeCode="D713AE20-25D8-49B6-ACC6-A995EAB128F2">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+		
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes" Schedule="afterInstallInitialize"/>
 		<Media Id="1" Cabinet="Setup.cab" EmbedCab="yes"/>
 
 		<Feature Id="ProductFeature" Title="Installer" Level="1">
@@ -12,6 +12,7 @@
 			<!--<ComponentGroupRef Id="AccordComponents"/>-->
 			<!--<ComponentRef Id="Manual"/>-->
 		</Feature>
+
 	</Product>
 
 	<Fragment>
@@ -33,7 +34,7 @@
 
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER" >
-			<Component Id="ProductComponent" Guid="B1A84C8F-E362-4E12-B57C-9F66F253F66F" Win64="yes">
+			<Component Id="ProductComponent" Guid="B299A82B-B1B7-4A64-BF78-391D9BB017B4" Win64="yes">
 				<File Source="$(var.PeakMapWPF.TargetPath)" DiskId="1" KeyPath="yes"/>
 				<Shortcut Id="pgrmMenuSrtcut" Directory="AppProgramMenuFolder" Name="Peak Map" WorkingDirectory="INSTALLFOLDER" Icon="icon.ico" IconIndex="0" Advertise="yes"/>
 				<!--<File Id="UserManual" Name="UsersManual.pdf" DiskId="1" Source="$(var.SolutionDir)\Manual\UsersManual.pdf"/>-->
@@ -47,10 +48,10 @@
 			<Component Id="Config" Guid="F1A672F2-C82B-4D6E-B68F-41C5CA825BA7" Win64="yes">
 				<File Source="$(var.PeakMapWPF.TargetDir)\$(var.PeakMapWPF.TargetFileName).config" DiskId="1" KeyPath="yes"/>
 			</Component>
-			<Component Id="CAMIOLibrary" Guid="64EB556A-D479-40AD-847A-20DFF36600E4" Win64="yes">
+			<Component Id="CAMIOLibrary" Guid="06F4678A-9C1D-4781-90BC-1699B10B9196" Win64="yes">
 				<File Id="CAMIODLL" Name="CAMInputOutput.dll" DiskId="1" Source="$(var.PeakMapWPF.TargetDir)CamInputOutput.dll" KeyPath="yes"/>
 			</Component>
-			<Component Id="PeakMapLibrary" Guid="2561B87E-9BB9-4DBC-895A-8C4613926476" Win64="yes">
+			<Component Id="PeakMapLibrary" Guid="E5755AD3-6136-4A7D-BDA5-E98FBFBDE16A" Win64="yes">
 				<File Id="PEAKMAPDLL" Name="PeakMap.dll" DiskId="1" Source="$(var.PeakMap.TargetDir)PeakMap.dll" KeyPath="yes"/>
 			</Component>
 			<Component Id="data" Guid="4E4729C6-0256-4F8E-86BB-177D5FAD7028" Win64="yes">

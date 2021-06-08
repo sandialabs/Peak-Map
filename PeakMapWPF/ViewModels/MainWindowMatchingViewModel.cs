@@ -82,7 +82,7 @@ namespace PeakMapWPF.ViewModels
             : base(dialogService, fileDialog)
         {
             UserInputCommand = new RelayCommand(UserInputCommand_Executed, CanUserInputExecute);
-            PeaksContextMenuCommand = new RelayCommand(PeaksContextMenuCommand_Executed, CanPeaksContextMenuExecute);
+            MatchesContextMenuCommand = new RelayCommand(PeaksContextMenuCommand_Executed, CanPeaksContextMenuExecute);
             PastedTextCommand = new RelayCommand(PasteCommand_Executed, CanPasteExecute);
             FileMenuCommand = new RelayCommand(FileMenuCommand_Executed, CanFileMenuExecute);
             LinesMenuCommand = new RelayCommand(LinesMenuCommand_Executed, CanLinesMenuExecute);
@@ -114,9 +114,9 @@ namespace PeakMapWPF.ViewModels
             string[] matches = ((string)SelectedPeak["MATCHNAME"]).Split(',');
             foreach (string nucName in matches)
             {
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear { nucName } from Peak {SelectedPeak["ID"]}", Action = PeaksContextMenuCommand });
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear {nucName} from all Peaks", Action = PeaksContextMenuCommand });
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear all matches", Action = PeaksContextMenuCommand });
+                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear { nucName } from Peak {SelectedPeak["ID"]}", Action = MatchesContextMenuCommand });
+                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear {nucName} from all Peaks", Action = MatchesContextMenuCommand });
+                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear all matches", Action = MatchesContextMenuCommand });
             }
         }
         /// <summary>
@@ -338,7 +338,6 @@ namespace PeakMapWPF.ViewModels
             if (context == null)
                 return false;
 
-            string menuName = context.ToString().ToLowerInvariant();
             if (SelectedPeak != null)
                 return SelectedPeak["MATCHNAME"] != DBNull.Value;
 

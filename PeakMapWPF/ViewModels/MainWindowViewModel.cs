@@ -436,10 +436,10 @@ namespace PeakMapWPF.ViewModels
             return true;
         }
         /// <summary>
-        /// Write the Lines to a CAM Library
+        /// Write the Lines to Library
         /// </summary>
-        /// <param name="type"></param>
-        protected void WriteLines(WriteType type)
+        /// <param name="type">Write Type</param>
+        protected virtual void WriteLines(WriteType type)
         {
             ////check if a nuclide is selected
             //if (matchedNuclidesGrid.SelectedRows.Count <= 0)
@@ -520,7 +520,7 @@ namespace PeakMapWPF.ViewModels
         public RelayCommand ModeCommand { get; protected set; }
         public RelayCommand ExitCommand { get; private set; }
         public RelayCommand UserInputCommand { get; protected set; }
-        public RelayCommand PeaksContextMenuCommand { get; protected set; }
+        public RelayCommand MatchesContextMenuCommand { get; protected set; }
         public RelayCommand PastedTextCommand { get; protected set; }
         private void InitilizeCommands() 
         {

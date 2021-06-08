@@ -50,8 +50,9 @@ authority from the Government may result in criminal liability under U.S. laws.
 
         <Style x:Key="RowHighlights" TargetType="{x:Type DataGridRow}">
             <Style.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#FFe6cc" Opacity="10"/>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#ff8000" Opacity="50"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#ff901a" Opacity="10"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#ff901a" Opacity="50"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="White"/>
             </Style.Resources>
         </Style>        
         <Style x:Key="MenuItemStyle" TargetType="{x:Type MenuItem}">

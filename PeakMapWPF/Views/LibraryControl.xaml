@@ -47,7 +47,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                 <DataGridTextColumn Header="Id"  Width="*" Binding="{Binding Path=NAME}"/>
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
-                <ContextMenu ItemsSource="{Binding SelectedLibrayNuclides}">
+                <ContextMenu ItemsSource="{Binding SelectedNuclideContextItems}">
                     <ContextMenu.ItemContainerStyle>
                         <Style TargetType="MenuItem">
                             <Setter Property="Header" Value="{Binding Name}"/>
@@ -117,12 +117,32 @@ authority from the Government may result in criminal liability under U.S. laws.
                 <DataGridTextColumn Header="Nuclide" Binding="{Binding Path=NAME}" Width=".9*"/>
             </DataGrid.Columns>
             <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Style.Resources>
+                <!--<Style TargetType="{x:Type DataGridRow}">-->
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource RowHighlights}">
+                    <!--<Style.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Orange" Opacity="50"/>
-                    </Style.Resources>
+                    </Style.Resources>-->
+                        <Style.Triggers>
+                        <DataTrigger Binding="{Binding MATCHED}" Value="True">
+                            <Setter Property="Background" Value="#FFe6cc"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding MATCHED}" Value="False">
+                            <Setter Property="Background" Value="White"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </DataGrid.RowStyle>
+            <DataGrid.ContextMenu>
+                <ContextMenu ItemsSource="{Binding SelectedLinesContextItems}">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command" Value="{Binding Action}"/>
+                            <Setter Property="CommandParameter" Value="{Binding Name}"/>
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </views:CustomDataGrid>
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <TextBlock Text="{Binding Path=LibraryFile, Mode=OneWay, StringFormat='Library File: {0}'}" Margin="20,0,20,0"/>

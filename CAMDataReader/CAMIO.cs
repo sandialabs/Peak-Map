@@ -879,6 +879,31 @@ namespace CAMInputOutput
                         HalfLifeUncertainty = ConvertTimeSpan(readData, loc + (UInt32)NuclideParameterLocation.HalfLifeUncertainty),
                         Index = fileLines[lineIndex-1].NuclideIndex
                     };
+                    //convert the half life and uncertainty to the correct unts
+                    switch (nuc.HalfLifeUnit.ToUpper().Trim())
+                    {
+                        case "Y":
+                            nuc.HalfLife /= 31557600;
+                            nuc.HalfLifeUncertainty /= 31557600;
+                            break;
+                        case "D":
+                            nuc.HalfLife /= 86400;
+                            nuc.HalfLifeUncertainty /= 86400;
+                            break;
+                        case "H":
+                            nuc.HalfLife /= 3600;
+                            nuc.HalfLifeUncertainty /= 3600;
+                            break;
+                        case "M":
+                            nuc.HalfLife /= 60;
+                            nuc.HalfLifeUncertainty /= 60;
+                            break;
+                        case "S":
+                            break;
+                        default:
+                            throw new ArgumentException("Half Life Unit "+ nuc.HalfLifeUnit + " not recognized");
+                    }
+                    //add the nuclides to the list
                     fileNuclides.Add(nuc);
                     UInt32 numLines = ((UInt32)BitConverter.ToUInt16(readData, (int)(loc)) - 0x23AU) / 3U + 1U;
                     lineListOffset += numLines * 0x3U;

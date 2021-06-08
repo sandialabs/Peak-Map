@@ -55,9 +55,13 @@ authority from the Government may result in criminal liability under U.S. laws.
 
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource RowHighlights}">
+                    <!--<Style.Resources>
+                        <SolidColorBrush  x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"  Opacity="50"/>
+                        <SolidColorBrush  x:Key="{x:Static SystemColors.}" Color="#ff901a" Opacity="50"/>
+                    </Style.Resources>-->
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding TENTATIVEMATCH}" Value="True">
-                            <Setter Property="Background" Value="Orange"/>
+                            <Setter Property="Background" Value="#FFe6cc"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding TENTATIVEMATCH}" Value="False">
                             <Setter Property="Background" Value="White"/>

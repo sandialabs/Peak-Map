@@ -20,7 +20,9 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.Windows;
+using System.Collections;
 
 namespace PeakMapWPF.ViewModels
 {
@@ -32,17 +34,22 @@ namespace PeakMapWPF.ViewModels
         public DataRowView SelectedLibrayNuclide
         {
             get { return _selectedLibrayNuclide; }
-            set {
+            set
+            {
                 _selectedLibrayNuclide = value;
                 OnPropertyChanged("SelectedLibrayNuclide");
                 if (value != null)
                 {
                     HighlightWrittenLines();
+                    FillNuclideContextManu();
                 }
             }
         }
-        public string SearchNuclide {
-            set {
+
+        public string SearchNuclide
+        {
+            set
+            {
                 if (string.IsNullOrEmpty(value))
                 {
                     matches.ClearMatches();
@@ -51,11 +58,11 @@ namespace PeakMapWPF.ViewModels
                 string sort = Nuclides.Sort;
                 matches.SetNuclides(value);
                 Nuclides.Sort = sort;
-            } 
+            }
         }
         public override DataView Nuclides
         {
-            get {return base.Nuclides; }
+            get { return base.Nuclides; }
 
         }
 
@@ -67,7 +74,8 @@ namespace PeakMapWPF.ViewModels
 
         public DataView LibraryNuclides
         {
-            get {
+            get
+            {
                 if (libGen != null)
                     return libGen.NuclideLibrary.Tables["MATCHEDNUCLIDES"].DefaultView;
                 else
@@ -76,9 +84,26 @@ namespace PeakMapWPF.ViewModels
             set { OnPropertyChanged("LibraryNuclides"); }
 
         }
+        private ObservableCollection<ContextAction> _selectedNuclideContextItems;
 
+        public ObservableCollection<ContextAction> SelectedNuclideContextItems
+        {
+            get { return _selectedNuclideContextItems; }
+            set
+            { _selectedNuclideContextItems = value; }
+        }
 
-        public MainWindowLibraryViewModel(IDialogService dialogService, IFileDialogService fileDialog ) 
+        public RelayCommand LinesContextMenuCommand { get; protected set; }
+        private ObservableCollection<ContextAction> _selectedLinesContextItems;
+
+        public ObservableCollection<ContextAction> SelectedLinesContextItems
+        {
+            get { return _selectedLinesContextItems; }
+            set
+            { _selectedLinesContextItems = value; }
+        }
+
+        public MainWindowLibraryViewModel(IDialogService dialogService, IFileDialogService fileDialog)
             : base(dialogService, fileDialog)
         {
 
@@ -86,17 +111,39 @@ namespace PeakMapWPF.ViewModels
             FileMenuCommand = new RelayCommand(FileMenuCommand_Executed, CanFileMenuExecute);
             LinesMenuCommand = new RelayCommand(LinesMenuCommand_Executed, CanLinesMenuExecute);
             SettingsMenuCommand = new RelayCommand(SettingsMenuCommand_Executed, CanSettingsMenuExecute);
+            MatchesContextMenuCommand = new RelayCommand(NuclidesContextMenuCommand_Executed, CanNuclidesPeaksContextMenuExecute);
+            LinesContextMenuCommand = new RelayCommand(LinesContextMenuCommand_Executed, CanLinesContextMenuExecute);
+
+            SelectedNuclideContextItems = new ObservableCollection<ContextAction>();
+            SelectedLinesContextItems = new ObservableCollection<ContextAction>()
+            {
+                new ContextAction { Name = $"Write Selected",  Action = LinesContextMenuCommand },
+                new ContextAction { Name = $"Write All",  Action = LinesContextMenuCommand },
+            };
 
             CurrentModeViewModel = this;
             Lines.Sort = "[ENERGY]";
 
         }
+
         protected async override Task GetLibraryFileAsync(FileOperation operation)
         {
             await base.GetLibraryFileAsync(operation);
 
             OnPropertyChanged("LibraryNuclides");
 
+        }
+
+        private void FillNuclideContextManu()
+        {
+            if (SelectedLibrayNuclide == null)
+                return;
+            if (SelectedLibrayNuclide["NAME"] == DBNull.Value)
+                return;
+
+            SelectedNuclideContextItems.Clear();
+            SelectedNuclideContextItems.Add(new ContextAction { Name = $"Delete {SelectedLibrayNuclide["NAME"]}", Action = MatchesContextMenuCommand });
+            SelectedNuclideContextItems.Add(new ContextAction { Name = $"Delete entire libary", Action = MatchesContextMenuCommand });
         }
 
         /// <summary>
@@ -131,17 +178,17 @@ namespace PeakMapWPF.ViewModels
                 //check for empites
                 if (string.IsNullOrEmpty(splitText[i]) || string.IsNullOrWhiteSpace(splitText[i]))
                     continue;
-            
+
                 try
                 {
                     matches.SetNuclides(splitText[i], matches.Nuclides.Rows.Count);
                 }
                 catch (Exception ex)
                 {
-                   DialogViewModel dialogViewModel = new DialogViewModel(ex.Message + ":\n" + ex.StackTrace, "General Exception", true);
-                   dialogService.ShowDialog(dialogViewModel);
-               }
-            }          
+                    DialogViewModel dialogViewModel = new DialogViewModel(ex.Message + ":\n" + ex.StackTrace, "General Exception", true);
+                    dialogService.ShowDialog(dialogViewModel);
+                }
+            }
 
         }
 
@@ -154,17 +201,16 @@ namespace PeakMapWPF.ViewModels
             //select the nuclide
             string name = (string)SelectedLibrayNuclide.Row["NAME"];
 
-            matches.SetNuclides(name,0,true);
-            
+            matches.SetNuclides(name, 0, true);
+
 
             SelectedNuclide = Nuclides.OfType<DataRowView>().Where(r => r["NAME"] != null && r["NAME"].ToString().Equals(name.Trim())).FirstOrDefault();
             //OnPropertyChanged("SelectedNuclide");
-            
+
             base.GetLines();
 
             DataRow[] foundLines = libGen.NuclideLibrary.Tables["MATCHEDLINES"].Select("NAME = '" + name.Trim() + "'");
             //ArrayList selectedLines = new ArrayList();
-            //SelectedLines = null;
             //highlight the matched lines
             foreach (DataRow row in foundLines)
             {
@@ -173,19 +219,37 @@ namespace PeakMapWPF.ViewModels
                 //loop through all the lines that match
                 foreach (DataRowView rw in matchedLines)
                 {
-                    SelectedLines.Add(rw);
+                    rw["MATCHED"] = true;
+                   // SelectedLines.Add(rw);
                 }
+
             }
+            if(SelectedLinesContextItems.Count > 2)
+            {
+                SelectedLinesContextItems.RemoveAt(2);
+                SelectedLinesContextItems.RemoveAt(2);
+            }
+            SelectedLinesContextItems.Add(new ContextAction { Name = $"Remove selected lines from {SelectedLibrayNuclide["NAME"]}", Action = LinesContextMenuCommand });
+            SelectedLinesContextItems.Add(new ContextAction { Name = $"Remove all lines from {SelectedLibrayNuclide["NAME"]}", Action = LinesContextMenuCommand });
             //SelectedLines = selectedLines;
             OnPropertyChanged("SelectedLines");
         }
 
+        /// <summary>
+        /// Write the Lines to Library
+        /// </summary>
+        /// <param name="type">Write Type</param>
+        protected override void WriteLines(WriteType type) 
+        {
+            base.WriteLines(type);
+            HighlightWrittenLines();
+        }
         protected override void PasteCommand_Executed(object context)
         {
             ImportPastedText(Clipboard.GetText());
         }
 
-        protected override  void FileMenuCommand_Executed(object context)
+        protected override void FileMenuCommand_Executed(object context)
         {
             base.FileMenuCommand_Executed(context);
         }
@@ -193,6 +257,80 @@ namespace PeakMapWPF.ViewModels
         {
             return base.CanFileMenuExecute(context);
         }
+        /// <summary>
+        /// Handle the file drop event
+        /// </summary>
+        /// <param name="files"></param>
+        public override void OnFileDrop(string[] files)
+        {
+                base.OnFileDrop(files);
+                OnPropertyChanged("LibraryNuclides");
+        }
+        protected bool CanNuclidesPeaksContextMenuExecute(object context)
+        {
+            if (context == null)
+                return false;
 
+            if (SelectedLibrayNuclide != null)
+                return SelectedLibrayNuclide["NAME"] != DBNull.Value;
+
+            return false;
+        }
+
+        protected void NuclidesContextMenuCommand_Executed(object context)
+        {
+            string menuName = context.ToString().ToLowerInvariant();
+            if (menuName.Contains("entire"))
+            {
+                foreach (DataRowView nuc in LibraryNuclides)
+                {
+                    libGen.ClearNuclide(nuc.Row);
+                }
+            }
+            else
+            {
+                libGen.ClearNuclide(SelectedLibrayNuclide.Row);
+            }
+        }
+
+        protected bool CanLinesContextMenuExecute(object context)
+        {
+            if (context == null)
+                return false;
+
+            base.CanLinesMenuExecute(context);
+
+            if (SelectedLine == null)
+                return false;
+            if (Lines != null)
+                return SelectedLine["ENERGY"] != DBNull.Value;
+
+            return false;
+        }
+
+        protected void LinesContextMenuCommand_Executed(object context)
+        {
+            string menuName = context.ToString().ToLowerInvariant();
+            if (menuName.Contains("selected"))
+            {
+                foreach (DataRowView line in SelectedLines)
+                {
+                    line["MATCHED"] = false;
+                    libGen.ClearLines((double)line["ENERGY"]);
+                }
+            }
+            if (menuName.Contains("all"))
+            {
+                //var matchedLines = matches.Lines.DefaultView.OfType<DataRowView>().Where(r => (bool)r["MATCHED"]);
+                //foreach (DataRowView line in matchedLines)
+                //{}
+                libGen.ClearNuclide(SelectedLibrayNuclide.Row);
+            }
+            else
+            {
+                base.LinesMenuCommand_Executed(context);
+            }
+
+        }
     }
 }

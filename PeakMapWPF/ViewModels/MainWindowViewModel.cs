@@ -325,6 +325,8 @@ namespace PeakMapWPF.ViewModels
             _upperEnergy = Properties.Settings.Default.UPPERENERGY;
             _lowerYield = Properties.Settings.Default.LOWERYEILD;
 
+            matches.YeildLimit = _lowerYield;
+
             _xrayFilter = true;
             _gammaFilter = true;
             _daughtersFilter = true;

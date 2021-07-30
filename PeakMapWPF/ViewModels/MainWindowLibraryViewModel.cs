@@ -242,7 +242,7 @@ namespace PeakMapWPF.ViewModels
         protected override void WriteLines(WriteType type) 
         {
             base.WriteLines(type);
-            HighlightWrittenLines();
+            //HighlightWrittenLines();
         }
         protected override void PasteCommand_Executed(object context)
         {

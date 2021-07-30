@@ -463,7 +463,7 @@ namespace PeakMapWPF.ViewModels
                             writeLines = Lines.ToTable();
                             break;
                         case WriteType.Matched:
-                            writeLines = matches.Lines.Select("MATCHED = True").CopyToDataTable();
+                            writeLines = Lines.ToTable().Select("MATCHED = True").CopyToDataTable();
                             break;
                         case WriteType.Selected:
                             writeLines = matches.Lines.Clone();

@@ -237,6 +237,7 @@ namespace PeakMapWPF.ViewModels
 
             //LinesSort = Lines.Sort;
             //set the lines
+            SetLinesFilter();
             matches.SetLines(SelectedNuclide.Row, SelectedPeak.Row);
             //Lines.Sort = LinesSort;
             //highlight the matched peaks

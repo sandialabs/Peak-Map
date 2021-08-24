@@ -698,10 +698,10 @@ namespace PeakMapWPF.ViewModels
                     message.AppendLine(attrbute.Product);
                     message.AppendLine();
                 }
-                object[] version = assembly.GetCustomAttributes(typeof(AssemblyVersionAttribute), false);
-                foreach (AssemblyVersionAttribute attrbute in version)
+                object[] version = assembly.GetCustomAttributes(typeof(AssemblyFileVersionAttribute), false);
+                foreach (AssemblyFileVersionAttribute attrbute in version)
                 {
-                    message.AppendLine(attrbute.Version);
+                    message.AppendLine("Version: "+attrbute.Version);
                     message.AppendLine();
                 }
                 object[] copyright = assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);

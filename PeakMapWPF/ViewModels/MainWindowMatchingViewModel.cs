@@ -178,9 +178,12 @@ namespace PeakMapWPF.ViewModels
                 //initilize the spectral data object
                 await specdata.LoadDataAsync(matches.Peaks);
 
+                SetPersistentLibraryMatches();
                 //apply the peaks to the lines
                 matches.SpecData = specdata;
                 OnPropertyChanged("InputFile");
+
+                
             }
             catch (System.Runtime.InteropServices.COMException)
             {
@@ -262,6 +265,9 @@ namespace PeakMapWPF.ViewModels
         }
         private void SetPersistentLibraryMatches() 
         {
+            if (libGen == null)
+                return;
+
             foreach (DataRow line in libGen.NuclideLibrary.Tables["MATCHEDLINES"].Rows)
             {
                 matches.SetPeakMatches(line, line["NAME"].ToString(), 1, false);
@@ -275,7 +281,7 @@ namespace PeakMapWPF.ViewModels
         protected async override Task GetLibraryFileAsync(FileOperation operation)
         {
             await base.GetLibraryFileAsync(operation);
-
+            
             SetPersistentLibraryMatches();
 
         }
@@ -323,6 +329,8 @@ namespace PeakMapWPF.ViewModels
                     continue;
                 }
             }
+
+            SetPersistentLibraryMatches();
         }
 
         private void PeaksContextMenuCommand_Executed(object context)
@@ -358,9 +366,9 @@ namespace PeakMapWPF.ViewModels
             {
                 string[] splitStr = context.ToString().Split(' ');
                 string nucName = splitStr[1];
-                int peakNo = int.Parse(splitStr[splitStr.Length]);
+                int peakNo = int.Parse(splitStr[splitStr.Length-1]);
                 DataRow peak = Peaks.Table.Rows[peakNo];
-                libGen.ClearLines((double)peak["ENERGY"]);
+                libGen.ClearLines((double)peak["ENERGY"], nucName);
                 matches.ClearPersistentMatch(peak, nucName);
             }
 
@@ -381,7 +389,7 @@ namespace PeakMapWPF.ViewModels
         /// Handle the file drop event
         /// </summary>
         /// <param name="files"></param>
-        public override async void OnFileDrop(string[] files)
+        public override async Task OnFileDrop(string[] files)
         {
             if (files.Length > 0)
             {
@@ -390,7 +398,10 @@ namespace PeakMapWPF.ViewModels
                     Path.GetExtension(files[0]).Equals(".txt", StringComparison.OrdinalIgnoreCase))
                     await GetSpecDataAsync(files[0]);
                 else
-                    base.OnFileDrop(files);
+                {
+                    await base.OnFileDrop(files);
+                    SetPersistentLibraryMatches();
+                }
             }
         }
         

@@ -355,6 +355,27 @@ namespace PeakMap
 
         }
         /// <summary>
+        /// Clears the lines of energy from the library
+        /// </summary>
+        /// <param name="energy">energy line to clear</param>
+        /// <param name="nuclide">Nuclide to remove line from</param>
+        public void ClearLines(double energy, string nuclide)
+        {
+            //remove pending state changes
+            lib.Tables["MATCHEDLINES"].AcceptChanges();
+
+            //Get the lines and delete them
+            string expression = string.Format("ENERGY > {0} AND ENERGY < {1} AND NAME = '{2}'", (energy - ResolutionLimit), (energy + ResolutionLimit), nuclide);
+            //string expression = string.Format("NAME = '{0}'", nuclide);
+            DataRow[] lines = lib.Tables["MATCHEDLINES"].Select(expression);
+            //DataRow[] lines = lib.Tables["MATCHEDLINES"].Select("ENERGY > " + (energy - ResolutionLimit).ToString() + " AND ENERGY < " + (energy + ResolutionLimit).ToString() + " AND NAME = " + nuclide);
+            foreach (DataRow line in lines)
+                line.Delete();
+            //accpet the changes
+            lib.Tables["MATCHEDLINES"].AcceptChanges();
+
+        }
+        /// <summary>
         /// Clears the nuclide and its lines from the library
         /// </summary>
         /// <param name="nuclide">nuclide to clear</param>

@@ -183,7 +183,7 @@ namespace PeakMapWPF
 
     public interface IFileDragDropTarget
     {
-        void OnFileDrop(string[] items);
+        System.Threading.Tasks.Task OnFileDrop(string[] items);
     }
 
     public class FileDragDropService

@@ -272,9 +272,9 @@ namespace PeakMapWPF.ViewModels
         /// Handle the file drop event
         /// </summary>
         /// <param name="files"></param>
-        public override void OnFileDrop(string[] files)
+        public override async Task OnFileDrop(string[] files)
         {
-                base.OnFileDrop(files);
+                await base.OnFileDrop(files);
                 OnPropertyChanged("LibraryNuclides");
         }
         protected bool CanNuclidesPeaksContextMenuExecute(object context)

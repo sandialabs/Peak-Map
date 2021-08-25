@@ -786,7 +786,7 @@ namespace PeakMapWPF.ViewModels
             return true && Clipboard.ContainsText();
         }
 
-        public async virtual void OnFileDrop(string[] items)
+        public async virtual Task OnFileDrop(string[] items)
         {
             if (items.Length > 0)
                 await GetLibrayDataAsync(items[0]);

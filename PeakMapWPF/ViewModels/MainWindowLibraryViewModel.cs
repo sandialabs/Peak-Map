@@ -16,6 +16,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                                              (End of Notice)
 *********************************************************************************************************************************************************************************************************************************************************/
 
+using PeakMap;
 using System;
 using System.Data;
 using System.Linq;
@@ -102,11 +103,22 @@ namespace PeakMapWPF.ViewModels
             set
             { _selectedLinesContextItems = value; }
         }
-
         public MainWindowLibraryViewModel(IDialogService dialogService, IFileDialogService fileDialog)
-            : base(dialogService, fileDialog)
+           : base(dialogService, fileDialog) 
         {
+            Initialize();
+        }
 
+        public MainWindowLibraryViewModel(IDialogService dialogService, IFileDialogService fileDialog, Matches matches)
+            : base(dialogService, fileDialog, matches)
+        {
+            Initialize();
+        }
+        /// <summary>
+        /// Initilize all the constructor variables
+        /// </summary>
+        private void Initialize() 
+        {
             PastedTextCommand = new RelayCommand(PasteCommand_Executed, CanPasteExecute);
             FileMenuCommand = new RelayCommand(FileMenuCommand_Executed, CanFileMenuExecute);
             LinesMenuCommand = new RelayCommand(LinesMenuCommand_Executed, CanLinesMenuExecute);
@@ -123,7 +135,6 @@ namespace PeakMapWPF.ViewModels
 
             CurrentModeViewModel = this;
             Lines.Sort = "[ENERGY]";
-
         }
 
         protected async override Task GetLibraryFileAsync(FileOperation operation)

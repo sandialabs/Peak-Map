@@ -21,6 +21,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -29,7 +30,7 @@ namespace PeakMapWPF.ViewModels
 
     class MainWindowMatchingViewModel : MainWindowViewModel
     {
-        private SpectralData specdata;
+        //private SpectralData specdata;
 
         private DataRowView _selectedPeak;
         public DataRowView SelectedPeak
@@ -77,9 +78,20 @@ namespace PeakMapWPF.ViewModels
                 OnPropertyChanged("SelectedPeakMatches");
             }
         }
-
         public MainWindowMatchingViewModel(IDialogService dialogService, IFileDialogService fileDialog)
-            : base(dialogService, fileDialog)
+    : base(dialogService, fileDialog)
+        {
+            Initialize();
+        }
+        public MainWindowMatchingViewModel(IDialogService dialogService, IFileDialogService fileDialog, Matches matches=null)
+            : base(dialogService, fileDialog, matches)
+        {
+            Initialize();
+        }
+        /// <summary>
+        /// Initilize all the constructor variables
+        /// </summary>
+        private void Initialize() 
         {
             UserInputCommand = new RelayCommand(UserInputCommand_Executed, CanUserInputExecute);
             MatchesContextMenuCommand = new RelayCommand(PeaksContextMenuCommand_Executed, CanPeaksContextMenuExecute);
@@ -114,8 +126,8 @@ namespace PeakMapWPF.ViewModels
             string[] matches = ((string)SelectedPeak["MATCHNAME"]).Split(',');
             foreach (string nucName in matches)
             {
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear { nucName } from Peak {SelectedPeak["ID"]}", Action = MatchesContextMenuCommand });
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear {nucName} from all Peaks", Action = MatchesContextMenuCommand });
+                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear { nucName.Trim() } from Peak {SelectedPeak["ID"]}", Action = MatchesContextMenuCommand });
+                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear {nucName.Trim()} from all Peaks", Action = MatchesContextMenuCommand });
                 SelectedPeakMatches.Add(new ContextAction { Name = $"Clear all matches", Action = MatchesContextMenuCommand });
             }
         }
@@ -229,7 +241,9 @@ namespace PeakMapWPF.ViewModels
                 dialogService.ShowDialog(dialogViewModel);
             }
         }
-
+        /// <summary>
+        /// Get the lines of the selected nuclide
+        /// </summary>
         protected override void GetLines()
         {
             if (!base.CanGetLines())
@@ -246,7 +260,25 @@ namespace PeakMapWPF.ViewModels
             //display the line match socre
             LineMatchScore = matches.ScoreLineMatch();
         }
+        private void SetPersistentLibraryMatches() 
+        {
+            foreach (DataRow line in libGen.NuclideLibrary.Tables["MATCHEDLINES"].Rows)
+            {
+                matches.SetPeakMatches(line, line["NAME"].ToString(), 1, false);
+            }
+        }
+        /// <summary>
+        /// Load the library and set the matches already in the library
+        /// </summary>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        protected async override Task GetLibraryFileAsync(FileOperation operation)
+        {
+            await base.GetLibraryFileAsync(operation);
 
+            SetPersistentLibraryMatches();
+
+        }
         /// <summary>
         /// Get a list of pasted nuclides and put them in the nuclides grid
         /// </summary>

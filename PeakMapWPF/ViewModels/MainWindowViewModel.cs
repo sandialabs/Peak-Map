@@ -39,8 +39,10 @@ namespace PeakMapWPF.ViewModels
         protected enum WriteType { All, Yield, Matched, Selected };
         public enum WindowMode { matching = 1200, library=500 };
 
+        
+        protected readonly IDataLibrary library;
         protected readonly Matches matches;
-        protected readonly IDataLibrary library;        
+        protected SpectralData specdata;
 
         protected SpectralLibraryGenerator libGen;
 
@@ -313,10 +315,44 @@ namespace PeakMapWPF.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public MainWindowViewModel(IDialogService dialogService, IFileDialogService fileDialogService)
+        public MainWindowViewModel(IDialogService dialogService, IFileDialogService fileDialogService, Matches matches)
         {
             
             library = new ICRPData();
+            this.matches = matches;
+            InitilizeCommands();
+
+            _lowerEnergy = Properties.Settings.Default.LOWERENERGY;
+            _upperEnergy = Properties.Settings.Default.UPPERENERGY;
+            _lowerYield = Properties.Settings.Default.LOWERYEILD;
+
+            matches.YeildLimit = _lowerYield;
+
+            _xrayFilter = true;
+            _gammaFilter = true;
+            _daughtersFilter = true;
+
+            this.dialogService = dialogService;
+            this.fileDialogService = fileDialogService;
+
+            _selectedLines = new ArrayList();
+            _nuclides = matches.Nuclides.DefaultView;
+            _nuclides.Sort = "SCORE DESC";
+            _lines = matches.Lines.DefaultView;
+
+
+            SetLinesFilter();
+
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public MainWindowViewModel(IDialogService dialogService, IFileDialogService fileDialogService)
+        {
+
+            library = new ICRPData();
+
             matches = new Matches(library);
 
             InitilizeCommands();
@@ -343,9 +379,6 @@ namespace PeakMapWPF.ViewModels
             SetLinesFilter();
 
         }
-
-
-
         // Create the OnPropertyChanged method to raise the event
         // The calling member's name will be used as the parameter.
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -630,16 +663,21 @@ namespace PeakMapWPF.ViewModels
             MainWindowViewModel model;
             if (win.DataContext.GetType() == typeof(MainWindowLibraryViewModel))
             {
-                model = new MainWindowMatchingViewModel(dialogService, fileDialogService);
+                model = new MainWindowMatchingViewModel(dialogService, fileDialogService, matches);
             }
             else
             {
-                model = new MainWindowLibraryViewModel(dialogService, fileDialogService);
+                model = new MainWindowLibraryViewModel(dialogService, fileDialogService, matches);
             }
             if (libGen != null) 
             { 
                 model.libGen = libGen;
                 model.LibraryFile = libGen.FileName;
+            }
+            if (specdata != null)
+            {
+                model.specdata = specdata;
+                //model.LibraryFile = libGen.FileName;
             }
             CurrentModeViewModel = model;
             win.DataContext = CurrentModeViewModel;

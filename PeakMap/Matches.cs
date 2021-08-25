@@ -622,7 +622,8 @@ namespace PeakMap
         /// <param name="line">Line to find peaks</param>
         /// <param name="MatchName">Name of the match</param>
         /// <param name="tolerance">energy tolerance</param>
-        public void SetPeakMatches(DataRow line, string matchName, double tolerance = 1)
+        /// <param name="tenative">indicates if the match is tenative</param>
+        public void SetPeakMatches(DataRow line, string matchName, double tolerance = 1, bool tenative=true)
         {
             if (!line.Table.Columns.Contains("MATCHED"))
                 throw new ArgumentException("The DataRow does not match the required schema");
@@ -644,13 +645,13 @@ namespace PeakMap
                 if (peak["MATCHNAME"] == DBNull.Value)
                 {
                     peak["MATCHNAME"] = matchName;
-                    peak["TENTATIVEMATCH"] = true;
+                    peak["TENTATIVEMATCH"] = tenative;
                 }
                 //avoid duplicates
                 else if (!peak["MATCHNAME"].ToString().Contains(matchName))
                 {
-                    peak["MATCHNAME"] = (string)peak["MATCHNAME"] + "," + matchName;
-                    peak["TENTATIVEMATCH"] = true;
+                    peak["MATCHNAME"] = ((string)peak["MATCHNAME"]).Trim() + "," + matchName;
+                    peak["TENTATIVEMATCH"] = tenative;
                 }
             }
         }

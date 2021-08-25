@@ -161,11 +161,11 @@ namespace PeakMap
             camfile.ReadFile(file);
 
             //get the data from the file async
-            //Task<Nuclide[]> nucTask = Task.Run(() => camfile.GetNuclides().ToArray());
+            Task<Nuclide[]> nucTask = Task.Run(() => camfile.GetNuclides().ToArray());
 
             //parse the nuclides
-            //Nuclide[] nucs = await nucTask;
-            Nuclide[] nucs = camfile.GetNuclides().ToArray();
+            Nuclide[] nucs = await nucTask;
+            //Nuclide[] nucs = camfile.GetNuclides().ToArray();
             foreach (Nuclide nuc in nucs) 
             {
                 DataRow nucRow = lib.Tables["MATCHEDNUCLIDES"].NewRow();

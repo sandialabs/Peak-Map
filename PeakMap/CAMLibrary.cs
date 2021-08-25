@@ -165,7 +165,7 @@ namespace PeakMap
 
             //parse the nuclides
             Nuclide[] nucs = await nucTask;
-            //Nuclide[] nucs = camfile.GetNuclides().ToArray();
+
             foreach (Nuclide nuc in nucs) 
             {
                 DataRow nucRow = lib.Tables["MATCHEDNUCLIDES"].NewRow();

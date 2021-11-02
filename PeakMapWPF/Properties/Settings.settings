@@ -9,7 +9,7 @@
       <Value Profile="(Default)">3000</Value>
     </Setting>
     <Setting Name="LOWERYEILD" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">1E-09</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

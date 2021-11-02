@@ -67,7 +67,7 @@ authority from the Government may result in criminal liability under U.S. laws.
 
         <KeyBinding Key="W" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write All"/>
         <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write Matched"/>
-        <KeyBinding Key="H" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write Highlighted"/>
+        <KeyBinding Key="H" Modifiers="Ctrl" Command="{Binding LinesMenuCommand}" CommandParameter="Write Selected"/>
         <KeyBinding Key="Insert" Command="{Binding LinesMenuCommand}" CommandParameter="Write"/>
         <!--<KeyBinding Key="S" Modifiers="Ctrl" Command="{x:Static commands:PeakMapCommands.SaveLibraryCmd}"/>
         <KeyBinding Key="F4" Modifiers="Alt" Command="Close"/>

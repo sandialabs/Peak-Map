@@ -17,7 +17,6 @@ authority from the Government may result in criminal liability under U.S. laws.
 *********************************************************************************************************************************************************************************************************************************************************/
 
 using PeakMap;
-using PeakMapWPF.Commands;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;

@@ -388,13 +388,22 @@ namespace PeakMapWPF.ViewModels
         /// <summary>
         /// Set the Lines Filter
         /// </summary>
-        protected virtual void SetLinesFilter() 
+        protected virtual void SetLinesFilter()
         {
-            Lines.RowFilter = "ENERGY > " + _lowerEnergy + " AND ENERGY < "  + _upperEnergy 
-                +" AND YIELD > " + _lowerYield +
-                (_gammaFilter ? "" : " AND TYPE ='G'") + 
+            Lines.RowFilter = "ENERGY > " + _lowerEnergy + " AND ENERGY < " + _upperEnergy
+                + " AND YIELD > " + _lowerYield +
+                (_gammaFilter ? "" : " AND TYPE ='G'") +
                 (_xrayFilter ? "" : " AND TYPE = 'X'") +
-                (!_daughtersFilter  && SelectedNuclide != null ? " AND NAME = '" + SelectedNuclide.Row["NAME"] + "'" : "");
+                (!_daughtersFilter && SelectedNuclide != null ? " AND NAME = '" + SelectedNuclide.Row["NAME"] + "'" : "");
+
+            //always set the lower limit
+            matches.YeildLimit = _lowerYield;
+
+            //save the lines filters as persistent user settings
+            Properties.Settings.Default.LOWERENERGY = _lowerEnergy;
+            Properties.Settings.Default.UPPERENERGY = _upperEnergy;
+            Properties.Settings.Default.LOWERYEILD = _lowerYield;
+            Properties.Settings.Default.Save();
         }
 
         protected virtual void GetLines() 
@@ -486,8 +495,12 @@ namespace PeakMapWPF.ViewModels
                 DataRow nuc = SelectedNuclide.Row;
                 bool isPhotoPeak = (string)nuc["NAME"] != "S.E." && (string)nuc["NAME"] != "D.E." && !((string)nuc["NAME"]).Contains("Sum");
 
+                //check if the nuclide has a half-life that is too long
+                if (nuc["HALF_LIFE_UNIT"].ToString().Equals("y") && (double)nuc["HALF_LIFE"] / (31557600*1E6) > Int32.MaxValue)
+                    throw new ArgumentException($"The Half-life for "+ (string)nuc["NAME"] + " is too large to be supported. It will not be added to the library" );
+
                 //get the lines to write to the library
-                if (isPhotoPeak)
+                    if (isPhotoPeak)
                 {
                     DataTable writeLines;
                     switch (type)
@@ -538,7 +551,7 @@ namespace PeakMapWPF.ViewModels
             }
             catch (Exception ex)
             {
-                DialogViewModel dialogViewModel = new DialogViewModel($"There was an exeption while writing to the library:\n {ex.Message}", "Library Exception", true);
+                DialogViewModel dialogViewModel = new DialogViewModel($"There was an exeption while writing to the library:\n{ex.Message}", "Library Exception", true);
                 dialogService.ShowDialog(dialogViewModel);
             }
         }

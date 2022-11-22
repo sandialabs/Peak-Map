@@ -111,6 +111,7 @@
     <Compile Include="CAMLibrary.cs" />
     <Compile Include="CAMSpecData.cs" />
     <Compile Include="Computer.cs" />
+    <Compile Include="ENSDData.cs" />
     <Compile Include="SpectralLibraryGenerator.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="IDataLibrary.cs" />

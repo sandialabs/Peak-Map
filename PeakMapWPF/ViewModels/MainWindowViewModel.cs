@@ -29,6 +29,8 @@ using System.Text;
 using System.Reflection;
 using System.Linq;
 
+using System.Collections.ObjectModel;
+
 namespace PeakMapWPF.ViewModels
 {        
     
@@ -309,6 +311,14 @@ namespace PeakMapWPF.ViewModels
                 OnPropertyChanged("ColumnVisibility");
             }
         }
+        private ObservableCollection<ContextAction> _selectedLinesContextItems;
+
+        public ObservableCollection<ContextAction> SelectedLinesContextItems
+        {
+            get { return _selectedLinesContextItems; }
+            set
+            { _selectedLinesContextItems = value; }
+        }
 
         #endregion
 
@@ -375,9 +385,22 @@ namespace PeakMapWPF.ViewModels
             _nuclides.Sort = "SCORE DESC";
             _lines = matches.Lines.DefaultView;
 
-
+            _selectedLinesContextItems = new ObservableCollection<ContextAction>()
+            {
+                new ContextAction { Name = $"Write Selected",  Action = LinesContextMenuCommand },
+                new ContextAction { Name = $"Write All",  Action = LinesContextMenuCommand },
+            };
+            
             SetLinesFilter();
 
+        }
+        protected void InitilizeSelectedLinesContextMenu() 
+        {
+            _selectedLinesContextItems = new ObservableCollection<ContextAction>()
+            {
+                new ContextAction { Name = $"Write Selected",  Action = LinesContextMenuCommand },
+                new ContextAction { Name = $"Write All",  Action = LinesContextMenuCommand },
+            };
         }
         // Create the OnPropertyChanged method to raise the event
         // The calling member's name will be used as the parameter.
@@ -570,11 +593,13 @@ namespace PeakMapWPF.ViewModels
         public RelayCommand UserInputCommand { get; protected set; }
         public RelayCommand MatchesContextMenuCommand { get; protected set; }
         public RelayCommand PastedTextCommand { get; protected set; }
+        public RelayCommand LinesContextMenuCommand { get; protected set; }
         private void InitilizeCommands() 
         {
             ExitCommand = new RelayCommand(ExitCommand_Executed, CanExitExecute);
             ModeCommand = new RelayCommand(ModeMenuCommand_Executed, CanModeMenuExecute);
             OtherMenuCommands = new RelayCommand(OtherMenuCommand_Executed, CanOtherMenuExecute);
+            
         }
 
         protected virtual async void FileMenuCommand_Executed(object context)
@@ -804,7 +829,35 @@ namespace PeakMapWPF.ViewModels
             if (items.Length > 0)
                 await GetLibrayDataAsync(items[0]);
         }
+
+        protected virtual bool CanLinesContextMenuExecute(object context)
+        {
+            if (context == null)
+                return false;
+
+            return CanLinesMenuExecute(context);
+        }
+
+        protected virtual void LinesContextMenuCommand_Executed(object context)
+        {
+            //string menuName = context.ToString().ToLowerInvariant();
+            //if (menuName.Contains("selected"))
+            //{
+            //    foreach (DataRowView line in SelectedLines)
+            //    {
+            //        line["MATCHED"] = false;
+            //        libGen.ClearLines((double)line["ENERGY"]);
+            //    }
+            //}
+            //else
+            //{
+                LinesMenuCommand_Executed(context);
+            //}
+
+        }
     }
+
+
     #endregion
 
     public class ContextAction 

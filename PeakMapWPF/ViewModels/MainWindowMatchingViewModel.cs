@@ -99,12 +99,13 @@ namespace PeakMapWPF.ViewModels
             FileMenuCommand = new RelayCommand(FileMenuCommand_Executed, CanFileMenuExecute);
             LinesMenuCommand = new RelayCommand(LinesMenuCommand_Executed, CanLinesMenuExecute);
             SettingsMenuCommand = new RelayCommand(SettingsMenuCommand_Executed, CanSettingsMenuExecute);
+            LinesContextMenuCommand = new RelayCommand(LinesContextMenuCommand_Executed, CanLinesContextMenuExecute);
 
             SelectedPeakMatches = new ObservableCollection<ContextAction>
             {
                 new ContextAction { Name = $"Paste", Action = PastedTextCommand }
             };
-
+            InitilizeSelectedLinesContextMenu();
             CurrentModeViewModel = this;
             Lines.Sort = "[YIELD] DESC";
         }
@@ -533,5 +534,29 @@ namespace PeakMapWPF.ViewModels
             else
                 return base.CanSettingsMenuExecute(context);
         }
+        //protected override bool CanLinesContextMenuExecute(object context)
+        //{
+        //    base.CanLinesContextMenuExecute(context);
+
+        //    //if (SelectedLine == null)
+        //    //    return false;
+        //    //if (Lines != null)
+        //    //    return SelectedLine["ENERGY"] != DBNull.Value;
+
+        //    return false;
+        //}
+
+        //protected override void LinesContextMenuCommand_Executed(object context)
+        //{
+        //    string menuName = context.ToString().ToLowerInvariant();
+        //    if (menuName.Contains("all"))
+        //    {
+        //        //var matchedLines = matches.Lines.DefaultView.OfType<DataRowView>().Where(r => (bool)r["MATCHED"]);
+        //        //foreach (DataRowView line in matchedLines)
+        //        //{}
+        //        //libGen.ClearNuclide(SelectedLibrayNuclide.Row);
+        //    }
+
+        //}
     }
 }

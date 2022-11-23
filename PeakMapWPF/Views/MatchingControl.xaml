@@ -144,6 +144,17 @@ authority from the Government may result in criminal liability under U.S. laws.
                 <DataGridTextColumn Header="Rel. Activity" Binding="{Binding RELACTIVITY, StringFormat=E3}" Width="*"/>
                 <DataGridTextColumn Header="Nuclide" Binding="{Binding Path=NAME}" Width="*"/>
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu ItemsSource="{Binding SelectedLinesContextItems}">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command" Value="{Binding Action}"/>
+                            <Setter Property="CommandParameter" Value="{Binding Name}"/>
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </views:CustomDataGrid>
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <TextBlock Text="{Binding Path=InputFile, Mode=OneWay, StringFormat='Input File: {0}'}" Margin="0,0,20,0"/>

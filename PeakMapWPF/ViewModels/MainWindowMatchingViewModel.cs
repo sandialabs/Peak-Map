@@ -106,6 +106,9 @@ namespace PeakMapWPF.ViewModels
                 new ContextAction { Name = $"Paste", Action = PastedTextCommand }
             };
             InitilizeSelectedLinesContextMenu();
+            //add the matched option for this mode. 
+            SelectedLinesContextItems.Insert(1, new ContextAction { Name = $"Write Matched", Action = LinesContextMenuCommand });
+
             CurrentModeViewModel = this;
             Lines.Sort = "[YIELD] DESC";
         }
@@ -534,29 +537,5 @@ namespace PeakMapWPF.ViewModels
             else
                 return base.CanSettingsMenuExecute(context);
         }
-        //protected override bool CanLinesContextMenuExecute(object context)
-        //{
-        //    base.CanLinesContextMenuExecute(context);
-
-        //    //if (SelectedLine == null)
-        //    //    return false;
-        //    //if (Lines != null)
-        //    //    return SelectedLine["ENERGY"] != DBNull.Value;
-
-        //    return false;
-        //}
-
-        //protected override void LinesContextMenuCommand_Executed(object context)
-        //{
-        //    string menuName = context.ToString().ToLowerInvariant();
-        //    if (menuName.Contains("all"))
-        //    {
-        //        //var matchedLines = matches.Lines.DefaultView.OfType<DataRowView>().Where(r => (bool)r["MATCHED"]);
-        //        //foreach (DataRowView line in matchedLines)
-        //        //{}
-        //        //libGen.ClearNuclide(SelectedLibrayNuclide.Row);
-        //    }
-
-        //}
     }
 }

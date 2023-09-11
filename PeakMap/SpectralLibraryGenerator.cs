@@ -280,6 +280,8 @@ namespace PeakMap
                     addedLine.ItemArray = writeLine.ItemArray;
                     addedLine["LINENUMBER"] = ln;
                     addedLine["ISKEY"] = ln == keyLine;
+                    if (!(addedLine["NAME"].ToString().Equals(nuclide["NAME"].ToString())))
+                        addedLine["NAME"] = nuclide["NAME"];
                     lib.Tables["MATCHEDLINES"].Rows.Add(addedLine);
                 }
             }

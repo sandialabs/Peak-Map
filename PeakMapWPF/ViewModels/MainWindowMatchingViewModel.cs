@@ -99,11 +99,15 @@ namespace PeakMapWPF.ViewModels
             FileMenuCommand = new RelayCommand(FileMenuCommand_Executed, CanFileMenuExecute);
             LinesMenuCommand = new RelayCommand(LinesMenuCommand_Executed, CanLinesMenuExecute);
             SettingsMenuCommand = new RelayCommand(SettingsMenuCommand_Executed, CanSettingsMenuExecute);
+            LinesContextMenuCommand = new RelayCommand(LinesContextMenuCommand_Executed, CanLinesContextMenuExecute);
 
             SelectedPeakMatches = new ObservableCollection<ContextAction>
             {
                 new ContextAction { Name = $"Paste", Action = PastedTextCommand }
             };
+            InitilizeSelectedLinesContextMenu();
+            //add the matched option for this mode. 
+            SelectedLinesContextItems.Insert(1, new ContextAction { Name = $"Write Matched", Action = LinesContextMenuCommand });
 
             CurrentModeViewModel = this;
             Lines.Sort = "[YIELD] DESC";

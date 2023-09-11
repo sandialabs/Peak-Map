@@ -1,0 +1,5 @@
+﻿
+
+partial class MatchedLibrary
+{
+}

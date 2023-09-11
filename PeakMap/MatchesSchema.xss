@@ -7,7 +7,7 @@
 <DiagramLayout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ex:showrelationlabel="False" ViewPortX="-10" ViewPortY="-47" xmlns:ex="urn:schemas-microsoft-com:xml-msdatasource-layout-extended" xmlns="urn:schemas-microsoft-com:xml-msdatasource-layout">
   <Shapes>
     <Shape ID="DesignTable:MATCHEDNUCLIDES" ZOrder="3" X="330" Y="178" Height="308" Width="254" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="304" />
-    <Shape ID="DesignTable:MATCHEDLINES" ZOrder="5" X="675" Y="185" Height="693" Width="247" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="689" />
+    <Shape ID="DesignTable:MATCHEDLINES" ZOrder="5" X="675" Y="185" Height="693" Width="216" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="689" />
     <Shape ID="DesignTable:PEAKS" ZOrder="2" X="101" Y="183" Height="280" Width="189" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="276" />
   </Shapes>
   <Connectors>

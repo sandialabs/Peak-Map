@@ -111,6 +111,9 @@
     <Compile Include="CAMLibrary.cs" />
     <Compile Include="CAMSpecData.cs" />
     <Compile Include="Computer.cs" />
+    <Compile Include="MatchesSchema.cs">
+      <DependentUpon>MatchesSchema.xsd</DependentUpon>
+    </Compile>
     <Compile Include="SpectralLibraryGenerator.cs" />
     <Compile Include="TextData.cs" />
     <Compile Include="IDataLibrary.cs" />

@@ -131,19 +131,37 @@ authority from the Government may result in criminal liability under U.S. laws.
                   ItemsSource="{Binding Lines}" SelectionMode="Extended" 
                   SelectedItemsList="{Binding SelectedLines, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                   AutoGenerateColumns="False" Style="{StaticResource DataGridStyle}">
+            <!--<DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <TextBlock Background="#FFe6cc" Text="{Binding INTERFERENCES}" TextWrapping="Wrap"
+                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>-->
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Energy" Binding="{Binding Path=ENERGY,StringFormat=F2}" Width="*"/>
                 <DataGridTextColumn Header="Yield (%)" Binding="{Binding Path=YIELD, StringFormat=F2}" Width="*"/>
                 <DataGridTextColumn Header="Type" Binding="{Binding Path=TYPE}" Width="Auto"/>
-                <DataGridTextColumn Header="Efficiency (%)" Binding="{Binding EFFICIENCY, StringFormat=E3}" Width="*"/>
-                <DataGridTextColumn Header="Area (cts)" Binding="{Binding AREA, StringFormat=E3}" Width="*"/>
-                <DataGridTextColumn Header="MDA (cts)" Binding="{Binding MDA, StringFormat=E3}" Width="*"/>
+                <!--<DataGridTextColumn Header="Efficiency (%)" Binding="{Binding EFFICIENCY, StringFormat=E3}" Width="*"/>-->
+                <DataGridTextColumn Header="Area (cts)" Binding="{Binding AREA, StringFormat=E3}" Width="Auto"/>
+                <DataGridTextColumn Header="MDA (cts)" Binding="{Binding MDA, StringFormat=E3}" Width="Auto"/>
+                <DataGridCheckBoxColumn Header="Area > MDA" Binding="{Binding GTRMDA, Mode=OneWay}" Width="SizeToHeader"/>
                 <DataGridCheckBoxColumn Header="Matched" Binding="{Binding MATCHED}" Width="*"/>
                 <DataGridTextColumn Header="Peak No." Binding="{Binding PEAKNUM, StringFormat=F0}" Width="*"/>
                 <DataGridTextColumn Header="Diff" Binding="{Binding DIFFERENCE, StringFormat=F2}" Width="*"/>
-                <DataGridTextColumn Header="Rel. Activity" Binding="{Binding RELACTIVITY, StringFormat=E3}" Width="*"/>
+                <DataGridTextColumn Header="Rel. Activity" Binding="{Binding RELACTIVITY, StringFormat=E3}" Width="SizeToHeader"/>
                 <DataGridTextColumn Header="Nuclide" Binding="{Binding Path=NAME}" Width="*"/>
             </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu ItemsSource="{Binding SelectedLinesContextItems}">
+                    <ContextMenu.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command" Value="{Binding Action}"/>
+                            <Setter Property="CommandParameter" Value="{Binding Name}"/>
+                        </Style>
+                    </ContextMenu.ItemContainerStyle>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </views:CustomDataGrid>
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
             <TextBlock Text="{Binding Path=InputFile, Mode=OneWay, StringFormat='Input File: {0}'}" Margin="0,0,20,0"/>

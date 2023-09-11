@@ -469,7 +469,8 @@ namespace PeakMap
                     //double e1 = CAMData.Efficiency(float.Parse(nuc["ENERGY"].ToString()), calParameters);
                     double y1 = (double)nuc["YIELD"];
 
-                    matches.Tables["MATCHEDLINES"].Rows.Add(line["NAME"], line["LINENUMBER"], line["ENERGY"], y2, line["TYPE"], eff, area * e2 * y2 / (eff * y1), m2);
+                    //matches.Tables["MATCHEDLINES"].Rows.Add(line["NAME"], line["LINENUMBER"], line["ENERGY"], y2, line["TYPE"], eff, area * e2 * y2 / (eff * y1), m2);
+                    _ = matches.Tables["MATCHEDLINES"].Rows.Add(line["NAME"], line["LINENUMBER"], line["ENERGY"], y2, line["TYPE"], eff, DBNull.Value, m2);
 
                 }
             }
@@ -612,6 +613,7 @@ namespace PeakMap
                 line["PEAKNUM"] = foundPeaks[0]["ID"];
                 line["AREA"] = foundPeaks[0]["AREA"];
                 line["DIFFERENCE"] = double.Parse(foundPeaks[0]["ENERGY"].ToString()) - (double)line["ENERGY"];
+                line["INTERFERENCES"] = foundPeaks[0]["MATCHNAME"];
             }
             return foundPeaks;
         }
@@ -842,22 +844,26 @@ namespace PeakMap
         /// score all the unmatched lines
         /// </summary>
         /// <param name="constant"></param>
-        public double ScoreLineMatch(double constant = 1)
+        public double ScoreLineMatch(double constant = 1.0)
         {
 
             double num = 0.0; double denom = 0.0;
             //loop throuhg the all the lines
             foreach (DataRow line in matches.Tables["MATCHEDLINES"].Rows)
             {
-                
+
                 int delta = 1;
                 //the numerator is only the matched lines
-                if ((bool)line["MATCHED"])
-                    num += (bool)line["MATCHED"] ? (double)line["YIELD"] * Math.Sqrt((double)line["EFFICIENCY"]) : 0;
+                bool isMatched = line["MATCHED"].Equals(true);
+                if (isMatched)
+                    num += isMatched ? (double)line["YIELD"] * Math.Sqrt((double)line["EFFICIENCY"]) : 0;
                 //determine if the not matched line is above MDA
-                else
+                else if(line["AREA"] != DBNull.Value)
+                {
+
                     delta = (double)line["AREA"] > (double)line["MDA"] ? 1 : 0;
-                //numerator is all the lines of a nuclide
+                }
+                //denominator is all the lines of a nuclide
                 denom += (double)line["YIELD"] * Math.Sqrt((double)line["EFFICIENCY"]) * delta;
             }
             return constant * num / denom;

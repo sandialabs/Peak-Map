@@ -545,9 +545,11 @@ namespace PeakMapWPF.ViewModels
                     }
                     //write the nuclides to the library
                     libGen.WriteNuclide(nuc, writeLines, CombineLinesCallback);
+
+                    //set the persistent matches
+                    matches.SetPersistentMatches(writeLines);
                 }
-                //set the persistent matches
-                matches.SetPersistentMatches();
+
 
             }
             catch (Exception ex)

@@ -70,7 +70,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.ContextMenu>
-                <ContextMenu ItemsSource="{Binding SelectedPeakMatches}">
+                <ContextMenu ItemsSource="{Binding SelectedPeakContextItems}">
                     <ContextMenu.ItemContainerStyle>
                         <Style TargetType="MenuItem">
                             <Setter Property="Header" Value="{Binding Name}"/>
@@ -131,12 +131,14 @@ authority from the Government may result in criminal liability under U.S. laws.
                   ItemsSource="{Binding Lines}" SelectionMode="Extended" 
                   SelectedItemsList="{Binding SelectedLines, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
                   AutoGenerateColumns="False" Style="{StaticResource DataGridStyle}">
-            <!--<DataGrid.RowDetailsTemplate>
+            <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <TextBlock Background="#FFe6cc" Text="{Binding INTERFERENCES}" TextWrapping="Wrap"
-                               HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <TextBlock Background="#FFe6cc"  TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Run Text="Inteferences: "/>
+                        <Run Text="{Binding INTERFERENCES}"/>
+                    </TextBlock>
                 </DataTemplate>
-            </DataGrid.RowDetailsTemplate>-->
+            </DataGrid.RowDetailsTemplate>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Energy" Binding="{Binding Path=ENERGY,StringFormat=F2}" Width="*"/>
                 <DataGridTextColumn Header="Yield (%)" Binding="{Binding Path=YIELD, StringFormat=F2}" Width="*"/>

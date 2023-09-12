@@ -14,21 +14,6 @@
     <Setting Name="UPPERELIMIT" Type="System.Double" Scope="Application">
       <Value Profile="(Default)">8000</Value>
     </Setting>
-    <Setting Name="LINES" Type="System.Collections.Specialized.StringCollection" Scope="Application">
-      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
-&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;string&gt;ENERGY,Energy,&lt;/string&gt;
-  &lt;string&gt;YIELD,Yield (%),&lt;/string&gt;
-  &lt;string&gt;TYPE,Type,&lt;/string&gt;
-  &lt;string&gt;EFFICIENCY,Efficiency (%),E3&lt;/string&gt;
-  &lt;string&gt;AREA,Area (cts),E3&lt;/string&gt;
-  &lt;string&gt;MDA,MDA (cts),E3&lt;/string&gt;
-  &lt;string&gt;MATCHED,Matched,&lt;/string&gt;
-  &lt;string&gt;PEAKNUM,Peak No.,F0&lt;/string&gt;
-  &lt;string&gt;DIFFERENCE,Diff,&lt;/string&gt;
-  &lt;string&gt;RELACTIVITY,Rel. Acitvity,E3&lt;/string&gt;
-&lt;/ArrayOfString&gt;</Value>
-    </Setting>
     <Setting Name="CHAINPARENT" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Th-232,Np-237,U-238,U-235</Value>
     </Setting>
@@ -83,6 +68,21 @@
 &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;string&gt;ID,No.,F0&lt;/string&gt;
   &lt;string&gt;MATCHNAME,Id,&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="LINES" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;ENERGY,Energy,&lt;/string&gt;
+  &lt;string&gt;YIELD,Yield (%),&lt;/string&gt;
+  &lt;string&gt;TYPE,Type,&lt;/string&gt;
+  &lt;string&gt;AREA,Area (cts),E3&lt;/string&gt;
+  &lt;string&gt;GTRMDA, &amp;gt; MDA,E3&lt;/string&gt;
+  &lt;string&gt;MDA,MDA (cts),E3&lt;/string&gt;
+  &lt;string&gt;MATCHED,Matched,&lt;/string&gt;
+  &lt;string&gt;PEAKNUM,Peak No.,F0&lt;/string&gt;
+  &lt;string&gt;DIFFERENCE,Diff,&lt;/string&gt;
+  &lt;string&gt;RELACTIVITY,Rel. Acitvity,E3&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>
   </Settings>

@@ -67,15 +67,15 @@ namespace PeakMapWPF.ViewModels
             }
         }
 
-        private ObservableCollection<ContextAction> _selectedPeakMatches;
+        private ObservableCollection<ContextAction> _selectedPeakContextItems;
 
-        public ObservableCollection<ContextAction> SelectedPeakMatches
+        public ObservableCollection<ContextAction> SelectedPeakContextItems
         {
-            get { return _selectedPeakMatches; }
+            get { return _selectedPeakContextItems; }
             set
             {
-                _selectedPeakMatches = value;
-                OnPropertyChanged("SelectedPeakMatches");
+                _selectedPeakContextItems = value;
+                OnPropertyChanged("SelectedPeakContextItems");
             }
         }
         public MainWindowMatchingViewModel(IDialogService dialogService, IFileDialogService fileDialog)
@@ -101,7 +101,7 @@ namespace PeakMapWPF.ViewModels
             SettingsMenuCommand = new RelayCommand(SettingsMenuCommand_Executed, CanSettingsMenuExecute);
             LinesContextMenuCommand = new RelayCommand(LinesContextMenuCommand_Executed, CanLinesContextMenuExecute);
 
-            SelectedPeakMatches = new ObservableCollection<ContextAction>
+            SelectedPeakContextItems = new ObservableCollection<ContextAction>
             {
                 new ContextAction { Name = $"Paste", Action = PastedTextCommand }
             };
@@ -120,19 +120,19 @@ namespace PeakMapWPF.ViewModels
         {
             if (SelectedPeak == null)
                 return;
-            if (SelectedPeak["MATCHNAME"] == DBNull.Value)
+
+            SelectedPeakContextItems.Clear();
+            SelectedPeakContextItems.Add(new ContextAction { Name = $"Paste", Action = PastedTextCommand });
+
+            if (SelectedPeak["MATCHNAME"] == DBNull.Value) 
                 return;
-
-            SelectedPeakMatches.Clear();
-            SelectedPeakMatches.Add(new ContextAction { Name = $"Paste", Action = PastedTextCommand });
-
-            //get the nucldes and add them to a collection of commands
+            //get the nucldes and add them to a collection of commands for the contextMenu
             string[] matches = ((string)SelectedPeak["MATCHNAME"]).Split(',');
             foreach (string nucName in matches)
             {
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear { nucName.Trim() } from Peak {SelectedPeak["ID"]}", Action = MatchesContextMenuCommand });
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear {nucName.Trim()} from all Peaks", Action = MatchesContextMenuCommand });
-                SelectedPeakMatches.Add(new ContextAction { Name = $"Clear all matches", Action = MatchesContextMenuCommand });
+                SelectedPeakContextItems.Add(new ContextAction { Name = $"Clear { nucName.Trim() } from Peak {SelectedPeak["ID"]}", Action = MatchesContextMenuCommand });
+                SelectedPeakContextItems.Add(new ContextAction { Name = $"Clear {nucName.Trim()} from all Peaks", Action = MatchesContextMenuCommand });
+                SelectedPeakContextItems.Add(new ContextAction { Name = $"Clear all matches", Action = MatchesContextMenuCommand });
             }
         }
         /// <summary>
@@ -277,12 +277,23 @@ namespace PeakMapWPF.ViewModels
                 matches.SetPeakMatches(line, line["NAME"].ToString(), 1, false);
             }
         }
+
         /// <summary>
-        /// Load the library and set the matches already in the library
+        /// Write the Lines to Library
         /// </summary>
-        /// <param name="operation"></param>
-        /// <returns></returns>
-        protected async override Task GetLibraryFileAsync(FileOperation operation)
+        /// <param name="type">Write Type</param>
+        protected override void WriteLines(WriteType type)
+        {
+            base.WriteLines(type);
+            SelectedPeakContextItems.Clear();
+
+        }
+    /// <summary>
+    /// Load the library and set the matches already in the library
+    /// </summary>
+    /// <param name="operation"></param>
+    /// <returns></returns>
+    protected async override Task GetLibraryFileAsync(FileOperation operation)
         {
             await base.GetLibraryFileAsync(operation);
             
@@ -352,6 +363,8 @@ namespace PeakMapWPF.ViewModels
                 {
                     libGen.ClearNuclide(nucName);
                     matches.ClearPersistentMatch(peak, nucName);
+                    SelectedPeakContextItems.Clear();
+                    SelectedPeakContextItems.Add(new ContextAction { Name = $"Paste", Action = PastedTextCommand });
                 }
             }
             //clear all the matches
@@ -363,6 +376,8 @@ namespace PeakMapWPF.ViewModels
                 {
                     libGen.ClearNuclide(peak);
                     matches.ClearPersistentMatch(peak);
+                    SelectedPeakContextItems.Clear();
+                    SelectedPeakContextItems.Add(new ContextAction { Name = $"Paste", Action = PastedTextCommand });
                 }
             }
             //clear 1 nuclide from one peak
@@ -374,8 +389,18 @@ namespace PeakMapWPF.ViewModels
                 DataRow peak = Peaks.Table.Rows[peakNo];
                 libGen.ClearLines((double)peak["ENERGY"], nucName);
                 matches.ClearPersistentMatch(peak, nucName);
+                ContextAction act = new ContextAction();
+                //clear from the context menu
+                var cntxActions = SelectedPeakContextItems.Where(contextMenuItem => contextMenuItem.Name.Contains(nucName));
+                foreach (ContextAction action in new System.Collections.Generic.List<ContextAction>(cntxActions))
+                {
+                    SelectedPeakContextItems.Remove(action);
+                }
+                var clrAllCnxtAction = SelectedPeakContextItems.First(contextMenuItem => contextMenuItem.Name.Contains("Clear all matches"));
+                if (clrAllCnxtAction != null)
+                    SelectedPeakContextItems.Remove(clrAllCnxtAction);
             }
-
+           
         }
 
         private bool CanPeaksContextMenuExecute(object context)

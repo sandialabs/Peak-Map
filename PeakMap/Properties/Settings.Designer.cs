@@ -12,7 +12,7 @@ namespace PeakMap.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -56,27 +56,6 @@ namespace PeakMap.Properties {
         public double UPPERELIMIT {
             get {
                 return ((double)(this["UPPERELIMIT"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>ENERGY,Energy,</string>
-  <string>YIELD,Yield (%),</string>
-  <string>TYPE,Type,</string>
-  <string>EFFICIENCY,Efficiency (%),E3</string>
-  <string>AREA,Area (cts),E3</string>
-  <string>MDA,MDA (cts),E3</string>
-  <string>MATCHED,Matched,</string>
-  <string>PEAKNUM,Peak No.,F0</string>
-  <string>DIFFERENCE,Diff,</string>
-  <string>RELACTIVITY,Rel. Acitvity,E3</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection LINES {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["LINES"]));
             }
         }
         
@@ -173,6 +152,27 @@ namespace PeakMap.Properties {
         public global::System.Collections.Specialized.StringCollection PEAKSLIBRARY {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["PEAKSLIBRARY"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>ENERGY,Energy,</string>
+  <string>YIELD,Yield (%),</string>
+  <string>TYPE,Type,</string>
+  <string>AREA,Area (cts),E3</string>
+  <string>GTRMDA, &gt; MDA,E3</string>
+  <string>MDA,MDA (cts),E3</string>
+  <string>MATCHED,Matched,</string>
+  <string>PEAKNUM,Peak No.,F0</string>
+  <string>DIFFERENCE,Diff,</string>
+  <string>RELACTIVITY,Rel. Acitvity,E3</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection LINES {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["LINES"]));
             }
         }
     }

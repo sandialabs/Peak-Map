@@ -639,6 +639,7 @@ namespace PeakMap
                 line["PEAKNUM"] = foundPeaks[0]["ID"];
                 line["AREA"] = foundPeaks[0]["AREA"];
                 line["DIFFERENCE"] = double.Parse(foundPeaks[0]["ENERGY"].ToString()) - (double)line["ENERGY"];
+                line["INTERFERENCES"] = foundPeaks[0]["MATCHNAME"];
             }
             //set the tenativematch flag
             foreach (DataRow peak in foundPeaks)
@@ -707,13 +708,30 @@ namespace PeakMap
                 peak["TENTATIVEMATCH"] = false;
         }
         /// <summary>
+        /// Set the Matches to persist (i.e. MATCHNAME != DBnull and TENATIVEMATCH = false) fir the selectedPeaks;
+        /// <paramref name="selectedLines">The Lines to be set the persistent matches</paramref>
+        /// </summary>
+        public void SetPersistentMatches(DataTable selectedLines, double tolerance = 1)
+        {
+            DataRow[] oldMatches = matches.Tables["Peaks"].Select("TENTATIVEMATCH = true");
+            foreach (DataRow peak in oldMatches)
+            {
+                DataRow[] selectedLine = selectedLines.Select("ENERGY" + "  > " + ((double)peak["ENERGY"] - tolerance) + " AND " + "ENERGY" + "  < " + ((double)peak["ENERGY"] + tolerance));
+                if (selectedLine.Length > 0)
+                {
+                    peak["TENTATIVEMATCH"] = false;
+                }
+            }
+        }
+        /// <summary>
         /// Clear all the persistant matches
         /// </summary>
         public void ClearPersistentMatches() 
         {
-            foreach(DataRow peak in Peaks.Rows) 
+            DataRow[] oldMatches = matches.Tables["Peaks"].Select("MATCHNAME <> '' and TENTATIVEMATCH = false");
+            foreach (DataRow peak in oldMatches) 
             {
-                ClearPersistentMatch(peak);
+                ClearPersistentMatch(peak, (string)peak["MATCHNAME"]);
             }
         }
         /// <summary>

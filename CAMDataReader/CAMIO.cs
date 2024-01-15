@@ -79,6 +79,7 @@ namespace CAMInputOutput
             CountRate = cntRate;
             CountRateUncertainty = cntRateUnc;
         }
+
     }
     public struct Nuclide
     {
@@ -932,19 +933,20 @@ namespace CAMInputOutput
                 throw new FileFormatException("There is no peak data in the loaded file");
 
             IList < Peak > filePeaks = new List<Peak>();
-
+            bool secondBlock = false;
             //loop through all the blocks
             foreach (UInt32 pos in start)
             {
-                //offset to record 0x22 in header if 0x04 is 0x500
-                UInt16 recOffset = BitConverter.ToUInt16(readData, (int)(pos + 0x04)) == 0x700 ? (UInt16)0 : BitConverter.ToUInt16(readData, (int)(pos + 0x22));
+                //offset to record 0x22 in header if 0x04 is 0x700
+                UInt16 recOffset = BitConverter.ToUInt16(readData, (int)(pos + 0x04)) == 0x700 || secondBlock ? 
+                    (UInt16)0 : BitConverter.ToUInt16(readData, (int)(pos + 0x22));
+
                 //the size of a record 0x20 in header
                 UInt16 recSize = BitConverter.ToUInt16(readData, (int)(pos + 0x20));
                 //get the number of records
                 UInt16 numRec = BitConverter.ToUInt16(readData, (int)(pos + 0x1E));
                 //get the header size
                 UInt16 headSize = BitConverter.ToUInt16(readData, (int)(pos + 0x10));
-               
                 //loop through the records and create and add a peak
                 for (int i = 0; i < numRec; i++) 
                 {
@@ -965,8 +967,9 @@ namespace CAMInputOutput
                     };
                     //add the peak
                     filePeaks.Add(peak);
+                    
                 }
-
+                secondBlock = true;
             }
 
             return filePeaks;

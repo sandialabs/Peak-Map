@@ -209,6 +209,9 @@ namespace PeakMap
             effMeas.CollectionChanged += EffMeas_CollectionChanged;
             //assign the peaks
             Peak[] filePeaks = await peakTask;
+            //sort the peaks by energy
+            Array.Sort(filePeaks, delegate(Peak x, Peak y) 
+                { return x.Energy.CompareTo(y.Energy); });
             //add the peaks to the datatable
             foreach (Peak pk in filePeaks)
             {

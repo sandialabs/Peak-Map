@@ -96,6 +96,7 @@ namespace PeakMap
             acqTime = DateTime.MinValue;
             collTime = DateTime.MinValue;
             elapsedWait = collTime - acqTime;
+            deadTime = -1;
             countTime = 0.0;
             file = inpfile;
         }

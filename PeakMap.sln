@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeakMap", "PeakMap\PeakMap.csproj", "{B6A03236-3631-486C-A13C-F49B02DC39A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeakMapTests", "PeakMapTests\PeakMapTests.csproj", "{996C6EC8-E1FA-47F8-8584-F6FF84E81689}"
-EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixproj", "{F4E6D277-BF2C-420B-9046-B39411D6BADE}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PeakMap Setup", "Setup\PeakMap Setup.wixproj", "{F4E6D277-BF2C-420B-9046-B39411D6BADE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAMInputOutput", "CAMDataReader\CAMInputOutput.csproj", "{B7BA466E-E3CE-4E1A-A5BE-DC933EB0F5F7}"
 EndProject
@@ -35,18 +33,6 @@ Global
 		{B6A03236-3631-486C-A13C-F49B02DC39A9}.Release|x64.Build.0 = Release|Any CPU
 		{B6A03236-3631-486C-A13C-F49B02DC39A9}.Release|x86.ActiveCfg = Release|Any CPU
 		{B6A03236-3631-486C-A13C-F49B02DC39A9}.Release|x86.Build.0 = Release|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Debug|x64.Build.0 = Debug|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Debug|x86.Build.0 = Debug|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Release|Any CPU.Build.0 = Release|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Release|x64.ActiveCfg = Release|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Release|x64.Build.0 = Release|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Release|x86.ActiveCfg = Release|Any CPU
-		{996C6EC8-E1FA-47F8-8584-F6FF84E81689}.Release|x86.Build.0 = Release|Any CPU
 		{F4E6D277-BF2C-420B-9046-B39411D6BADE}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{F4E6D277-BF2C-420B-9046-B39411D6BADE}.Debug|x64.ActiveCfg = Debug|x64
 		{F4E6D277-BF2C-420B-9046-B39411D6BADE}.Debug|x64.Build.0 = Debug|x64

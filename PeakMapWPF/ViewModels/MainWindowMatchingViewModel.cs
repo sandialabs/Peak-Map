@@ -67,6 +67,15 @@ namespace PeakMapWPF.ViewModels
             }
         }
 
+        public string DeadTime
+        {
+            get
+            {
+                if (specdata == null)
+                    return "";
+                return specdata.DeadTime.ToString("P2");
+            }
+        }
         private ObservableCollection<ContextAction> _selectedPeakContextItems;
 
         public ObservableCollection<ContextAction> SelectedPeakContextItems
@@ -186,6 +195,8 @@ namespace PeakMapWPF.ViewModels
                 //apply the peaks to the lines
                 matches.SpecData = specdata;
                 OnPropertyChanged("InputFile");
+                OnPropertyChanged("DeadTime");
+
 
                 
             }

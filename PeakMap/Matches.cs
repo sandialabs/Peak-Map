@@ -29,7 +29,7 @@ namespace PeakMap
     //[DefaultPropertyAttribute("Name")]  
     public class Matches 
     {
-        public enum PeakType { Photopeak, SingleEscape, DoubleEscape, Sum };
+        public enum PeakType { Photopeak, SingleEscape, DoubleEscape, Sum, Annihilation };
 
         readonly DataSet matches;
         SpectralData specData;
@@ -130,10 +130,10 @@ namespace PeakMap
         private void DataTable_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             //score when the dataRow is added upon
-            if (e.Action == DataRowAction.Add)
-                sumPeakPenalty = ScoreSumPeaks();
-            if (e.Action == DataRowAction.Change)
-                sumPeakPenalty = ScoreSumPeaks();
+            //if (e.Action == DataRowAction.Add)
+            //    sumPeakPenalty = ScoreSumPeaks();
+            //if (e.Action == DataRowAction.Change)
+            //    sumPeakPenalty = ScoreSumPeaks();
         }
 
         /// <summary>
@@ -274,8 +274,9 @@ namespace PeakMap
             StringBuilder nucList = new StringBuilder();
             foreach (DataRow row in tmatches.Rows)
                 nucList.Append("'" + row["NAME"] + "',");
-
-            nucList.Remove(nucList.Length - 1, 1);
+            
+            if (!String.IsNullOrEmpty(nucList.ToString())) 
+                nucList.Remove(nucList.Length - 1, 1);
 
             //get the data and fill the table
             DataTable nucs = lib.Select("NUCLIDES", "NAME IN (" + nucList.ToString() + ")");
@@ -964,6 +965,12 @@ namespace PeakMap
         /// <returns></returns>
         private double ScoreSumPeaks(double tolerance = 1.0)
         {
+            if (specData == null) 
+            {
+                return  1.0;
+            }
+            double deadTime = specData.DeadTime;
+            double deadTimePenalty = deadTime > 0 ? deadTime : 1;
             //got to have at least 3 peaks to have a sum peak
             if (matches.Tables["PEAKS"].Rows.Count < 3)
                 return sumPeakPenalty;
@@ -977,13 +984,19 @@ namespace PeakMap
             if (t_peaks.Select("ENERGY > " + (expSum - tolerance).ToString() + " AND ENERGY < " + (expSum - tolerance).ToString()).Length > 0)
                 return 1;
             else
-                return sumPeakPenalty;
+                return sumPeakPenalty * deadTimePenalty;
 
         }
         #endregion
         //set the unbrowsable parameters
         [Browsable(false)]
-        public SpectralData SpecData { set { specData = value; } }
+        public SpectralData SpecData { 
+            set 
+            { 
+                specData = value;
+                sumPeakPenalty = ScoreSumPeaks();
+            } 
+        }
         [Browsable(false)]
         public DataTable Nuclides { get { return matches.Tables["MATCHEDNUCLIDES"]; } }
         [Browsable(false)]

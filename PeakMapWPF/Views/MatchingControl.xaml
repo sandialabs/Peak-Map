@@ -24,7 +24,7 @@ authority from the Government may result in criminal liability under U.S. laws.
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PeakMapWPF.Views"
              mc:Ignorable="d" 
-             xmlns:views="clr-namespace:PeakMapWPF.Views"
+             xmlns:views="clr-namespace:PeakMapWPF.Views" xmlns:viewmodels="clr-namespace:PeakMapWPF.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
              d:DesignHeight="450" d:DesignWidth="1000">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -166,7 +166,8 @@ authority from the Government may result in criminal liability under U.S. laws.
             </DataGrid.ContextMenu>
         </views:CustomDataGrid>
         <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
-            <TextBlock Text="{Binding Path=InputFile, Mode=OneWay, StringFormat='Input File: {0}'}" Margin="0,0,20,0"/>
+            <TextBlock Text="{Binding Path=DeadTime, Mode=OneWay, StringFormat='Dead Time: {0}'}" Margin="0,0,20,0"/>
+            <TextBlock Text="{Binding Path=InputFile, Mode=OneWay, StringFormat='Input File: {0}'}" Margin="20,0,20,0"/>
             <TextBlock Text="{Binding Path=LibraryFile, Mode=OneWay, StringFormat='Library File: {0}'}" Margin="20,0,20,0"/>
         </StackPanel>
     </Grid>

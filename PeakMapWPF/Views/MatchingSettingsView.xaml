@@ -22,7 +22,7 @@ authority from the Government may result in criminal liability under U.S. laws.
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PeakMapWPF.Views"
+        xmlns:local="clr-namespace:PeakMapWPF.Views" xmlns:viewmodels="clr-namespace:PeakMapWPF.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MatchSettingsViewModel}"
         mc:Ignorable="d"
         Title="MatchingSettingsView" Height="320" Width="350" Icon="icon.ico">
     <Grid>
@@ -57,16 +57,16 @@ authority from the Government may result in criminal liability under U.S. laws.
                     <CheckBox Grid.Row="0" Grid.Column="1" Margin="0,2" HorizontalAlignment="Center" IsChecked="{Binding EnableHalfLifeScore}"/>
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="Half-Life Constant" Margin="5,2"
                            ToolTip="The constant to adjust the severity of the half-life penalty"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding HalfLifeConstant}"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding Path=HalfLifeConstant, StringFormat=F5}"/>
                     <TextBlock Grid.Row="2" Grid.Column="0"  Text="Line Deveation Constant" Margin="5,2"
                            ToolTip="The constant to adjust the severity of the deviation of peak centroid to line energy penalty"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding LineDeviationConstant}"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding Path=LineDeviationConstant, StringFormat=F5}"/>
                     <TextBlock Grid.Row="3" Grid.Column="0"  Text="Sum Peak Penalty" Margin="5,2"
                            ToolTip="The penalty assigned to possible sum peaks for not sum peaks not being likely"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding SumPeakPenalty}"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding Path=SumPeakPenalty, StringFormat=F5}"/>
                     <TextBlock Grid.Row="4" Grid.Column="0"  Text="Unmatched Line Constant" Margin="5,2"
                            ToolTip="The constant to adjust the severity of the Line Match score"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding UnmatchedLineConstant}"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" HorizontalContentAlignment="Center" Margin="0,2" Text="{Binding Path=UnmatchedLineConstant, StringFormat=F5}"/>
             </Grid>
         </TreeViewItem>
         <TreeViewItem Header="Limit Settings" IsExpanded="True">

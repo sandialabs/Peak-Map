@@ -165,6 +165,7 @@ namespace PeakMap
             Task<DateTime> acqTask = Task.Run(() => camfile.GetAqusitionTime());
             Task<DateTime> sampTask = Task.Run(() => camfile.GetSampleTime());
             Task<double> liveTask = Task.Run(() => camfile.GetLiveTime());
+            Task<double> realTask = Task.Run(() => camfile.GetRealTime());
             //sepectrum
             Task<uint[]> specTask = Task.Run(() => camfile.GetSpectrum());
             //peaks
@@ -173,12 +174,15 @@ namespace PeakMap
             Task<double[]> ecalTask = Task.Run(() => camfile.GetEnergyCalibration());
             Task<double[]> shapeCalTask = Task.Run(() => camfile.GetShapeCalibration());
             Task<EfficiencyPoint[]> effCalTask = Task.Run(() => camfile.GetEfficiencyPoints().ToArray());
+            
 
             //assign variables
             collTime = await sampTask;
             acqTime = await acqTask;
             elapsedWait = collTime - acqTime;
             countTime = await liveTask;
+            double realTime = await realTask;
+            deadTime = (realTime - countTime) / realTime;
             spectrum = await specTask;
 
 

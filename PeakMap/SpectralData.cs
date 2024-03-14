@@ -179,6 +179,7 @@ namespace PeakMap
         protected DateTime acqTime;
         protected DateTime collTime;
         protected double countTime;
+        protected double deadTime; //in percent
         protected string file;
         protected int order;
         private int numMeas;
@@ -270,6 +271,13 @@ namespace PeakMap
         DisplayName("Count Time"),
         Description("Length of time the sample was counted in seconds")]
         public double CountTime { get { return countTime; } set { countTime = value; } }
+        /// <summary>
+        /// Gets or sets the dead time
+        /// </summary>
+        [Category("DeadTime"),
+            DisplayName("Dead Time"),
+            Description("Dead time in fraction")]
+        public double DeadTime { get { return deadTime; } set { deadTime = value; } }
         /// <summary>
         /// Gets the Specrtral File.
         /// </summary>

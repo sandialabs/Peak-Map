@@ -109,6 +109,7 @@ namespace PeakMap
                         EnergyUncertainty = nucLine["ENERGYUNC"] == DBNull.Value ? GetUncertainty((double)nucLine["ENERGY"]) : (double)nucLine["ENERGYUNC"],
                         AbundanceUncertainty = nucLine["YIELDUNC"] == DBNull.Value ? GetUncertainty((double)nucLine["YIELD"]) : (double)nucLine["YIELDUNC"],
                         IsKeyLine = (bool)nucLine["ISKEY"],
+                        NoWtMean = (bool)nucLine["NOWTMEAN"],
                         NuclideIndex = nucID
                     };
 

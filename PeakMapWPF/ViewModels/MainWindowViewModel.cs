@@ -290,6 +290,17 @@ namespace PeakMapWPF.ViewModels
             }
         }
 
+        private bool _isNoWtMeanChecked=false;
+        public bool IsNoWtMeanChecked
+        {
+            get { return _isNoWtMeanChecked; }
+            set
+            {
+                _isNoWtMeanChecked = value;
+                OnPropertyChanged("IsNoWtMeanChecked");
+            }
+        }
+
         private bool _isInputUser = false;
 
         public bool IsInputUser
@@ -523,7 +534,7 @@ namespace PeakMapWPF.ViewModels
                     throw new ArgumentException($"The Half-life for "+ (string)nuc["NAME"] + " is too large to be supported. It will not be added to the library" );
 
                 //get the lines to write to the library
-                    if (isPhotoPeak)
+                if (isPhotoPeak)
                 {
                     DataTable writeLines;
                     switch (type)
@@ -542,6 +553,13 @@ namespace PeakMapWPF.ViewModels
                         default:
                             writeLines = matches.Lines.Select().CopyToDataTable();
                             break;
+                    }
+                    // do the no weight mean for x-rays
+                    foreach (DataRow line in writeLines.Rows) 
+                    {
+                        line["NOWTMEAN"] = line["TYPE"].ToString().Equals("x",StringComparison.CurrentCultureIgnoreCase) 
+                            && _isNoWtMeanChecked;
+
                     }
                     //write the nuclides to the library
                     libGen.WriteNuclide(nuc, writeLines, CombineLinesCallback);

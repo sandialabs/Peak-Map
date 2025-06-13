@@ -62,7 +62,9 @@ namespace CAMInputOutput
         /// <param name="critialLevel">The peak critical level</param>
         /// <param name="cntRate">The count rate of the peak in cps</param>
         /// <param name="cntRateUnc">Uncertainty in the count rate</param>
-        public Peak(double energy, double centrd, double centrdUnc, double fwhm, double lowTail, double area, double areaUnc, double continuum,double critialLevel, double cntRate, double cntRateUnc) 
+        public Peak(double energy, double centrd, double centrdUnc, double fwhm, 
+            double lowTail, double area, double areaUnc, double continuum,
+            double critialLevel, double cntRate, double cntRateUnc) 
         {
             Energy = energy;
             Centroid = centrd;
@@ -94,7 +96,8 @@ namespace CAMInputOutput
         /// <param name="halfLifeUnc">Half-Life Uncertaitny</param>
         /// <param name="halfLifeUnit">HalfLifeUnit</param>
         /// <param name="nucNo">The nuclide record number</param>
-        public Nuclide(string name, double halfLife, double halfLifeUnc, string halfLifeUnit, int nucNo) 
+        public Nuclide(string name, double halfLife, double halfLifeUnc, 
+            string halfLifeUnit, int nucNo) 
         { 
             Name = name;
             HalfLife = halfLife;
@@ -110,6 +113,7 @@ namespace CAMInputOutput
         public double Abundance;
         public double AbundanceUncertainty;
         public bool IsKeyLine;
+        public bool NoWtMean;
         public int NuclideIndex;
 
         /// <summary>
@@ -121,13 +125,15 @@ namespace CAMInputOutput
         /// <param name="aundanceUnc">The line yield uncertainty in percent</param>
         /// <param name="nucNo">The nuclide number associated with line</param>
         /// <param name="key">true if the line is the key line</param>
-        public Line(double energy, double energyUnc, double abundance, double aundanceUnc, int nucNo, bool key = false) 
+        public Line(double energy, double energyUnc, double abundance, double aundanceUnc, 
+            int nucNo, bool key = false, bool noWTMean=false) 
         {
             Energy = energy;
             EnergyUncertainty = energyUnc;
             Abundance = abundance;
             AbundanceUncertainty = aundanceUnc;
             IsKeyLine = key;
+            NoWtMean = noWTMean;
             NuclideIndex = nucNo;
         }
     }
@@ -197,6 +203,7 @@ namespace CAMInputOutput
             Abundance = 0x05,
             AbundanceUncertainty = 0x39,
             IsKeyLine = 0x1D,
+            NoWtMean = 0x1F,
             NuclideIndex = 0x1B
 
         }
@@ -1427,9 +1434,9 @@ namespace CAMInputOutput
         /// <param name="yieldUnc">The line yield uncertainty in percent</param>
         /// <param name="nucNo">The nuclide number associated with line</param>
         /// <param name="key">true if the line is the key line</param>
-        public void AddLine(double energy, double enUnc, double yield, double yieldUnc, int nucNo, bool key = false)
+        public void AddLine(double energy, double enUnc, double yield, double yieldUnc, int nucNo, bool key = false, bool noWtMean = false)
         {
-            Line line = new Line(energy, enUnc, yield, yieldUnc, nucNo, key);
+            Line line = new Line(energy, enUnc, yield, yieldUnc, nucNo, key, noWtMean);
             AddLine(line);
         }
         /// <summary>
@@ -1447,7 +1454,8 @@ namespace CAMInputOutput
             if (lines == null || lines.Count < 1)
                 lines = new List<byte[]>();
             //insert in the correct position
-            byte[] lineBytes = GenerateLine(line.Energy, line.EnergyUncertainty, line.Abundance, line.AbundanceUncertainty, line.IsKeyLine, BitConverter.GetBytes(nucNo)[0]);
+            byte[] lineBytes = GenerateLine(line.Energy, line.EnergyUncertainty, line.Abundance, line.AbundanceUncertainty, 
+                line.IsKeyLine, line.NoWtMean, BitConverter.GetBytes(nucNo)[0]);
             int lnIndex = ~lines.BinarySearch(lineBytes, new LineComparer());
             if (lnIndex < 0)
                 lines.Insert(~lnIndex,lineBytes);
@@ -1720,8 +1728,9 @@ namespace CAMInputOutput
             nuc[1] = 0x02; nuc[2] = 0x01;
             nuc[0x5f] = 0x01;
             //set the time spans
-            Array.Copy(TimeSpanToCAM(halfLife), 0, nuc, 0x1b,0x08);
-            Array.Copy(TimeSpanToCAM(halfLifeUnc), 0, nuc, 0x89, 0x08);
+            
+            Array.Copy(TimeSpanToCAM(halfLife), 0, nuc, (int)NuclideParameterLocation.HalfLife, 0x08);
+            Array.Copy(TimeSpanToCAM(halfLifeUnc), 0, nuc, (int)NuclideParameterLocation.HalfLifeUncertainty, 0x08);
             //set the strings
             Encoding.ASCII.GetBytes(name.PadRight(0x8,' '), 0, 0x8, nuc, 0x03);
             Encoding.ASCII.GetBytes(halfLifeUnit.PadRight(0x2, ' '), 0, 0x2, nuc, 0x61);
@@ -1773,17 +1782,18 @@ namespace CAMInputOutput
         /// <param name="key">true if the line is the key line</param>
         /// <param name="nucNo">The nuclide number associated with line</param>
         /// <returns>A line that can be written to a CAM file</returns>
-        public byte[] GenerateLine(double energy, double enUnc, double yield, double yieldUnc, bool key, byte nucNo)
+        public byte[] GenerateLine(double energy, double enUnc, double yield, double yieldUnc, bool key, bool noWtMean ,byte nucNo)
         {
             //create a new byte array and fill it
             byte[] line = new byte[(UInt16)RecordSize.NLINES];
             line[0] = 0x01;
-            Array.Copy(FloatToCAM(energy), 0,line, 0x01,0x4);
-            Array.Copy(FloatToCAM(enUnc), 0, line, 0x21, 0x4);
-            Array.Copy(FloatToCAM(yield), 0, line, 0x05, 0x4);
-            Array.Copy(FloatToCAM(yieldUnc), 0, line, 0x39, 0x4);
+            Array.Copy(FloatToCAM(energy), 0,line, (int)LineParameterLocation.Energy, 0x4);
+            Array.Copy(FloatToCAM(enUnc), 0, line, (int)LineParameterLocation.EnergyUncertainty, 0x4);
+            Array.Copy(FloatToCAM(yield), 0, line, (int)LineParameterLocation.Abundance, 0x4);
+            Array.Copy(FloatToCAM(yieldUnc), 0, line, (int)LineParameterLocation.AbundanceUncertainty, 0x4);
             //set if it is the key line
-            line[0x1D] = key ? BitConverter.GetBytes(0x04)[0] : BitConverter.GetBytes(0x00)[0];
+            line[(int)LineParameterLocation.IsKeyLine] = key ? BitConverter.GetBytes(0x04)[0] : BitConverter.GetBytes(0x00)[0];
+            line[(int)LineParameterLocation.NoWtMean] = noWtMean ? BitConverter.GetBytes(0x02)[0] : BitConverter.GetBytes(0x00)[0];
             //set the nuclide number
             line[0x1B] = BitConverter.GetBytes(nucNo)[0];
 

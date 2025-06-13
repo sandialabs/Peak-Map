@@ -179,14 +179,28 @@ namespace PeakMap
         protected DataRow GetKeyLine(DataTable writeLines)
         {
             //get the largest yield 
-            DataRow[] Lines = writeLines.Select("LINENUMBER > -1", "YIELD ASC");
-            //DataRow keyLine = writeLines.Select("LINENUMBER > -1", "YIELD ASC").LastOrDefault();
+            DataRow[] Lines = writeLines.Select("LINENUMBER > -1", "YIELD DESC");
 
+            double score = 0, keyscore = 0;
+            int keyScoreIndex = -1, lasKeyIndex = -1;
             //loop through lines and set the key line to the largest yield that doesn't have intefearnences
-            foreach (DataRow line in Lines)
+            for(int i =0; i < Lines.Length; i++)
             {
-                if (!HasLineInterferences(line))
-                    return line;
+                DataRow line = Lines[i];
+                if (HasLineInterferences(line))
+                    continue;
+                //compute a score
+                score = (double)line["ENERGY"] / 1000.0 + (double)line["YIELD"] / 10.0;
+                if (score > keyscore)
+                {
+                    keyscore = score;
+                    keyScoreIndex = i;
+                }
+            }
+            //get the line with the largest key score
+            if (keyScoreIndex > 0)
+            {
+                return Lines[keyScoreIndex];
             }
             //if it dosen't find a line just use the largest yield
             return Lines.FirstOrDefault();
@@ -198,23 +212,9 @@ namespace PeakMap
         /// <param name="writeLines"></param>
         protected void SetKeyLine(DataTable writeLines)
         {
-            //get the largest yield 
-            DataRow[] Lines = writeLines.Select("LINENUMBER > -1", "YIELD DESC");
-            //DataRow keyLine = writeLines.Select("LINENUMBER > -1", "YIELD ASC").LastOrDefault();
-            bool keyLineSet = false;
-            //loop through lines and set the key line to the largest yield that doesn't have intefearnences
-            foreach (DataRow line in Lines) 
-            {
-                if (!HasLineInterferences(line))
-                {
-                    line["ISKEY"] = true;
-                    keyLineSet = true;
-                    break;
-                }
-            }
-            //if it dosen't find a line just use the largest yield
-            if (!keyLineSet)
-                Lines.FirstOrDefault()["ISKEY"] = true;
+            DataRow line = GetKeyLine(writeLines);
+            line["ISKEY"] = true;
+
         }
         /// <summary>
         /// Check if a line has an intefearing line

@@ -30,6 +30,11 @@ using System.Reflection;
 using System.Linq;
 
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Windows.Controls;
+using System.Security.Policy;
+using System.Windows.Media.Animation;
+using PeakMapWPF.Commands;
 
 namespace PeakMapWPF.ViewModels
 {        
@@ -227,10 +232,11 @@ namespace PeakMapWPF.ViewModels
         public double LowerYield
         {
             get { return _lowerYield; }
-            set { 
+            set {
                 _lowerYield = value;
                 OnPropertyChanged("LowerYield");
                 SetLinesFilter();
+
             }
         }
         private WriteType _writeType;
@@ -419,6 +425,7 @@ namespace PeakMapWPF.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
         /// <summary>
         /// Set the Lines Filter
         /// </summary>
@@ -432,6 +439,8 @@ namespace PeakMapWPF.ViewModels
 
             //always set the lower limit
             matches.YeildLimit = _lowerYield;
+
+            OnPropertyChanged(nameof(Lines));
 
             //save the lines filters as persistent user settings
             Properties.Settings.Default.LOWERENERGY = _lowerEnergy;
@@ -614,11 +623,13 @@ namespace PeakMapWPF.ViewModels
         public RelayCommand MatchesContextMenuCommand { get; protected set; }
         public RelayCommand PastedTextCommand { get; protected set; }
         public RelayCommand LinesContextMenuCommand { get; protected set; }
+        public RelayCommand EnterKeyCommand { get; protected set; }
         private void InitilizeCommands() 
         {
             ExitCommand = new RelayCommand(ExitCommand_Executed, CanExitExecute);
             ModeCommand = new RelayCommand(ModeMenuCommand_Executed, CanModeMenuExecute);
             OtherMenuCommands = new RelayCommand(OtherMenuCommand_Executed, CanOtherMenuExecute);
+            EnterKeyCommand = new RelayCommand(EnterKeyPressed_Executed, CanEnterKeyPressedExecute);
             
         }
 
@@ -768,6 +779,33 @@ namespace PeakMapWPF.ViewModels
         }
         protected virtual void PasteCommand_Executed(object context)
         {
+
+        }
+
+        protected bool CanEnterKeyPressedExecute(object context)
+        {
+            return true;
+        }
+
+        protected void EnterKeyPressed_Executed(object parmater)
+        {
+            //Application.Current.Dispatcher.Invoke(() =>
+            //{
+            //    var linesGrid = Application.Current.MainWindow.FindName("contentCtrl") as UIElement;
+            //    linesGrid?.Focus();  
+            //});
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var focusedElement = Keyboard.FocusedElement as UIElement;
+
+                if (focusedElement != null)
+                {
+                    // Move focus to the next element in the tab order
+                    var request = new TraversalRequest(FocusNavigationDirection.Next);
+                    focusedElement.MoveFocus(request);
+                }
+            });
+
 
         }
 

@@ -113,17 +113,17 @@ authority from the Government may result in criminal liability under U.S. laws.
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Lower Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
                     <TextBox x:Name="LEnergyCutoffText" Width="60" Margin="2.5,10,10,10" 
-                             Text="{Binding LowerEnergy, Mode=TwoWay}"/>
+                             Text="{Binding LowerEnergy, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Upper Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
                     <TextBox x:Name="UEnergyCutoffText" Width="60" Margin="2.5,10,10,10"
-                             Text="{Binding UpperEnergy, Mode=TwoWay}"/>
+                             Text="{Binding UpperEnergy, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Lower Yield Cutoff (%)" Margin="10,10,2.5,10"/>
                     <TextBox x:Name="YieldCutoffText" Width="60" Margin="2.5,10,10,10"
-                             Text="{Binding LowerYield, Mode=TwoWay}"/>
+                             Text="{Binding LowerYield, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
             </WrapPanel>
         </Expander>

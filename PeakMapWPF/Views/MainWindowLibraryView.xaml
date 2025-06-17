@@ -9,7 +9,8 @@
         mc:Ignorable="d" FontFamily="Segoe UI" 
         Title="Peak Map" Height="500" Width="500" x:Name="MainWindowView"
         Icon="icon.ico" AllowDrop="True" DragEnter="Window_DragEnter"
-        local:FileDragDropService.FileDragDropTarget="{Binding}" local:FileDragDropService.IsFileDragDropEnabled="True">
+        local:FileDragDropService.FileDragDropTarget="{Binding}" 
+		local:FileDragDropService.IsFileDragDropEnabled="True">
     <Window.Resources>
         <DiscreteObjectKeyFrame x:Key="FlagKey" Value="{Binding ColumnVisibility}" />
         <Style x:Key="DataGridStyle" TargetType="{x:Type DataGrid}">
@@ -102,14 +103,6 @@
                               InputGestureText="F6"/>
                 </MenuItem>
             </MenuItem>
-            <!--<MenuItem Header="_Advanced">
-                <MenuItem x:Name="RebuildDBMenuItem" Header="_Rebuild Library Database..." 
-                          Command="{x:Static commands:PeakMapCommands.RebuildDBCmd}"/>
-            </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem x:Name="HelpMenuItem" Header="_About" 
-                          Command="{x:Static commands:PeakMapCommands.AboutCmd}"/>
-            </MenuItem>-->
         </Menu>
 
         <DataGrid x:Name="LibraryGrid" Grid.Column="1" Grid.Row="3" Grid.RowSpan="5" Margin="0,0,5,0" 
@@ -162,17 +155,17 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Lower Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
                     <TextBox x:Name="LEnergyCutoffText" Width="60" Margin="2.5,10,10,10" 
-                             Text="{Binding LowerEnergy, Mode=TwoWay}"/>
+                             Text="{Binding LowerEnergy, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Upper Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
                     <TextBox x:Name="UEnergyCutoffText" Width="60" Margin="2.5,10,10,10"
-                             Text="{Binding UpperEnergy, Mode=TwoWay}"/>
+                             Text="{Binding UpperEnergy, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Lower Yield Cutoff (keV)" Margin="10,10,2.5,10"/>
                     <TextBox x:Name="YieldCutoffText" Width="60" Margin="2.5,10,10,10"
-                             Text="{Binding LowerYield, Mode=TwoWay}"/>
+                             Text="{Binding LowerYield, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
             </WrapPanel>
         </Expander>
@@ -201,7 +194,7 @@
     </Grid>
 
     <Window.InputBindings>
-        <KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Open Input"/>
+        <!--<KeyBinding Key="I" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Open Input"/>
         <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Close Input"/>
         <KeyBinding Key="O" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Open Library"/>
         <KeyBinding Key="N" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="New Library"/>
@@ -210,7 +203,9 @@
         <KeyBinding Key="A" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write All"/>
         <KeyBinding Key="M" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write Matched"/>
         <KeyBinding Key="H" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write Highlighted"/>
-        <KeyBinding Key="Insert" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write"/>
+        <KeyBinding Key="Insert" Modifiers="Ctrl" Command="{Binding MenuCommand}" CommandParameter="Write"/>-->
+
+		<KeyBinding Key="Return" Command="{Binding EnterKeyCommand}"/>
 
     </Window.InputBindings>
 

@@ -20,7 +20,7 @@ authority from the Government may result in criminal liability under U.S. laws.
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PeakMapWPF.Views"
              xmlns:views="clr-namespace:PeakMapWPF.Views" xmlns:viewmodels="clr-namespace:PeakMapWPF.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
              mc:Ignorable="d" 
@@ -85,23 +85,23 @@ authority from the Government may result in criminal liability under U.S. laws.
         <Expander x:Name="LineFilterExp" Grid.Row="2" Grid.Column="1" Header="Line Filters" Margin="5,0,0,5">
             <WrapPanel Orientation="Horizontal">
                 <CheckBox x:Name="DaughterCheckBox" IsChecked="{Binding DaughtersFilter, Mode=TwoWay}" Content="Daughter Lines" Margin="10"/>
-                <CheckBox x:Name="XRayCheckBox" IsChecked="{Binding GammaFilter, Mode=TwoWay}" Content="x-Rays" Margin="10" />
-                <CheckBox x:Name="γRayCheckBox" IsChecked="{Binding XRayFilter, Mode=TwoWay}" Content="γ-Rays" Margin="10"/>
+                <CheckBox x:Name="XRayCheckBox" IsChecked="{Binding GammaFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="x-Rays" Margin="10" />
+                <CheckBox x:Name="γRayCheckBox" IsChecked="{Binding XRayFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="γ-Rays" Margin="10"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Lower Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
-                    <TextBox x:Name="LEnergyCutoffText" Width="60" Margin="2.5,10,10,10" 
-                             Text="{Binding LowerEnergy, Mode=TwoWay}"/>
+					<TextBox x:Name="LEnergyCutoffText" Width="60" Margin="2.5,10,10,10" 
+                             Text="{Binding LowerEnergy, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Upper Enegy Cutoff (keV)" Margin="10,10,2.5,10"/>
-                    <TextBox x:Name="UEnergyCutoffText" Width="60" Margin="2.5,10,10,10"
-                             Text="{Binding UpperEnergy, Mode=TwoWay}"/>
+					<TextBox x:Name="UEnergyCutoffText" Width="60" Margin="2.5,10,10,10"
+                             Text="{Binding UpperEnergy, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Lower Yield Cutoff (%)" Margin="10,10,2.5,10"/>
-                    <TextBox x:Name="YieldCutoffText" Width="60" Margin="2.5,10,10,10"
-                             Text="{Binding LowerYield, Mode=TwoWay}"/>
-                </StackPanel>
+					<TextBox x:Name="YieldCutoffText" Width="60" Margin="2.5,10,10,10"
+                             Text="{Binding LowerYield, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+				</StackPanel>
             </WrapPanel>
         </Expander>
         <views:CustomDataGrid x:Name="MatchedLinesGrid" Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" IsReadOnly="True"

@@ -147,9 +147,10 @@ authority from the Government may result in criminal liability under U.S. laws.
                           AutomationProperties.HelpText="Write via the selected method" 
                           InputGestureText="Insert"/>
 				<Separator/>
-				<MenuItem x:Name="NoWtMeanMenuItem" Header="_X-Ray No Wt Mean"
+				<MenuItem x:Name="NoWtMeanMenuItem" Header="No X-Ray Act."
                           IsCheckable="True" IsChecked="{Binding IsNoWtMeanChecked}"
-                          AutomationProperties.HelpText="Mark x-rays for excluison in activity calculations"/>
+                          AutomationProperties.HelpText="Mark x-rays for excluison in activity calculations"
+                          InputGestureText="CTRL+X"/>
             </MenuItem>
             <MenuItem Header="_Settings">
                 <MenuItem x:Name="MatchingSettingsMenuItem" Header="_Matching..."  

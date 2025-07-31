@@ -1,0 +1,14 @@
+Comprehensive \TeX\ Archive Network (CTAN) recommends using the subcaption package to create subfigures within figures and subtables within tables.
+
+    \begin{figure}[!hbtp]
+	\centering
+	\subcaptionbox{A Hyppogriff\label{fig:sub:intro:creatures:hippogriff}}{
+	    \includegraphics[keepaspectratio=true, width=2.0in]{hippogriff}
+	    }
+	\subcaptionbox{A Dragon\label{fig:sub:intro:creatures:dragon}}{
+	     \includegraphics[keepaspectratio=true, width=2.0in]{dragon}
+	    }
+	\caption{Creatures not drawn using dry-erase markers.}
+	\label{fig:creatures}
+    \end{figure}
+

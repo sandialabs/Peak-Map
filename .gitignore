@@ -37,15 +37,24 @@ bld/
 [Ll]ogs/
 
 # Manual stuff
-/Manual/*.PNG
-/Manual/*.eps
-/Manual/*.jpg
-/Manual/*.png
-/Manual/*.cls
-/Manual/*.tex
-/Manual/*.synctex.gz
-/Manual/DOEbwlogo.pdf
-/Manual/snllineblk.pdf
+*.aux
+*.bit
+*.blg
+*.bbl
+*.lof
+*.log
+*.lot
+*.glo
+*.glx
+*.gxg
+*.gxs
+*.idx
+*.ilg
+*.ind
+*.out
+*.url
+*.svn
+*.toc
 
 # Files built by Visual Studio
 *_i.c

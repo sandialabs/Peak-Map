@@ -170,8 +170,7 @@ namespace PeakMap
         public void ClearMatches(DataRow nuc)
         {
             //delete the nuclide
-            if (nuc != null)
-                nuc.Delete();
+            nuc?.Delete();
             //get and delete the lines
             DataRow[] lines = matches.Tables["MATCHEDLINES"].Select("NAME = '" + nuc["NAME"] + "'");
             foreach (DataRow line in lines)
@@ -415,7 +414,6 @@ namespace PeakMap
                 throw new NullReferenceException("Spectal Data is not defined");
 
 
-
             double area = double.TryParse(peak["AREA"].ToString(), out area) ? area : 0.0;
             double mda = double.TryParse(peak["CRITLEVEL"].ToString(), out mda) ? 2.71 + 2*mda : 0.0;
 
@@ -442,7 +440,7 @@ namespace PeakMap
                 //get the yelds of the daughters.
                 double yieldMult = (daughters.TryGetValue((string)line["NAME"], out double branchRatio)) ? branchRatio : 1;
 
-                //double yieldMult = isParent ? (double)nuc["BRANCHING"] : 1;
+
                 //get the basis line
                 if (Math.Abs((double)line["ENERGY"] - (double)nuc["ENERGY"]) < 1e-6)
                 {
@@ -455,8 +453,7 @@ namespace PeakMap
                     double y2 = (double)line["YIELD"] * yieldMult;
                     if (y2 < yeildLimit)
                         continue;
-                    //DataRow basis = temp.FirstOrDefault(c => c["NAME"].Equals(line["NAME"]));
-                    double e2 = specData.GetEfficiency((double)nuc["ENERGY"]);
+
                     //set the MDA's it is possible this fails so throw it in a try catch
                     double m2 = 2.71;
                     try
@@ -467,10 +464,7 @@ namespace PeakMap
                     {
                         Console.WriteLine(ex.Message+":\n"+ex.StackTrace);
                     }
-                    //double e1 = CAMData.Efficiency(float.Parse(nuc["ENERGY"].ToString()), calParameters);
-                    double y1 = (double)nuc["YIELD"];
 
-                    //matches.Tables["MATCHEDLINES"].Rows.Add(line["NAME"], line["LINENUMBER"], line["ENERGY"], y2, line["TYPE"], eff, area * e2 * y2 / (eff * y1), m2);
                     _ = matches.Tables["MATCHEDLINES"].Rows.Add(line["NAME"], line["LINENUMBER"], line["ENERGY"], y2, line["TYPE"], eff, DBNull.Value, m2);
 
                 }

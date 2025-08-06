@@ -79,6 +79,7 @@ authority from the Government may result in criminal liability under U.S. laws.
         <KeyBinding Key="Y" Modifiers="CTRL" Command="{x:Static commands:PeakMapCommands.WriteYieldCmd}"/>-->
 
         <KeyBinding Key="F5" Command="{Binding ModeCommand}" CommandParameter="{Binding ElementName=MainWindowView}"/>
+        <KeyBinding Key="Return" Command="{Binding EnterKeyCommand}"/>
     </Window.InputBindings>
     <Grid >
         <Grid.ColumnDefinitions>
@@ -145,6 +146,11 @@ authority from the Government may result in criminal liability under U.S. laws.
                           Command="{Binding LinesMenuCommand}" CommandParameter="write"
                           AutomationProperties.HelpText="Write via the selected method" 
                           InputGestureText="Insert"/>
+				<Separator/>
+				<MenuItem x:Name="NoWtMeanMenuItem" Header="No X-Ray Act."
+                          IsCheckable="True" IsChecked="{Binding IsNoWtMeanChecked}"
+                          AutomationProperties.HelpText="Mark x-rays for excluison in activity calculations"
+                          InputGestureText="CTRL+X"/>
             </MenuItem>
             <MenuItem Header="_Settings">
                 <MenuItem x:Name="MatchingSettingsMenuItem" Header="_Matching..."  
@@ -158,16 +164,6 @@ authority from the Government may result in criminal liability under U.S. laws.
                           Command="{Binding ModeCommand}" CommandParameter="{Binding ElementName=MainWindowView}"
                           AutomationProperties.HelpText="Change the mode" 
                           InputGestureText="F5">
-                    
-                    <!--<MenuItem x:Name="MatchingModeMenuItem" Header="_Matching" 
-                            
-                              AutomationProperties.HelpText="Change to matching mode" 
-                              InputGestureText="F5"/>
-
-                    <MenuItem x:Name="LibraryModeMenuItem" Header="_Library" 
-                               Command="{Binding ModeCommand}" CommandParameter="library"
-                              AutomationProperties.HelpText="Change to library mode" 
-                              InputGestureText="F6"/>-->
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Advanced">
@@ -179,7 +175,7 @@ authority from the Government may result in criminal liability under U.S. laws.
                           Command="{Binding OtherMenuCommands}" CommandParameter="{Binding ElementName=HelpMenuItem, Path=Header}"/>
             </MenuItem>
         </Menu>
-        <ContentControl Grid.Row="2" Grid.Column="1" Content="{Binding CurrentModeViewModel}"/>
+        <ContentControl Name="contentCtrl" Grid.Row="2" Grid.Column="1" Content="{Binding CurrentModeViewModel}"/>
     </Grid>
 
    

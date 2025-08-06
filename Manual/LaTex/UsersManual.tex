@@ -153,7 +153,7 @@ for technical direction and help with testing.
 	\item[keV]
 	     Kiloelectonvolts, unit of energy 1000 times the energy needed to move an electron across one volt
 	\item[MDA]
-	     Minimum Detectable Activity, the point at which a false positive peak identification is setto fixed percentage, typically 5\%
+	     Minimum Detectable Activity, the point at which a false positive peak identification is set to fixed percentage, typically 5\%
 	\item[ROI]
 	     Region of Interest, an span of channels on a gamma spectra representing an important region
 	\item[CAM]
@@ -192,18 +192,18 @@ Chapter \hyperref[sec:usage]{Usage} describes how to use the tool to accomplish 
 overview of the parameters used in the matching algorithm and \hyperref[sec:install]{Appendix~\ref{sec:install}} provides instructions
 on the installation of the software.
 
-    \chapter{Usage}\label{sec:usage}
-    This chapter describes the usage and the the complete functionality of the tool. It is broken into
-    the menus available to the user. The terminology is as follows:
-    \begin{itemize}
-        \item Left Click - Use the mouse left button
-        \item Right Click - Use the right mouse button
-        \item Navigate - Move through the menus as directed, using the mouse or keyboard (ALT+letter)
-        \item Select - Click on a row
-        \item Selected - Highlighted row
-        \item Multi-Select - Select multiple rows by using the left click while holding the Control key (CTRL) or the Shift Key (SHIFT)\
-        \item Drag and Drop - Left click and hold on a file, move the mouse over the Peak Map tool, and release the mouse button
-    \end{itemize}
+\chapter{Usage}\label{sec:usage}
+This chapter describes the usage and the the complete functionality of the tool. It is broken into
+the menus available to the user. The terminology is as follows:
+\begin{itemize}
+    \item Left Click - Use the mouse left button
+    \item Right Click - Use the right mouse button
+    \item Navigate - Move through the menus as directed, using the mouse or keyboard (ALT+letter)
+    \item Select - Click on a row
+    \item Selected - Highlighted row
+    \item Multi-Select - Select multiple rows by using the left click while holding the Control key (CTRL) or the Shift Key (SHIFT)\
+    \item Drag and Drop - Left click and hold on a file, move the mouse over the Peak Map tool, and release the mouse button
+\end{itemize}
 The tool has two modes, Matching Mode and Library Mode. The former is for matching a list of
 peaks to signature lines and nuclides then writing a nuclide library file. The latter, is for entering
 nuclides and writing them and the signature lines to a nuclide library file. Library mode is useful
@@ -214,7 +214,7 @@ two modes. The window will toggle between \hyperref[fig:main_window]{Figure~\ref
 and \hyperref[fig:lib_mode]{Figure~\ref{fig:lib_mode}}, display a subset of the columns in the
 remaining grids, and hiding peak input information.
 
-Irespective of the mode, the window containts three grid views, one on the left for the peaks in
+Irrespective of the mode, the window contains three grid views, one on the left for the peaks in
 matching mode or written nuclides in library mode and two on the top and bottom of the right side
 of the window. The upper right grid displays the found nuclides from either a matching line or searched
 nuclide. The bottom right grid shows all the characteristic lines from the selected nuclide and any
@@ -222,6 +222,73 @@ daughters in equilibrium with the nuclide. This grid can be filtered by expandin
 which can include/exclude Daughter Lines, x-Rays, Gamma-Rays, provide a minimum yield and a window the
 line energies. The strip at the bottom of the screen presents information about loaded spectra/peak
 files, and the nuclide library file that is being written.
+
+Generally, the process involves searching for nuclide either by name in Library mode, or peak energy in matching
+mode. Selecting the desired nuclides in the nuclides grid, will display a filtered list of lines associated with
+that parent and daughters. If a library file is opened, a selection of lines can be written by writing the selected
+lines, the lines with matching peaks (only in matching mode) or all the displayed lines. In the last case of writing
+all the lines, only the lines displayed will be written; if filters are applied the lines filtered out will not be
+written. When a nuclide is written, a key line will be selected that maximizes both the energy and yield. For example,
+for 2 lines of similar yield (e.g. Co-60 with a 1137.3 keV and 1332.5 keV lines), the line with the higher energy
+will be marked as the key line. THe key line will also be chosen to avoid interferences with other lines from other
+nuclides. Ultimately the the key line will be chosen to the the line with the highest yield, highest energy and
+free of interfering lines. See the \hyperref[sec:key_line]{Key Line} section in the Technical chapter for further
+details.
+
+
+\section{Menu Navigation}\label{sec:menu}
+\subsection{File Menu}\label{sec:file_menu}
+\begin{itemize}
+    \item \textbf{Open Input\ldots} - Open a window to browse to an input file, a list of the inputs can be found
+        in \hyperref[sec:peak_inp]{Peak Inputs}
+    \item \textbf{Close Input} - Clear the peaks and other spectral information and return the program to the state
+        when it was opened.
+    \item \textbf{New\ldots} - Create a new nuclear data library to write the nuclides and lines, see
+        \hyperref[sec:lib_mode]{Library Mode} for details.
+    \item \textbf{Open\ldots} - Open an existing nuclear data library to write the nuclides and lines, see
+        \hyperref[sec:lib_mode]{Library Mode} for details.
+    \item \textbf{Save Library} - Close the open nuclear data library.
+    \item \text{Exit} - Exit the software
+\end{itemize}
+\subsection{Lines Menu}\label{sec:line_menu}
+\begin{itemize}
+    \item \textbf{Show Daughter Lines} - Toggle showing the lines from the daughter nuclide. If this is unchecked
+        on the lines from the nuclide in the \textbf{Name} column with be displayed.
+    \item \textbf{Selected} - Write the lines that have been selected in the Lines Grid.
+    \item \textbf{Matched} - Write only the lines that have matching peaks, delineated by a check mark in the
+        \textbf{Matched} column. Available in Matching Mode only.
+    \item \textbf{All} - Write every line in the Lines Grid.
+    \item \textbf{Write} - Write to the library via the checked means of writing (Selected, Matched, All)
+    \item \textbf{X-Ray No Wt Mean} - Adds the flag to no uses the line in the weighted mean activity calculation
+        to all lines of type x-ray.
+\end{itemize}
+
+\subsection{Settings Menu}\label{sec:set_menu}
+\begin{itemize}
+    \item \textbf{Matching\ldots} - Adjust the parameters used in the matching algorithm. See
+        \hyperref[sec:match]{Matching} for a description of the algorithms and
+        \hyperref[sec:set_desc]{Section~\ref{sec:set_desc}} for the parameters.
+    \item \textbf{Spectral\ldots} - Enter or change the remaining information about the spectrum. See
+        \hyperref[sec:set_match]{Section \ref{sec:set_match}} for a description of the of the
+        spectral parameters.
+    \item \textbf{Library\ldots} - Adjust the parameters used in the library writing algorithm. See
+        \hyperref[sec:library]{Library} or the description of the algorithms and
+        \hyperref[sec:set_lib]{Section \ref{sec:set_lib}} for the specifics of the parameters
+    \item \textbf{Change Mode\ldots} - Change the mode to \hyperref[sec:lib_mode]{Library~Mode} if in matching mode
+        or to \hyperref[sec:match_mode]{Matching~Mode} if in library mode.
+\end{itemize}
+\subsection{Advanced}\label{sec:adv_menu}
+\begin{itemize}
+    \item \textbf{Rebuild Library Database\ldots} - Generate a new SQLite database containing all the nuclide
+        and line data from the library file with the settings in the app.config file. The software deploys with
+        the database necessary. The only reason to do this is if the default settings and the built in decay
+        chains are not adequate for the user's purposes.
+\end{itemize}
+\subsection{Help Menu}\label{sec:help_menu}
+\begin{itemize}
+    \item \textbf{About} - View the information about the tool
+\end{itemize}
+
 %Between the two grids is the line match score or the score determined by the number of detectable lines that are associated with peaks.
 
 \section{Matching Mode}\label{sec:match_mode}
@@ -229,7 +296,7 @@ files, and the nuclide library file that is being written.
     \includegraphics[width=0.85\textwidth]{MainWindow.png}
     \centering
     \caption{Peak Map window in matching mode performing peak matches.}
-   \label{fig:main_window}
+    \label{fig:main_window}
 \end{figure}
 
 The columns in the peaks grid are as follows:
@@ -267,7 +334,6 @@ The column in the lines grid are as follows:
     \item \textbf{Peak No.} - The identification number of the matched peak, blank if Matched is unchecked.
     \item \textbf{Diff} - The difference between the matched peak centroid and the line energy in keV. Blank if the \textbf{Matched} is unchecked.
     \item \textbf{Rel. Activity} - The expected activity, based on the selected peak, of this line relative to the other lines. Blank if the \textbf{Matched} is unchecked.
-    \item \textbf{Name} - Library Mode only. The name of the nuclide emitting the line.
 \end{itemize}
 
 Matching Mode as shown in \hyperref[fig:main_window]{Figure \ref{fig:main_window}} allows for
@@ -307,7 +373,7 @@ of the calibration settings are changed.
     \item Avoid jumping around to different peaks, finish with one peak before moving on.
     \item If the efficiency calibration is a good representation, the relative activity across the energy lines
     should be uniform for a correctly identified nuclide.
-    \item If the camparitive analysis is valid, clicking on a line in the lines grid can expose potential identified
+    \item If the comparative analysis is valid, clicking on a line in the lines grid can expose potential identified
     interferences.
     \item If a line peak has a relative activity that is different from the others, it might be an interference
     with another nuclide.
@@ -336,7 +402,7 @@ and select the appropriate option from the \hyperref[sec:line_menu]{Lines Menu}.
 Every line, independent of the option chosen, will be written to the selected nuclide. Lines from daughters
 in equilibrium can be associated with their parent or a decay chain
 (\hyperref[sec:decay_chain]{Appendix \ref{sec:decay_chain}}) by selecting the desired
-nuclude in the nuclide grid. \textbf{Note:} Attributing daughter lines with parents will write the lines to the
+nuclide in the nuclide grid. \textbf{Note:} Attributing daughter lines with parents will write the lines to the
 parent nuclide, (with the parent half-life) and the line yield will be adjusted for branching ratios.
 
 The key line for the nuclide is determined by finding the line with the largest abundance that does
@@ -379,15 +445,37 @@ through the \hyperref[sec:file_menu]{File Menu} \(\rightarrow\) \textbf{Input\ld
 to load, but once the file is loaded the peaks will appear in the peaks grid, and the input file name will be
 displayed in the status strip at the bottom of the window.
 
-\section{Library Mode}\label{sec:libMode}
+\section{Library Mode}\label{sec:lib_mode}
 \begin{figure}[h]
     \includegraphics[width=0.3\textwidth]{LibraryMode.png}
     \centering
     \caption{Peak Map window in library Mode}
    \label{fig:lib_mode}
 \end{figure}
-Library Mode (\hyperref[sec:fig:lib_mode]{Figure \ref{fig:lib_mode}})
-allows for the searching of nucluide names and the displaying and library generation of the resultant nuclides and
+The columns in the peaks grid are as follows:
+\begin{itemize}
+    \item \textbf{No.} - An identification number for the peak.
+    \item \textbf{Id} - The nuclides written to the library.
+\end{itemize}
+
+The columns in the nuclides grid are as follows:
+\begin{itemize}
+    \item \textbf{Name} - The nuclide to be associated with matched lines or decay chain (see \hyperref[sec:decay_chain]{Appendix~\ref{sec:decay_chain}} for a discussion on the decay chains).
+    \item \textbf{Nuclide} - The actual nuclide that emits the characteristic line.
+    \item \textbf{Half-Life} - The half-life of the nuclide listed in the \textbf{Name} column.
+    \item \textbf{Unit} - The unit of half-life.
+\end{itemize}
+
+The column in the lines grid are as follows:
+\begin{itemize}
+    \item \textbf{Energy} - The energy of the characteristic line in keV.
+    \item \textbf{Yield} - The photon yield, in percent, of the characteristic line in the \textbf{Name} column. This include nuclide branching ratios if applicable.
+    \item \textbf{Type} - Emission type: \textbf{X} for x-rays, \textbf{G} for gamma rays.
+    \item \textbf{Name} - Library Mode only. The name of the nuclide emitting the line.
+\end{itemize}
+
+Library Mode (\hyperref[fig:lib_mode]{Figure~\ref{fig:lib_mode}})
+allows for the searching of nuclide names and the displaying and library generation of the resultant nuclides and
 lines. Selecting library mode from the \hyperref[sec:set_menu]]{Settings Menu} or pressing F5 toggles between library
 and matching mode. Typing a nuclide (e.g. Cs137, or CS-137, 137cs) in the search bar will search for that nuclide
 and its daughters in equilibrium. An incomplete entry can also be entered, fore example, only the chemical symbol
@@ -400,27 +488,26 @@ and daughters if applicable. The lines from the daughters can be toggled on or o
 written to the library in the same as in the \hyperref[sec:match_mode]{Matching Mode} and the nuclides added will
 show up in the left most pane. Nuclides and all their lines can be removed by selecting the nuclides to remove and
 right clicking and selecting \textbf{Clear Selected}. \textbf{Clear Current Row} will delete just the row that was
-right-clicked on, and \textbf{clear Matches} will clear the whole table.
-    \chapter{Menu Navigation}\label{sec:menu}
-      \section{File Menu}\label{sec:file_menu}
-      \section{Lines Menu}\label{sec:line_menu}
-      \section{Settings Menu}\label{sec:set_menu}
-      \section{Advanced}\label{sec:adv_menu}
-      \section{Help Menu}\label{sec:help_menu}
+right-clicked on, and \textbf{clear Matches} will clear the whole table. Selecting an existing nuclide in the left
+grid will load the nuclide and the lines. The written lines that are are highlighted so they can be reviewed. It is
+possible that written lines in do not appear in the lines grid if they are filtered out using the \textbf{Line Filters}.
 
-    \chapter{Technical}\label{sec:tech}
+
+
+\chapter{Technical}\label{sec:tech}
 The following algorithms are used to perform all the calculations in the tool. They are provided
 for clarity, transparency and to allow advanced users to tweak the parameters to fit their specific
 needs. There are two main categories of algorithms, one for matching and one for nuclide library
 generation.
-      \section{Matching}\label{sec:match}
+
+\section{Matching}\label{sec:match}
 The matching algorithms are used in \hyperref[sec:match_mode]{Matching Mode} to assist the user in
 determining which nuclides are present in a set of peaks. The correctness of a matched is judged by
 two scores: the nuclide score and the line score. Both scores depend on the amount of information
 in the input file. See \hyperref[sec:peak_inp]{Peak Inputs} for more information on the data from the
 various inputs.
 
-      \section{Scoring}\label{sec:score}
+\section{Scoring}\label{sec:score}
 The score is a series of penalties ascribed to the selected nuclide (\textbf{Name} column) in the Nuclides
 Grid based on the number of elapsed half-lives, the deviation of the peak centroid from the matched
 line energy, and the yield of the matched line. The line score is a metric of the number of lines
@@ -482,7 +569,7 @@ P, \text{there is no peak that matches the energy sum of the 2 largest peaks} \\
 \label{eq:sp_score}
 \end{equation}
 The \hyperref[itm:sm_peak_pen]{Sum Peak Penalty} is an adjustable parameter and as with the other
-penalty constants whichallows the user to finely tune the nuclide scores within a session of matching.
+penalty constants which allows the user to finely tune the nuclide scores within a session of matching.
 
 
 \subsection{Line Scoring}\label{sec:ln_score}
@@ -492,12 +579,14 @@ that should have been found. To determine which lines should have been found, an
 calibration is required, as well as a measurement of continuum where MDA can be determined.
 For the ith line attributed to the nuclide, the Minimum detectable activity \( \left(MDA_i\right) \),
 efficiency at
-the line energy \(\left(e_i\right)\), and the activity \(\left( a_i\right)\) relative to the reference line (denoted with subscript \(r\)) is
+the line energy \(\left(e_i\right)\), and the activity \(\left( a_i\right)\) relative to the reference line
+(denoted with subscript \(r\)) is
 calculated using the \hyperref[sec:comp_calcs]{Comparative calculations}. The reference line is the line found that matches
 the highlighted peak in the peaks grid. The denominator in \hyperref[eq:line_score]{Equation \ref{eq:line_score}} is all the lines that should
 be detected with (di) indicating if it should have been detected. The numerator is the number of
 lines found in the spectra. The severity of the penalty can be scaled with \(\left(C_L\right)\) and is described in
-\hyperref[sec:set_desc]{Appendix \ref{sec:set_desc}} section: \hyperref[itm:sm_peak_pen]{Unmatched Line Constant}. It is possible of the \hyperref[eq:line_score]{Equation \ref{eq:line_score}} to exceed 100\% if
+\hyperref[sec:set_desc]{Appendix \ref{sec:set_desc}} section: \hyperref[itm:sm_peak_pen]{Unmatched Line Constant}. It is
+possible for the \hyperref[eq:line_score]{Equation \ref{eq:line_score}} to exceed 100\% if
 lines that should not have been detected were. It might indicate and interference.
 \begin{equation}
 S_L = C_L \cdot \frac{\sum_i^N y_i \sqrt{\epsilon _i}}{\sum_i^N \delta _i \cdot y_i \sqrt{\epsilon _i}} \cdot 100
@@ -606,7 +695,7 @@ in the line energies. \hyperref[eq:ave_E_sig]{Equation~\ref{eq:ave_E_sig}} is us
 \label{eq:ave_E_sig}
 \]
 The yield of the newly combined peak is just simple addition of the yields. It is possible for this
-yied to exceed 100\% if the nuclear decay structure has many high yield instantaneous decays.
+yield to exceed 100\% if the nuclear decay structure has many high yield instantaneous decays.
 \hyperref[eq:ave_yld]{equation \ref{eq:ave_yld}} is used for the addition.
 \[
 \bar{y} = \sum^N_i y_i
@@ -619,7 +708,17 @@ uncertainty as determined in the Uncertainty section.
 \label{eq:ave_yld_sig}
 \]
 
-
+\section{key Line}\label{sec:key_line}
+The key line is computed by giving a weight to each line based off the energy and the yield of the line.
+\hyperref[eq:key_line_socre]{Equation \ref{eq:key_line_socre}} shows the computation of the
+score.
+\begin{equation}
+    S_{k} = \frac{E_i}{1000} + \frac{y_i}{10}
+    \label{eq:key_line_socre}
+\end{equation}
+If a line is found to have an interference, that is within the \hyperref[itm:ky_inf]{Key Line Interference} setting.
+If another line in the library is found within this limit the line with the next highest score will be used unless
+there are no other lines for that nuclide.
     % ---------------------------------------------------------------------- %
     % References
     %
@@ -636,7 +735,7 @@ uncertainty as determined in the Uncertainty section.
     \appendix
     \chapter{Settings Description}\label{sec:set_desc}
 
-\section{Matching}
+\section{Matching}\label{sec:set_match}
 \begin{center}
 {\large \textbf{Algorithm Settings}}
 \end{center}
@@ -671,7 +770,7 @@ pair are in equilibrium and will be added as a pair or a single nuclide.
 \end{description}
 
 
-\section{Library}
+\section{Library}\label{sec:set_lib}
 \begin{center}
 {\large \textbf{Line Combination Settings}}
 \end{center}
@@ -685,7 +784,8 @@ individually resolved.
  \textbf{Default:} 3.0. The symmetrical band limit in keV where there may be and interference and to
 not set as the key line for that nuclide
 \end{description}
-\section{Spectral}
+
+\section{Spectral}\label{sec:set_spec}
 
 \begin{center}
 {\large \textbf{Calibration}}
@@ -748,7 +848,7 @@ For many applications the emissions for the daughters of the large decay chains 
 attributed to to the chain itself as the determination of exact concentrations of each daughter can
 be problematic. As such, the tool is distributed with the Th-232, and U-238, U-235, and Np-237
 decay chains defined in their entirety. If a peak is matched with a daughter line in a chain the parent
-of the chain or any of the four parents are searched for in \hyperref[sec:libMode]{Library Mode} will
+of the chain or any of the four parents are searched for in \hyperref[sec:lib_mode]{Library Mode} will
 appear in the \textbf{Name} column appended by a “+”. Selecting a decay chain will display all of the
 lines of all the daughters with the branching ratio adjusted yields.
 

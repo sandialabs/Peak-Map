@@ -341,6 +341,11 @@ INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ts1ntxtlf.f
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ts1ntxtlf.fd
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\tex\latex\newtx\ts1ntxtlf.fd
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\tex-gyre\ts1-qtmr.tfm
+INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\tex-gyre\q-ts1.enc
+INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxsy.vf
+INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txsys.tfm
+INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txex-bar.tfm
+INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\tex-gyre\ec-qhvbi.tfm
 INPUT .\MainWindow.png
 INPUT .\MainWindow.png
 INPUT .\MainWindow.png
@@ -350,10 +355,6 @@ INPUT .\MainWindow.png
 INPUT .\MainWindow.png
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\tex-gyre\ec-qhvr.tfm
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\tex-gyre\ec-qhvb.tfm
-INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\tex-gyre\q-ts1.enc
-INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntxsy.vf
-INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txsys.tfm
-INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txex-bar.tfm
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-t1.tfm
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Italic-tlf-t1.tfm
@@ -361,7 +362,6 @@ INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\vf\public\newtx\ntx-R
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\txmiaX.tfm
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\newtx\ntx-Regular-tlf-ot1r.tfm
 INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\newtx\ntx-ot1-tlf.enc
-INPUT C:\Users\eleonar\AppData\Local\Programs\MiKTeX\fonts\tfm\public\tex-gyre\ec-qhvbi.tfm
 INPUT .\LibraryMode.png
 INPUT .\LibraryMode.png
 INPUT .\LibraryMode.png

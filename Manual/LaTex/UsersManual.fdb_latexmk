@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex UsersManual"] 0 "UsersManual.aux" "UsersManual.bbl" "UsersManual" 1754333697.44273 0
+["bibtex UsersManual"] 0 "UsersManual.aux" "UsersManual.bbl" "UsersManual" 1754518872.91237 0
   "C:/Users/eleonar/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/plain.bst" 1291864736 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
   "SANDExample.bib" 0 -1 0 ""
-  "SANDdistribution.aux" 1754333695 866 3a4f0f7a5c726b35180b51b59ce2bbe9 "pdflatex"
+  "SANDdistribution.aux" 1754518870 866 3a4f0f7a5c726b35180b51b59ce2bbe9 "pdflatex"
   "UsersManual.aux" 0 -1 0 "pdflatex"
   (generated)
   "UsersManual.bbl"
   "UsersManual.blg"
   (rewritten before read)
-["pdflatex"] 1754333688.47771 "c:/Users/eleonar/source/repos/Peak-Map/Manual/LaTex/UsersManual.tex" "UsersManual.pdf" "UsersManual" 1754333697.44652 0
+["pdflatex"] 1754518863.66087 "c:/Users/eleonar/source/repos/Peak-Map/Manual/LaTex/UsersManual.tex" "UsersManual.pdf" "UsersManual" 1754518872.9163 0
   "C:/Users/eleonar/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1754329515 163207 8b397a28da8cf491d72adf658ad1aa93 ""
   "C:/Users/eleonar/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1754328310 13255280 eedd23b61a93c61fed811ccab6610a2e ""
   "C:/Users/eleonar/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/newtx/ntx-ec-tlf.enc" 1736607166 2914 fdbc4a54b9bc76f4551b5303f2737d33 ""
@@ -177,15 +177,15 @@
   "C:/Users/eleonar/AppData/Local/Programs/MiKTeX/tex/latex/xstring/xstring.sty" 1693735632 123 a302f2c651a95033260db60e51527ae8 ""
   "LibraryMode.png" 1754325509 118615 c7747bf89742d68bbe807f1380a0e181 ""
   "MainWindow.png" 1754325509 731917 48c221e5f4dd160b2bb6232b9bb28785 ""
-  "SANDdistribution.aux" 1754333695 866 3a4f0f7a5c726b35180b51b59ce2bbe9 "pdflatex"
+  "SANDdistribution.aux" 1754518870 866 3a4f0f7a5c726b35180b51b59ce2bbe9 "pdflatex"
   "SANDdistribution.tex" 0 -1 0 ""
-  "UsersManual.aux" 1754333695 16635 1f5ab3c70975ae4f8c8539061767c7ef "pdflatex"
+  "UsersManual.aux" 1754518870 17290 0538ddd4a86c55d35155734623cc667d "pdflatex"
   "UsersManual.bbl" 0 -1 0 "bibtex UsersManual"
-  "UsersManual.lof" 1754333695 455 ac5f8086ec0a3abf28e2a8f05b5cf56d "pdflatex"
-  "UsersManual.lot" 1754333695 365 aa9fe7b68fa8b6d004f41cdfdf491d4c "pdflatex"
-  "UsersManual.tex" 1754333677 45686 784fa97de402c5bf759afda060e16065 ""
-  "UsersManual.toc" 1754333695 2423 14dad84d35e56523a0f571ac664be48a "pdflatex"
-  "c:/Users/eleonar/source/repos/Peak-Map/Manual/LaTex/UsersManual.tex" 1754333677 45686 784fa97de402c5bf759afda060e16065 ""
+  "UsersManual.lof" 1754518870 435 4c1b522d588abe647ecce0a6f279579d "pdflatex"
+  "UsersManual.lot" 1754518870 345 5e028fe152503c341e44420d897b17f5 "pdflatex"
+  "UsersManual.tex" 1754518861 51918 06a51958f63298c0b1180b6e1fe64145 ""
+  "UsersManual.toc" 1754518870 2546 8335acb94120bae1446501130ead7b07 "pdflatex"
+  "c:/Users/eleonar/source/repos/Peak-Map/Manual/LaTex/UsersManual.tex" 1754518861 51918 06a51958f63298c0b1180b6e1fe64145 ""
   "sand_report_template/DOEbwlogo.pdf" 1754325509 13474 9d2f1b865162e3f7f5dd94c8144f4ea7 ""
   "sand_report_template/NNSA_logo.pdf" 1754325509 14764 80645d13314badbc669c103ddaf416b1 ""
   "sand_report_template/SANDbackcover-bg.pdf" 1754325509 811461 6e587f221e665c2f058ff91825c4df6d ""
